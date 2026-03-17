@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parkings Sion — Tarifs & Simulateur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #EFECE6;
+      --surface: #FFFFFF;
+      --navy: #1A2440;
+      --red: #C8001F;
+      --blue-soft: #EBF1FB;
+      --blue-text: #1E4087;
+      --green: #0F7A3E;
+      --green-soft: #E8F4EE;
+      --amber: #8A5900;
+      --amber-soft: #FDF3DC;
+      --text: #1A2440;
+      --muted: #7A8099;
+      --border: #DDD9D0;
+      --shadow-sm: 0 1px 3px rgba(26,36,64,0.07), 0 2px 8px rgba(26,36,64,0.04);
+      --shadow-md: 0 4px 20px rgba(26,36,64,0.10), 0 1px 4px rgba(26,36,64,0.06);
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ──────────────────────────────── */
+    .header {
+      background: var(--navy);
+      padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 3rem);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-watermark {
+      position: absolute;
+      right: -1rem;
+      bottom: -3rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(8rem, 22vw, 18rem);
+      color: rgba(255,255,255,0.03);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -0.05em;
+    }
+
+    .header-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .header-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Swiss cross */
+    .swiss-cross {
+      width: 18px; height: 18px;
+      background: var(--red);
+      border-radius: 2px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .swiss-cross::before, .swiss-cross::after {
+      content: '';
+      position: absolute;
+      background: white;
+    }
+    .swiss-cross::before { width: 10px; height: 2px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    .swiss-cross::after  { width: 2px; height: 10px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+
+    .header-eyebrow span {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .header h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      color: white;
+      line-height: 1;
+      letter-spacing: -0.025em;
+    }
+    .header h1 em { font-style: normal; color: rgba(255,255,255,0.3); }
+
+    .header-stats {
+      display: flex;
+      gap: 1.75rem;
+      padding-bottom: 0.25rem;
+    }
+    .hstat { text-align: right; }
+    .hstat-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      line-height: 1;
+      display: block;
+    }
+    .hstat-lbl {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.2rem;
+      display: block;
+    }
+
+    /* ── LAYOUT ──────────────────────────────── */
+    .main {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 2.5rem clamp(1rem, 4vw, 2rem) 5rem;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-label span {
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── CARDS ──────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .card:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+    .card-top {
+      padding: 1.25rem 1.5rem 1rem;
+      background: var(--navy);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.5rem;
+      align-items: start;
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.975rem;
+      font-weight: 700;
+      color: white;
+      line-height: 1.3;
+    }
+    .card-addr {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.42);
+      margin-top: 0.25rem;
+    }
+    .price-badge {
+      background: rgba(255,255,255,0.1);
+      border-radius: 6px;
+      padding: 0.35rem 0.625rem;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .price-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: white;
+      display: block;
+      line-height: 1;
+    }
+    .price-unit {
+      font-size: 0.62rem;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.04em;
+    }
+
+    .card-body { padding: 1.25rem 1.5rem; }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.625rem;
+      margin-bottom: 1rem;
+    }
+    .stat-box {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 0.625rem 0.5rem;
+      text-align: center;
+    }
+    .stat-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      display: block;
+      line-height: 1.2;
+    }
+    .stat-lbl {
+      font-size: 0.6rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: block;
+      margin-top: 0.15rem;
+    }
+
+    .rules-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      padding-top: 0.875rem;
+      border-top: 1px solid var(--border);
+    }
+    .rule-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.275rem 0.625rem;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      background: var(--blue-soft);
+      color: var(--blue-text);
+    }
+    .no-rules {
+      padding-top: 0.875rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* ── SIMULATOR ───────────────────────────── */
+    .simulator {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .sim-header {
+      background: linear-gradient(130deg, #1A2440 0%, #2C3F6B 100%);
+      padding: 1.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .sim-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: white;
+    }
+    .sim-header p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.2rem;
+    }
+    .sim-icon {
+      width: 48px; height: 48px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .sim-body { padding: 2rem; }
+
+    .sim-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.125rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-field { display: flex; flex-direction: column; gap: 0.375rem; }
+    .form-field.full { grid-column: 1 / -1; }
+
+    .field-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .field-input {
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.925rem;
+      color: var(--text);
+      background: white;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .field-input:hover { border-color: #C5C0B6; }
+    .field-input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(26,36,64,0.08); }
+    select.field-input {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A8099' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+
+    .btn-calc {
+      background: var(--navy);
+      color: white;
+      border: none;
+      padding: 0.875rem 2rem;
+      border-radius: var(--radius-sm);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-calc:hover { background: #2C3F6B; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(26,36,64,0.25); }
+    .btn-calc:active { transform: none; box-shadow: none; }
+
+    .alert {
+      display: none;
+      margin-top: 1.25rem;
+      padding: 0.875rem 1.125rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .alert.error { background: #FEF2F2; border: 1.5px solid #FECACA; color: #991B1B; }
+    .alert.visible { display: flex; }
+
+    /* ── RESULT ──────────────────────────────── */
+    .result {
+      display: none;
+      margin-top: 2rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .result.visible {
+      display: block;
+      animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-hero {
+      background: var(--navy);
+      padding: 1.75rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+    }
+    .result-info h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+    }
+    .result-info p {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.3rem;
+    }
+    .result-amount { text-align: right; }
+    .result-chf {
+      font-family: 'Syne', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      color: white;
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+      justify-content: flex-end;
+    }
+    .result-chf .cur { font-size: 1rem; font-weight: 400; opacity: 0.55; }
+    .result-savings {
+      font-size: 0.72rem;
+      color: rgba(134,239,172,0.9);
+      margin-top: 0.35rem;
+      text-align: right;
+    }
+
+    .breakdown { padding: 1.75rem 2rem; }
+    .breakdown-head {
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .breakdown-table { width: 100%; border-collapse: collapse; }
+    .breakdown-table th {
+      font-size: 0.66rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: left;
+      padding: 0 0 0.625rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .breakdown-table th:last-child,
+    .breakdown-table td:last-child { text-align: right; }
+    .breakdown-table td {
+      padding: 0.75rem 0;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .breakdown-table tr:last-child td { border-bottom: none; }
+
+    .seg-name {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 500;
+    }
+    .seg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .seg-time { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; }
+
+    .cost-free    { font-weight: 600; color: var(--green); }
+    .cost-reduced { font-weight: 600; color: var(--amber); }
+    .cost-normal  { color: var(--text); }
+
+    .result-footer {
+      padding: 1rem 2rem;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────── */
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; }
+      .header-stats { display: none; }
+      .sim-icon { display: none; }
+      .result-hero { flex-direction: column; align-items: flex-start; }
+      .result-amount, .result-savings { text-align: left; }
+      .result-chf { justify-content: flex-start; }
+      .sim-body { padding: 1.5rem; }
+      .breakdown { padding: 1.25rem 1.5rem; }
+      .breakdown-table th:nth-child(3),
+      .breakdown-table td:nth-child(3) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-watermark">P</div>
+  <div class="header-inner">
+    <div>
+      <div class="header-eyebrow">
+        <div class="swiss-cross"></div>
+        <span>Canton du Valais &nbsp;·&nbsp; Suisse</span>
+      </div>
+      <h1>Parkings <em>Sion</em></h1>
+    </div>
+    <div class="header-stats">
+      <div class="hstat">
+        <span class="hstat-val">7</span>
+        <span class="hstat-lbl">Parkings</span>
+      </div>
+      <div class="hstat">
+        <span class="hstat-val">1 375</span>
+        <span class="hstat-lbl">Places</span>
+      </div>
+      <div class="hstat">
+        <span class="hstat-val">1.00 – 2.20</span>
+        <span class="hstat-lbl">CHF / heure</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="section-label"><span>Les parkings</span></div>
+  <div class="grid" id="parkingGrid"></div>
+
+  <div class="section-label"><span>Simulateur de prix</span></div>
+  <div class="simulator">
+    <div class="sim-header">
+      <div>
+        <h2>Calculez votre tarif exact</h2>
+        <p>Toutes les spécificités tarifaires sont automatiquement prises en compte</p>
+      </div>
+      <div class="sim-icon">🧮</div>
+    </div>
+    <div class="sim-body">
+      <div class="sim-form">
+        <div class="form-field full">
+          <label class="field-label" for="selParking">Parking</label>
+          <select class="field-input" id="selParking"></select>
+        </div>
+        <div class="form-field">
+          <label class="field-label" for="inpArrivee">Arrivée</label>
+          <input class="field-input" type="datetime-local" id="inpArrivee">
+        </div>
+        <div class="form-field">
+          <label class="field-label" for="inpDepart">Départ</label>
+          <input class="field-input" type="datetime-local" id="inpDepart">
+        </div>
+      </div>
+      <button class="btn-calc" onclick="simuler()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Calculer le prix
+      </button>
+
+      <div class="alert error" id="alertError"></div>
+
+      <div class="result" id="result">
+        <div class="result-hero">
+          <div class="result-info">
+            <h3 id="resNom"></h3>
+            <p id="resPeriode"></p>
+          </div>
+          <div class="result-amount">
+            <div class="result-chf">
+              <span class="cur">CHF</span>
+              <span id="resTotal">0.00</span>
+            </div>
+            <div class="result-savings" id="resSavings"></div>
+          </div>
+        </div>
+        <div class="breakdown">
+          <div class="breakdown-head">Détail de facturation</div>
+          <table class="breakdown-table">
+            <thead>
+              <tr>
+                <th>Période</th>
+                <th>Durée</th>
+                <th>Tarif</th>
+                <th>Montant</th>
+              </tr>
+            </thead>
+            <tbody id="breakdownBody"></tbody>
+          </table>
+        </div>
+        <div class="result-footer" id="resultFooter">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="resultNote"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+
+// Jours fériés fixes en Valais
+const FERIES = ['01-01','01-02','05-01','08-01','11-01','12-25','12-26'];
+function estFerie(d) {
+  return FERIES.includes(`${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
+}
+
+const PARKINGS = [
+  {
+    id: 'planta',
+    nom: 'Parking de la Planta',
+    adresse: 'Rue de la Planta',
+    places: 350, hauteur: 2.00, prixH: 1.50,
+    horaire: '24h/24', ouvH: 0, fermH: 24,
+    regles: [{ type:'gratuit_dim', label:'Gratuit le dimanche', emoji:'☀️' }]
+  },
+  {
+    id: 'remparts',
+    nom: 'Parking des Remparts',
+    adresse: 'Rue des Remparts',
+    places: 180, hauteur: 1.90, prixH: 2.00,
+    horaire: '6h – 23h', ouvH: 6, fermH: 23,
+    regles: [{ type:'h1_plage', hDeb:8, hFin:18, label:'1ère heure gratuite (8h–18h)', emoji:'🎁' }]
+  },
+  {
+    id: 'grand-pont',
+    nom: 'Parking du Grand-Pont',
+    adresse: 'Grand-Pont',
+    places: 120, hauteur: 1.95, prixH: 1.80,
+    horaire: '6h – 23h', ouvH: 6, fermH: 23,
+    regles: [{ type:'gratuit_sam_apres', hApres:12, label:'Gratuit sam. dès 12h', emoji:'🏖️' }]
+  },
+  {
+    id: 'gare',
+    nom: 'Parking de la Gare',
+    adresse: 'Avenue de la Gare',
+    places: 280, hauteur: 2.10, prixH: 1.20,
+    horaire: '24h/24', ouvH: 0, fermH: 24,
+    regles: [{ type:'tarif_nuit', hDeb:20, hFin:8, reduc:0.5, label:'Tarif nuit –50% (20h–8h)', emoji:'🌙' }]
+  },
+  {
+    id: 'supersaxo',
+    nom: 'Parking Supersaxo',
+    adresse: 'Rue Supersaxo',
+    places: 95, hauteur: 1.85, prixH: 2.20,
+    horaire: '7h – 22h', ouvH: 7, fermH: 22,
+    regles: []
+  },
+  {
+    id: 'potences',
+    nom: 'Parking des Potences',
+    adresse: 'Rue des Potences',
+    places: 200, hauteur: 2.00, prixH: 1.00,
+    horaire: '24h/24', ouvH: 0, fermH: 24,
+    regles: [{ type:'gratuit_dim_feries', label:'Gratuit dim. & jours fériés', emoji:'🎉' }]
+  },
+  {
+    id: 'longemalle',
+    nom: 'Parking Longemalle',
+    adresse: 'Av. de la Longemalle',
+    places: 150, hauteur: 2.05, prixH: 1.60,
+    horaire: '24h/24', ouvH: 0, fermH: 24,
+    regles: [{ type:'demi_h_gratuite', label:'30 premières min. offertes', emoji:'⏱️' }]
+  }
+];
+
+// ── MOTEUR DE CALCUL ──────────────────────────────────────────────────────
+// Calcul minute par minute pour précision maximale sur les règles tarifaires
+
+function calculer(parking, arrivee, depart) {
+  const totalMin = Math.round((depart - arrivee) / 60000);
+  if (totalMin <= 0) return null;
+
+  const rH1     = parking.regles.find(r => r.type === 'h1_plage');
+  const rDemi   = parking.regles.find(r => r.type === 'demi_h_gratuite');
+
+  let minutesH1Left   = rH1   ? 60 : 0;  // 1ère heure offerte (dans la plage)
+  let minutesDemiLeft = rDemi ? 30 : 0;  // 30 premières minutes offertes
+
+  const minutes = [];
+
+  for (let i = 0; i < totalMin; i++) {
+    const t   = new Date(arrivee.getTime() + i * 60000);
+    const h   = t.getHours();
+    const dow = t.getDay(); // 0=dim, 6=sam
+
+    let isFree = false, isReduced = false;
+    let label = 'Tarif normal';
+    let rate  = parking.prixH / 60;
+
+    // Règle : gratuit dimanche
+    if (parking.regles.some(r => r.type === 'gratuit_dim') && dow === 0) {
+      isFree = true; label = 'Gratuit — dimanche';
+    }
+    // Règle : gratuit dimanche + jours fériés
+    if (parking.regles.some(r => r.type === 'gratuit_dim_feries')) {
+      if (dow === 0)       { isFree = true; label = 'Gratuit — dimanche'; }
+      else if (estFerie(t)){ isFree = true; label = 'Gratuit — jour férié'; }
+    }
+    // Règle : gratuit samedi après midi
+    const rSam = parking.regles.find(r => r.type === 'gratuit_sam_apres');
+    if (rSam && dow === 6 && h >= rSam.hApres) {
+      isFree = true; label = 'Gratuit — samedi ≥ 12h';
+    }
+    // Règle : tarif nuit
+    const rNuit = parking.regles.find(r => r.type === 'tarif_nuit');
+    if (rNuit && !isFree) {
+      if (h >= rNuit.hDeb || h < rNuit.hFin) {
+        rate = (parking.prixH * (1 - rNuit.reduc)) / 60;
+        isReduced = true; label = 'Tarif nuit (–50%)';
+      }
+    }
+    // Règle : 1ère heure gratuite dans plage horaire
+    if (rH1 && !isFree && minutesH1Left > 0 && h >= rH1.hDeb && h < rH1.hFin) {
+      isFree = true; isReduced = false; label = '1ère heure offerte';
+      minutesH1Left--;
+    }
+    // Règle : 30 premières minutes offertes (global au séjour)
+    if (rDemi && !isFree && minutesDemiLeft > 0) {
+      isFree = true; isReduced = false; label = '30 min offertes';
+      minutesDemiLeft--;
+    }
+
+    minutes.push({ label, rate: isFree ? 0 : rate, isFree, isReduced, t });
+  }
+
+  // Regrouper les minutes consécutives de même label en segments
+  const segments = [];
+  let i = 0;
+  while (i < minutes.length) {
+    const cur = minutes[i];
+    let j = i + 1;
+    while (j < minutes.length && minutes[j].label === cur.label) j++;
+    const count = j - i;
+    segments.push({
+      from:     cur.t,
+      to:       new Date(cur.t.getTime() + count * 60000),
+      minutes:  count,
+      tauxH:    cur.rate * 60,
+      cout:     count * cur.rate,
+      label:    cur.label,
+      isFree:   cur.isFree,
+      isReduced:cur.isReduced
+    });
+    i = j;
+  }
+
+  const total      = segments.reduce((s, sg) => s + sg.cout, 0);
+  const sansRemise = (totalMin / 60) * parking.prixH;
+  const economies  = sansRemise - total;
+  return { total, economies, segments };
+}
+
+// ── FORMATAGE ─────────────────────────────────────────────────────────────
+
+function fmtH(d) { return d.toLocaleTimeString('fr-CH', { hour:'2-digit', minute:'2-digit' }); }
+function fmtD(d) { return d.toLocaleDateString('fr-CH', { weekday:'short', day:'numeric', month:'short' }); }
+function fmtDuree(min) {
+  const h = Math.floor(min / 60), m = Math.round(min % 60);
+  if (h === 0) return `${m} min`;
+  if (m === 0) return `${h}h`;
+  return `${h}h ${m}min`;
+}
+function fmtChf(v) { return v.toFixed(2); }
+
+// ── RENDU DES CARTES ──────────────────────────────────────────────────────
+
+function renderCards() {
+  const grid = document.getElementById('parkingGrid');
+  const sel  = document.getElementById('selParking');
+
+  PARKINGS.forEach(p => {
+    const rulesHTML = p.regles.length
+      ? `<div class="rules-list">${p.regles.map(r =>
+          `<span class="rule-chip">${r.emoji} ${r.label}</span>`).join('')}</div>`
+      : `<div class="no-rules">Aucune réduction spéciale</div>`;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.tabIndex = 0;
+    card.setAttribute('role','button');
+    card.setAttribute('aria-label', `Simuler le prix pour ${p.nom}`);
+    card.innerHTML = `
+      <div class="card-top">
+        <div>
+          <div class="card-title">${p.nom}</div>
+          <div class="card-addr">📍 ${p.adresse}</div>
+        </div>
+        <div class="price-badge">
+          <span class="price-amount">CHF ${p.prixH.toFixed(2)}</span>
+          <span class="price-unit">par heure</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="stats-row">
+          <div class="stat-box">
+            <span class="stat-val">${p.places}</span>
+            <span class="stat-lbl">Places</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val">${p.hauteur.toFixed(2)} m</span>
+            <span class="stat-lbl">Hauteur</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val" style="font-size:0.76rem;line-height:1.4">${p.horaire}</span>
+            <span class="stat-lbl">Horaires</span>
+          </div>
+        </div>
+        ${rulesHTML}
+      </div>`;
+
+    const go = () => {
+      document.getElementById('selParking').value = p.id;
+      document.querySelector('.simulator').scrollIntoView({ behavior:'smooth', block:'start' });
+    };
+    card.addEventListener('click', go);
+    card.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); go(); } });
+    grid.appendChild(card);
+
+    const opt = document.createElement('option');
+    opt.value = p.id; opt.textContent = p.nom;
+    sel.appendChild(opt);
+  });
+}
+
+// ── SIMULATEUR ────────────────────────────────────────────────────────────
+
+function setDefaults() {
+  const now   = new Date(); now.setSeconds(0,0);
+  const later = new Date(now.getTime() + 2 * 3600000);
+  const fmt = d => {
+    const p = n => String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+  };
+  document.getElementById('inpArrivee').value = fmt(now);
+  document.getElementById('inpDepart').value  = fmt(later);
+}
+
+function simuler() {
+  const alertEl  = document.getElementById('alertError');
+  const resultEl = document.getElementById('result');
+  alertEl.className  = 'alert error';
+  resultEl.className = 'result';
+
+  const pid    = document.getElementById('selParking').value;
+  const arStr  = document.getElementById('inpArrivee').value;
+  const dpStr  = document.getElementById('inpDepart').value;
+
+  if (!arStr || !dpStr) {
+    alertEl.innerHTML = '⚠️&nbsp; Veuillez renseigner l\'heure d\'arrivée et de départ.';
+    alertEl.className = 'alert error visible'; return;
+  }
+
+  const arrivee = new Date(arStr);
+  const depart  = new Date(dpStr);
+
+  if (depart <= arrivee) {
+    alertEl.innerHTML = '⚠️&nbsp; L\'heure de départ doit être postérieure à l\'heure d\'arrivée.';
+    alertEl.className = 'alert error visible'; return;
+  }
+
+  const dureeMin = (depart - arrivee) / 60000;
+  if (dureeMin > 7 * 24 * 60) {
+    alertEl.innerHTML = '⚠️&nbsp; La durée maximum simulable est de 7 jours.';
+    alertEl.className = 'alert error visible'; return;
+  }
+
+  const parking = PARKINGS.find(p => p.id === pid);
+  const result  = calculer(parking, arrivee, depart);
+
+  // Remplir l'en-tête résultat
+  document.getElementById('resNom').textContent = parking.nom;
+  document.getElementById('resPeriode').textContent =
+    `${fmtD(arrivee)} ${fmtH(arrivee)} → ${fmtD(depart)} ${fmtH(depart)}  ·  ${fmtDuree(dureeMin)}`;
+  document.getElementById('resTotal').textContent = fmtChf(result.total);
+
+  const savEl = document.getElementById('resSavings');
+  if (result.economies > 0.005) {
+    savEl.textContent = `Économie appliquée : CHF ${fmtChf(result.economies)}`;
+    savEl.style.display = 'block';
+  } else {
+    savEl.style.display = 'none';
+  }
+
+  // Tableau de détail
+  const tbody = document.getElementById('breakdownBody');
+  tbody.innerHTML = '';
+  result.segments.forEach(seg => {
+    const dotColor  = seg.isFree ? '#22C55E' : (seg.isReduced ? '#F59E0B' : '#94A3B8');
+    const costClass = seg.isFree ? 'cost-free' : (seg.isReduced ? 'cost-reduced' : 'cost-normal');
+    const costText  = seg.isFree ? 'Gratuit' : `CHF ${fmtChf(seg.cout)}`;
+    const tarifText = seg.isFree ? '—' : `CHF ${fmtChf(seg.tauxH)}/h`;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="seg-name">
+          <span class="seg-dot" style="background:${dotColor}"></span>
+          <span>${seg.label}</span>
+        </div>
+        <div class="seg-time">${fmtD(seg.from)} ${fmtH(seg.from)} – ${fmtH(seg.to)}</div>
+      </td>
+      <td>${fmtDuree(seg.minutes)}</td>
+      <td style="color:var(--muted)">${tarifText}</td>
+      <td><span class="${costClass}">${costText}</span></td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Note horaire pour parkings à horaire limité
+  const footerEl = document.getElementById('resultFooter');
+  const noteEl   = document.getElementById('resultNote');
+  if (parking.ouvH !== 0 || parking.fermH !== 24) {
+    noteEl.textContent = `Ce parking est ouvert de ${parking.ouvH}h à ${parking.fermH}h. Vérifiez que votre séjour respecte ces horaires.`;
+    footerEl.style.display = 'flex';
+  } else {
+    footerEl.style.display = 'none';
+  }
+
+  // Afficher avec animation (reset pour re-trigger)
+  resultEl.className = 'result';
+  requestAnimationFrame(() => { resultEl.className = 'result visible'; });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+renderCards();
+setDefaults();
+</script>
+</body>
+</html>

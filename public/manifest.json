@@ -1,0 +1,25 @@
+{
+  "name": "Parkings Sion",
+  "short_name": "Parkings",
+  "description": "Simulateur de tarifs des parkings de Sion — Valais, Suisse",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "fr",
+  "theme_color": "#0C0B09",
+  "background_color": "#0C0B09",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

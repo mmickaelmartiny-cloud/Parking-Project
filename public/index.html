@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parkings Sion — Tarifs & Simulateur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" id="metaThemeColor" content="#0C0B09">
+
+  <!-- iOS / Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Parkings Sion">
+  <link rel="apple-touch-icon" href="/icon.svg">
+</head>
+<body>
+
+<div class="noise" aria-hidden="true"></div>
+
+<header class="header">
+  <div class="header-stripe" aria-hidden="true"></div>
+  <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Basculer le thème">
+    <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-eyebrow">
+        <span class="ch-badge">CH</span>
+        <span>Canton du Valais</span>
+        <span class="dot">·</span>
+        <span>Simulateur de tarifs</span>
+      </div>
+      <h1 class="header-title">
+        <span class="title-main">Parkings</span>
+        <span class="title-city">Sion</span>
+      </h1>
+    </div>
+    <div class="header-stats">
+      <div class="hstat">
+        <span class="hstat-val">7</span>
+        <span class="hstat-lbl">Parkings</span>
+      </div>
+      <div class="hstat-sep"></div>
+      <div class="hstat">
+        <span class="hstat-val">2 618</span>
+        <span class="hstat-lbl">Places</span>
+      </div>
+      <div class="hstat-sep"></div>
+      <div class="hstat">
+        <span class="hstat-val">0 – 3.00</span>
+        <span class="hstat-lbl">CHF / heure</span>
+      </div>
+    </div>
+  </div>
+  <div class="header-accent-bar" aria-hidden="true"></div>
+</header>
+
+<main class="main">
+
+  <div class="section-label"><span>Les parkings</span></div>
+  <div class="grid" id="parkingGrid"></div>
+
+  <div class="section-label"><span>Simulateur de prix</span></div>
+  <div class="simulator">
+
+    <div class="sim-header">
+      <div class="sim-header-left">
+        <div class="sim-icon-wrap" id="simIcon" aria-hidden="true">◈</div>
+        <div>
+          <h2 id="simTitle">Calculez votre tarif exact</h2>
+          <p id="simSubtitle">Toutes les spécificités tarifaires sont automatiquement prises en compte</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sim-tabs" role="tablist">
+      <button class="sim-tab active" id="tabSingle" onclick="setMode('single')" role="tab" aria-selected="true">
+        <span class="tab-marker"></span>Un parking
+      </button>
+      <button class="sim-tab" id="tabAll" onclick="setMode('all')" role="tab" aria-selected="false">
+        <span class="tab-marker"></span>Comparer tous
+      </button>
+    </div>
+
+    <div class="sim-body">
+      <div class="sim-form">
+        <div class="form-field full" id="fieldParking">
+          <label class="field-label" for="selParking">Parking</label>
+          <select class="field-input" id="selParking"></select>
+        </div>
+        <div class="form-field">
+          <label class="field-label" for="inpArrivee">Arrivée</label>
+          <input class="field-input" type="datetime-local" id="inpArrivee">
+        </div>
+        <div class="form-field">
+          <label class="field-label" for="inpDepart">Départ</label>
+          <input class="field-input" type="datetime-local" id="inpDepart">
+        </div>
+      </div>
+
+      <button class="btn-calc" id="btnCalc" onclick="simuler()">Calculer le prix</button>
+
+      <div class="alert error" id="alertError"></div>
+
+      <div class="result" id="result">
+        <div class="result-hero">
+          <div class="result-info">
+            <h3 id="resNom"></h3>
+            <p id="resPeriode"></p>
+          </div>
+          <div class="result-amount">
+            <div class="result-chf">
+              <span class="cur">CHF</span>
+              <span id="resTotal">0.00</span>
+            </div>
+            <div class="result-savings" id="resSavings"></div>
+          </div>
+        </div>
+        <div class="breakdown">
+          <div class="breakdown-head">Détail de facturation</div>
+          <table class="breakdown-table">
+            <thead>
+              <tr>
+                <th>Période</th>
+                <th>Durée</th>
+                <th>Tarif</th>
+                <th>Montant</th>
+              </tr>
+            </thead>
+            <tbody id="breakdownBody"></tbody>
+          </table>
+        </div>
+        <div class="result-footer" id="resultFooter">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="resultNote"></span>
+        </div>
+      </div>
+
+      <div class="comparison" id="comparison">
+        <div class="comp-header">
+          <div class="comp-period" id="compPeriode"></div>
+          <div class="comp-legend">
+            <span class="comp-legend-item legend-best">Moins cher</span>
+            <span class="comp-legend-item legend-saving">Économie</span>
+          </div>
+        </div>
+        <div class="comp-list" id="compList"></div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

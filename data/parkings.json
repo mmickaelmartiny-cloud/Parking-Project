@@ -1,0 +1,108 @@
+[
+  {
+    "id": "planta",
+    "nom": "Parking de la Planta",
+    "adresse": "Avenue de la Gare 41",
+    "places": 570,
+    "hauteur": 2.10,
+    "prixH": 3.00,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "regles": [
+      { "type": "premiere_h_gratuite", "label": "1ère heure toujours gratuite", "emoji": "🎁" },
+      { "type": "gratuit_plage_quotidien", "hDeb": 12, "hFin": 13.5, "label": "Gratuit 12h–13h30", "emoji": "🍽️" },
+      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit vendredi 17h–24h", "emoji": "🎉" },
+      { "type": "tarif_nuit", "hDeb": 19, "hFin": 8, "reduc": 0.5, "label": "Tarif nuit (–50%)", "emoji": "🌙" }
+    ]
+  },
+  {
+    "id": "scex",
+    "nom": "Parking du Scex",
+    "adresse": "Rue du Scex",
+    "places": 658,
+    "hauteur": 2.00,
+    "prixH": 3.00,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "regles": [
+      { "type": "premiere_h_gratuite", "label": "1ère heure toujours gratuite", "emoji": "🎁" },
+      { "type": "gratuit_plage_quotidien", "hDeb": 12, "hFin": 13.5, "label": "Gratuit 12h–13h30", "emoji": "🍽️" },
+      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit vendredi 17h–24h", "emoji": "🎉" },
+      { "type": "tarif_nuit", "hDeb": 19, "hFin": 8, "reduc": 0.5, "label": "Tarif nuit (–50%)", "emoji": "🌙" }
+    ]
+  },
+  {
+    "id": "cible",
+    "nom": "Parking de la Cible",
+    "adresse": "Rue des Tonneliers 3",
+    "places": 204,
+    "hauteur": 2.00,
+    "prixH": 3.00,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "regles": [
+      { "type": "gratuit_plage_quotidien", "hDeb": 12, "hFin": 13.5, "label": "Gratuit 12h–13h30", "emoji": "🍽️" },
+      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit vendredi 17h–24h", "emoji": "🎉" }
+    ]
+  },
+  {
+    "id": "gare",
+    "nom": "Parking Cour de Gare",
+    "adresse": "Avenue des Mayennets 31",
+    "places": 300,
+    "hauteur": 2.20,
+    "prixH": 2.00,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Plafond : CHF 35/j (jour) · CHF 12/j (nuit, dim. & fériés)",
+    "regles": [
+      { "type": "premiere_h_gratuite", "label": "1ère heure toujours gratuite", "emoji": "🎁" },
+      { "type": "tarif_nuit_dim_feries", "hDeb": 19, "hFin": 7, "prixH_reduit": 1.00, "label": "Tarif réduit nuit & dim. (CHF 1.00/h)", "emoji": "🌙" }
+    ]
+  },
+  {
+    "id": "st-guerin",
+    "nom": "Parking de St-Guérin",
+    "adresse": "Rue de Saint-Guérin 3",
+    "places": 66,
+    "hauteur": 2.20,
+    "prixH": 3.00,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max 3 jours",
+    "regles": [
+      { "type": "gratuit_plage_quotidien", "hDeb": 12, "hFin": 13.5, "label": "Gratuit 12h–13h30", "emoji": "🍽️" },
+      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit vendredi 17h–24h", "emoji": "🎉" }
+    ]
+  },
+  {
+    "id": "potences",
+    "nom": "Parking des Potences",
+    "adresse": "Chemin des Potences",
+    "places": 450,
+    "hauteur": 2.10,
+    "prixH": 0,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Gratuit, durée max 10h",
+    "regles": []
+  },
+  {
+    "id": "roches-brunes",
+    "nom": "Parking des Roches-Brunes",
+    "adresse": "Avenue de Tourbillon",
+    "places": 370,
+    "hauteur": 2.00,
+    "prixH": 3.00,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "regles": []
+  }
+]

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Fond plein (pas de coins arrondis pour maskable) -->
+  <rect width="512" height="512" fill="#EDB82A"/>
+  <!-- Zone safe = 80% du centre = 205px de marge -->
+  <rect x="155" y="92" width="72" height="328" rx="8" fill="#1C1914"/>
+  <path d="M 225 92 L 225 252 C 385 252 385 92 225 92 Z" fill="#1C1914"/>
+</svg>

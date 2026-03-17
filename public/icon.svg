@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#EDB82A" rx="80"/>
+  <!-- Spine verticale du P -->
+  <rect x="138" y="76" width="72" height="360" rx="8" fill="#1C1914"/>
+  <!-- Bol du P (forme D) -->
+  <path d="M 208 76 L 208 268 C 394 268 394 76 208 76 Z" fill="#1C1914"/>
+</svg>
