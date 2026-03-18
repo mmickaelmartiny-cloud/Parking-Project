@@ -1,6 +1,6 @@
 // ── THÈME ─────────────────────────────────────────────────────────────────
 
-const THEME_COLORS = { dark: '#0C0B09', light: '#EDB82A' };
+const THEME_COLORS = { dark: '#060913', light: '#EDB82A' };
 
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
