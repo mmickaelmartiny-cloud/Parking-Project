@@ -3,6 +3,7 @@
     "id": "planta",
     "nom": "Parking de la Planta",
     "adresse": "Avenue de la Gare 41",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking+de+la+Planta+Avenue+de+la+Gare+41+Sion",
     "places": 570,
     "hauteur": 2.10,
     "prixH": 3.00,
@@ -12,14 +13,37 @@
     "regles": [
       { "type": "premiere_h_gratuite", "label": "1ère heure toujours gratuite", "emoji": "🎁" },
       { "type": "gratuit_plage_quotidien", "hDeb": 12, "hFin": 13.5, "label": "Gratuit 12h–13h30", "emoji": "🍽️" },
-      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit vendredi 17h–24h", "emoji": "🎉" },
-      { "type": "tarif_nuit", "hDeb": 19, "hFin": 8, "reduc": 0.5, "label": "Tarif nuit (–50%)", "emoji": "🌙" }
-    ]
+      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
+      { "type": "gratuit_plage_hebdo", "jour": 6, "hDeb": 0, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
+      { "type": "info", "label": "Tarif progressif (voir tableau)", "emoji": "📊" }
+    ],
+    "tarification": {
+      "gratuit_initial": 60,
+      "jour": {
+        "heures": [7.5, 19],
+        "arrondi": "ceil",
+        "paliers": [
+          { "jusqua": null, "tranche": 20, "prix": 1.00 }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [19, 7.5],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          { "jusqua": 600, "tranche": 60, "prix": 1.00 },
+          { "jusqua": null, "tranche": 60, "prix": 0.20 }
+        ],
+        "plafond": 9999
+      }
+    }
   },
   {
     "id": "scex",
     "nom": "Parking du Scex",
     "adresse": "Rue du Scex",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking+du+Scex+Rue+du+Scex+Sion",
     "places": 658,
     "hauteur": 2.00,
     "prixH": 3.00,
@@ -37,6 +61,7 @@
     "id": "cible",
     "nom": "Parking de la Cible",
     "adresse": "Rue des Tonneliers 3",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking+de+la+Cible+Rue+des+Tonneliers+3+Sion",
     "places": 204,
     "hauteur": 2.00,
     "prixH": 3.00,
@@ -52,6 +77,7 @@
     "id": "gare",
     "nom": "Parking Cour de Gare",
     "adresse": "Avenue des Mayennets 31",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking+Cour+de+Gare+Avenue+des+Mayennets+31+Sion",
     "places": 300,
     "hauteur": 2.20,
     "prixH": 2.00,
@@ -61,13 +87,37 @@
     "note": "Plafond : CHF 35/j (jour) · CHF 12/j (nuit, dim. & fériés)",
     "regles": [
       { "type": "premiere_h_gratuite", "label": "1ère heure toujours gratuite", "emoji": "🎁" },
-      { "type": "tarif_nuit_dim_feries", "hDeb": 19, "hFin": 7, "prixH_reduit": 1.00, "label": "Tarif réduit nuit & dim. (CHF 1.00/h)", "emoji": "🌙" }
-    ]
+      { "type": "tarif_nuit_dim_feries", "hDeb": 19, "hFin": 7, "prixH_reduit": 1.00, "label": "Tarif réduit nuit, dim. & fériés", "emoji": "🌙" },
+      { "type": "info", "label": "Tarif progressif (voir tableau)", "emoji": "📊" }
+    ],
+    "tarification": {
+      "gratuit_initial": 60,
+      "jour": {
+        "heures": [7, 19],
+        "arrondi": "ceil",
+        "paliers": [
+          { "jusqua": 270, "tranche": 30, "prix": 1.00 },
+          { "jusqua": null, "tranche": 30, "prix": 2.00 }
+        ],
+        "plafond": 35.00
+      },
+      "nuit": {
+        "heures": [19, 7],
+        "dimFeries": true,
+        "arrondi": "floor",
+        "paliers": [
+          { "jusqua": 120, "tranche": 60, "prix": 1.00 },
+          { "jusqua": null, "tranche": 120, "prix": 1.00 }
+        ],
+        "plafond": 12.00
+      }
+    }
   },
   {
     "id": "st-guerin",
     "nom": "Parking de St-Guérin",
     "adresse": "Rue de Saint-Guérin 3",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking+de+St-Gu%C3%A9rin+Rue+de+Saint-Gu%C3%A9rin+3+Sion",
     "places": 66,
     "hauteur": 2.20,
     "prixH": 3.00,
@@ -84,6 +134,7 @@
     "id": "potences",
     "nom": "Parking des Potences",
     "adresse": "Chemin des Potences",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking+des+Potences+Chemin+des+Potences+Sion",
     "places": 450,
     "hauteur": 2.10,
     "prixH": 0,
@@ -97,6 +148,7 @@
     "id": "roches-brunes",
     "nom": "Parking des Roches-Brunes",
     "adresse": "Avenue de Tourbillon",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking+des+Roches-Brunes+Avenue+de+Tourbillon+Sion",
     "places": 370,
     "hauteur": 2.00,
     "prixH": 3.00,

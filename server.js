@@ -132,6 +132,136 @@ function calculer(parking, arrivee, depart) {
   return { total, economies, segments };
 }
 
+// ── MOTEUR PROGRESSIF (ex: Cour de Gare) ─────────────────────────────────
+
+function coutProgressif(config, totalBillableMin) {
+  const round = config.arrondi === 'floor' ? Math.floor : Math.ceil;
+  let cost = 0, pos = 0;
+
+  for (const palier of config.paliers) {
+    const palierEnd = palier.jusqua !== null ? palier.jusqua : Infinity;
+    if (pos >= palierEnd) continue;
+
+    const effectiveEnd = Math.min(totalBillableMin, palierEnd);
+    const mins = effectiveEnd - pos;
+    if (mins <= 0) continue;
+
+    cost += round(mins / palier.tranche) * palier.prix;
+    pos = effectiveEnd;
+    if (pos >= totalBillableMin) break;
+  }
+
+  return Math.min(cost, config.plafond);
+}
+
+function calculerProgressif(parking, arrivee, depart) {
+  const tarif = parking.tarification;
+  const totalMin = Math.round((depart - arrivee) / 60000);
+  if (totalMin <= 0) return null;
+
+  // Plages gratuites issues des règles
+  const gratuitQuot  = parking.regles.find(r => r.type === 'gratuit_plage_quotidien');
+  const gratuitHebdo = parking.regles.filter(r => r.type === 'gratuit_plage_hebdo');
+
+  // 1. Classer chaque minute en gratuit / jour / nuit
+  const mData = [];
+  for (let i = 0; i < totalMin; i++) {
+    const t     = new Date(arrivee.getTime() + i * 60000);
+    const hFrac = t.getHours() + t.getMinutes() / 60;
+    const dow   = t.getDay();
+
+    // Plages gratuites prioritaires
+    let isFreeP = false, freeLabel = '';
+    if (gratuitQuot && hFrac >= gratuitQuot.hDeb && hFrac < gratuitQuot.hFin) {
+      isFreeP = true; freeLabel = gratuitQuot.label;
+    }
+    if (!isFreeP) {
+      for (const rh of gratuitHebdo) {
+        if (dow === rh.jour && hFrac >= rh.hDeb && hFrac < rh.hFin) {
+          isFreeP = true; freeLabel = rh.label; break;
+        }
+      }
+    }
+
+    if (isFreeP) {
+      mData.push({ t, periode: 'gratuit', label: freeLabel });
+    } else {
+      const isNuitH    = hFrac >= tarif.nuit.heures[0] || hFrac < tarif.nuit.heures[1];
+      const isDimFerie = tarif.nuit.dimFeries && (dow === 0 || estFerie(t));
+      mData.push({ t, periode: (isNuitH || isDimFerie) ? 'nuit' : 'jour' });
+    }
+  }
+
+  // 2. Regrouper les minutes consécutives par période (et label pour gratuit)
+  const groupes = [];
+  let gi = 0;
+  while (gi < totalMin) {
+    const cur = mData[gi];
+    let gj = gi + 1;
+    while (gj < totalMin && mData[gj].periode === cur.periode
+           && (cur.periode !== 'gratuit' || mData[gj].label === cur.label)) gj++;
+    groupes.push({ from: cur.t, minutes: gj - gi, periode: cur.periode, label: cur.label });
+    gi = gj;
+  }
+
+  // 3. Appliquer la période gratuite initiale, puis facturer
+  let freeLeft = tarif.gratuit_initial;
+  const cumul  = { jour: 0, nuit: 0 };
+  const segments = [];
+
+  for (const g of groupes) {
+    // Plage gratuite (midi, week-end…) — ne consomme pas le crédit initial
+    if (g.periode === 'gratuit') {
+      segments.push({
+        from: g.from,
+        to:   new Date(g.from.getTime() + g.minutes * 60000),
+        minutes: g.minutes, tauxH: 0, cout: 0,
+        label: g.label, isFree: true, isReduced: false
+      });
+      continue;
+    }
+
+    const freeInThis = Math.min(freeLeft, g.minutes);
+    freeLeft -= freeInThis;
+    const billable = g.minutes - freeInThis;
+
+    if (freeInThis > 0) {
+      segments.push({
+        from: g.from,
+        to:   new Date(g.from.getTime() + freeInThis * 60000),
+        minutes: freeInThis, tauxH: 0, cout: 0,
+        label: '1ère heure offerte', isFree: true, isReduced: false
+      });
+    }
+
+    if (billable > 0) {
+      const config    = tarif[g.periode];
+      const startCum  = cumul[g.periode];
+      cumul[g.periode] += billable;
+      const costAfter  = coutProgressif(config, cumul[g.periode]);
+      const costBefore = coutProgressif(config, startCum);
+      const segCost    = Math.round((costAfter - costBefore) * 100) / 100;
+      const isNuit     = g.periode === 'nuit';
+
+      segments.push({
+        from: new Date(g.from.getTime() + freeInThis * 60000),
+        to:   new Date(g.from.getTime() + g.minutes * 60000),
+        minutes: billable,
+        tauxH:   billable > 0 ? Math.round((segCost / billable) * 60 * 100) / 100 : 0,
+        cout:    segCost,
+        label:   isNuit ? 'Tarif nuit / dim. & fériés' : 'Tarif jour',
+        isFree:  segCost === 0,
+        isReduced: isNuit
+      });
+    }
+  }
+
+  const total      = Math.round(segments.reduce((s, sg) => s + sg.cout, 0) * 100) / 100;
+  const sansRemise = (totalMin / 60) * parking.prixH;
+  const economies  = Math.max(0, sansRemise - total);
+  return { total, economies, segments };
+}
+
 // ── ROUTES API ────────────────────────────────────────────────────────────
 
 app.get('/api/parkings', (req, res) => {
@@ -160,7 +290,9 @@ app.post('/api/calculer', (req, res) => {
     return res.status(400).json({ erreur: 'La durée maximum simulable est de 7 jours.' });
   }
 
-  const result = calculer(parking, dtArrivee, dtDepart);
+  const result = parking.tarification
+    ? calculerProgressif(parking, dtArrivee, dtDepart)
+    : calculer(parking, dtArrivee, dtDepart);
   res.json({ parking, result });
 });
 

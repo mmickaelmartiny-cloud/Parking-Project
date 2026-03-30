@@ -79,7 +79,7 @@ async function init() {
       <div class="card-top">
         <div class="card-name-block">
           <div class="card-title">${p.nom}</div>
-          <div class="card-addr">📍 ${p.adresse}</div>
+          <div class="card-addr"><a href="${p.maps}" target="_blank" rel="noopener" class="maps-link" onclick="event.stopPropagation()">📍 ${p.adresse}</a></div>
         </div>
         <div class="price-badge">
           <span class="price-amount${isFree ? ' is-free' : ''}">${priceStr}</span>
@@ -120,11 +120,12 @@ async function init() {
   });
 
   setDefaults();
+  setMode('all');
 }
 
 // ── MODE (single / all) ───────────────────────────────────────────────────
 
-let currentMode = 'single';
+let currentMode = 'all';
 
 function setMode(mode) {
   currentMode = mode;
@@ -349,7 +350,7 @@ async function comparer() {
         ${rankHTML}
         <div class="comp-info">
           <div class="comp-name">${parking.nom}</div>
-          <div class="comp-addr">📍 ${parking.adresse}</div>
+          <div class="comp-addr"><a href="${parking.maps}" target="_blank" rel="noopener" class="maps-link" onclick="event.stopPropagation()">📍 ${parking.adresse}</a></div>
         </div>
         <div class="comp-right">${amountHTML}</div>
         <div class="comp-bar-wrap">

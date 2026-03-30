@@ -96,9 +96,6 @@
 
 <main class="main">
 
-  <div class="section-label"><span>Les parkings</span></div>
-  <div class="grid" id="parkingGrid"></div>
-
   <div class="section-label"><span>Simulateur de prix</span></div>
   <div class="simulator">
 
@@ -113,11 +110,11 @@
     </div>
 
     <div class="sim-tabs" role="tablist">
-      <button class="sim-tab active" id="tabSingle" onclick="setMode('single')" role="tab" aria-selected="true">
-        <span class="tab-marker"></span>Un parking
-      </button>
-      <button class="sim-tab" id="tabAll" onclick="setMode('all')" role="tab" aria-selected="false">
+      <button class="sim-tab active" id="tabAll" onclick="setMode('all')" role="tab" aria-selected="true">
         <span class="tab-marker"></span>Comparer tous
+      </button>
+      <button class="sim-tab" id="tabSingle" onclick="setMode('single')" role="tab" aria-selected="false">
+        <span class="tab-marker"></span>Un parking
       </button>
     </div>
 
@@ -188,6 +185,9 @@
 
     </div>
   </div>
+
+  <div class="section-label"><span>Les parkings</span></div>
+  <div class="grid" id="parkingGrid"></div>
 
 </main>
 
