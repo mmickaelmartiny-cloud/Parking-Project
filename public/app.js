@@ -51,6 +51,7 @@ function fmtChf(v) { return Number(v).toFixed(2); }
 async function init() {
   const res = await fetch('/api/parkings');
   const parkings = await res.json();
+  allParkings = parkings;
 
   const grid = document.getElementById('parkingGrid');
   const sel  = document.getElementById('selParking');
@@ -59,9 +60,15 @@ async function init() {
     const isFree   = p.prixH === 0;
     const priceStr = isFree ? 'Gratuit' : `CHF ${Number(p.prixH).toFixed(2)}`;
 
-    const rulesHTML = p.regles.length
+    const trancheJour = p.tarification?.jour?.paliers?.[0]?.tranche;
+    const motoChip    = p.moto ? `<span class="rule-chip chip-moto">🏍 Moto ${p.moto.tarifH.toFixed(2)} CHF/h</span>` : '';
+    const trancheChip = trancheJour ? `<span class="rule-chip chip-granularity">⏱ Tranches de ${trancheJour} min</span>` : '';
+
+    const rulesHTML = (p.regles.length || trancheJour || p.moto)
       ? `<div class="rules-list">${p.regles.map(r =>
           `<span class="rule-chip">${r.emoji || ''} ${r.label}</span>`).join('')}
+          ${trancheChip}
+          ${motoChip}
           ${p.note ? `<span class="rule-chip">ℹ️ ${p.note}</span>` : ''}
          </div>`
       : (p.note
@@ -126,6 +133,33 @@ async function init() {
 // ── MODE (single / all) ───────────────────────────────────────────────────
 
 let currentMode = 'all';
+let currentVehicule = 'voiture';
+let allParkings = [];
+
+function setVehicule(v) {
+  currentVehicule = v;
+  document.getElementById('vehCar').classList.toggle('active', v === 'voiture');
+  document.getElementById('vehMoto').classList.toggle('active', v === 'moto');
+  document.getElementById('vehCar').setAttribute('aria-checked', v === 'voiture');
+  document.getElementById('vehMoto').setAttribute('aria-checked', v === 'moto');
+
+  const sel = document.getElementById('selParking');
+  const prev = sel.value;
+  sel.innerHTML = '';
+  const eligibles = v === 'moto'
+    ? allParkings.filter(p => p.moto || p.prixH === 0)
+    : allParkings;
+  eligibles.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.nom + (v === 'moto' && p.moto ? ` — ${p.moto.tarifH.toFixed(2)} CHF/h` : '');
+    sel.appendChild(opt);
+  });
+  if (eligibles.find(p => p.id === prev)) sel.value = prev;
+
+  document.getElementById('result').className = 'result';
+  document.getElementById('comparison').className = 'comparison';
+}
 
 function setMode(mode) {
   currentMode = mode;
@@ -199,7 +233,7 @@ async function simuler() {
     const res = await fetch('/api/calculer', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ parkingId: pid, arrivee: arStr, depart: dpStr })
+      body:    JSON.stringify({ parkingId: pid, arrivee: arStr, depart: dpStr, vehicule: currentVehicule })
     });
     const data = await res.json();
 
@@ -295,13 +329,16 @@ async function comparer() {
 
   try {
     const parkingsList = await fetch('/api/parkings').then(r => r.json());
+    const eligibles = currentVehicule === 'moto'
+      ? parkingsList.filter(p => p.moto || p.prixH === 0)
+      : parkingsList;
 
     const results = await Promise.all(
-      parkingsList.map(p =>
+      eligibles.map(p =>
         fetch('/api/calculer', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ parkingId: p.id, arrivee: arStr, depart: dpStr })
+          body:    JSON.stringify({ parkingId: p.id, arrivee: arStr, depart: dpStr, vehicule: currentVehicule })
         })
         .then(r => r.json())
         .then(data => ({ parking: data.parking, result: data.result }))

@@ -15,7 +15,7 @@
       { "type": "gratuit_plage_quotidien", "hDeb": 12, "hFin": 13.5, "label": "Gratuit 12h–13h30", "emoji": "🍽️" },
       { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
       { "type": "gratuit_plage_hebdo", "jour": 6, "hDeb": 0, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
-      { "type": "info", "label": "Tarif progressif (voir tableau)", "emoji": "📊" }
+      { "type": "info", "label": "Facturation par tranches", "emoji": "📊" }
     ],
     "tarification": {
       "gratuit_initial": 60,
@@ -37,7 +37,18 @@
         ],
         "plafond": 9999
       }
-    }
+    },
+    "moto": {
+      "tarifH": 0.50,
+      "abonnementMois": 30
+    },
+    "abonnements": {
+      "pendulaireMois": 160,
+      "residentMois": 140
+    },
+    "ticketPerdu": 20,
+    "source": "https://www.sion.ch/_docn/6894088/Tarifs_du_parking_de_la_Planta.pdf",
+    "dateTarif": "2026-03-25"
   },
   {
     "id": "scex",
@@ -53,9 +64,42 @@
     "regles": [
       { "type": "premiere_h_gratuite", "label": "1ère heure toujours gratuite", "emoji": "🎁" },
       { "type": "gratuit_plage_quotidien", "hDeb": 12, "hFin": 13.5, "label": "Gratuit 12h–13h30", "emoji": "🍽️" },
-      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit vendredi 17h–24h", "emoji": "🎉" },
-      { "type": "tarif_nuit", "hDeb": 19, "hFin": 8, "reduc": 0.5, "label": "Tarif nuit (–50%)", "emoji": "🌙" }
-    ]
+      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
+      { "type": "gratuit_plage_hebdo", "jour": 6, "hDeb": 0, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
+      { "type": "info", "label": "Facturation par tranches", "emoji": "📊" }
+    ],
+    "tarification": {
+      "gratuit_initial": 60,
+      "jour": {
+        "heures": [7.5, 19],
+        "arrondi": "ceil",
+        "paliers": [
+          { "jusqua": null, "tranche": 20, "prix": 1.00 }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [19, 7.5],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          { "jusqua": 600, "tranche": 60, "prix": 1.00 },
+          { "jusqua": null, "tranche": 60, "prix": 0.20 }
+        ],
+        "plafond": 9999
+      }
+    },
+    "moto": {
+      "tarifH": 0.50,
+      "abonnementMois": 30
+    },
+    "abonnements": {
+      "pendulaireMois": 160,
+      "residentMois": 140
+    },
+    "ticketPerdu": 20,
+    "source": "https://www.sion.ch/_docn/6894097/Tarifs_du_parking_du_Scex.pdf",
+    "dateTarif": "2026-03-25"
   },
   {
     "id": "cible",
@@ -69,9 +113,40 @@
     "ouvH": 0,
     "fermH": 24,
     "regles": [
+      { "type": "premiere_h_gratuite", "label": "1ère heure toujours gratuite", "emoji": "🎁" },
       { "type": "gratuit_plage_quotidien", "hDeb": 12, "hFin": 13.5, "label": "Gratuit 12h–13h30", "emoji": "🍽️" },
-      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit vendredi 17h–24h", "emoji": "🎉" }
-    ]
+      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
+      { "type": "gratuit_plage_hebdo", "jour": 6, "hDeb": 0, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
+      { "type": "info", "label": "Facturation par tranches", "emoji": "📊" }
+    ],
+    "tarification": {
+      "gratuit_initial": 60,
+      "jour": {
+        "heures": [7.5, 19],
+        "arrondi": "ceil",
+        "paliers": [
+          { "jusqua": null, "tranche": 20, "prix": 1.00 }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [19, 7.5],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          { "jusqua": 600, "tranche": 60, "prix": 1.00 },
+          { "jusqua": null, "tranche": 60, "prix": 0.20 }
+        ],
+        "plafond": 9999
+      }
+    },
+    "abonnements": {
+      "pendulaireMois": 160,
+      "residentMois": 140
+    },
+    "ticketPerdu": 20,
+    "source": "https://www.sion.ch/_docn/5243635/Tarifs_du_parkings_de_la_Cible.pdf",
+    "dateTarif": "2024-07-15"
   },
   {
     "id": "gare",
@@ -88,7 +163,7 @@
     "regles": [
       { "type": "premiere_h_gratuite", "label": "1ère heure toujours gratuite", "emoji": "🎁" },
       { "type": "tarif_nuit_dim_feries", "hDeb": 19, "hFin": 7, "prixH_reduit": 1.00, "label": "Tarif réduit nuit, dim. & fériés", "emoji": "🌙" },
-      { "type": "info", "label": "Tarif progressif (voir tableau)", "emoji": "📊" }
+      { "type": "info", "label": "Facturation par tranches", "emoji": "📊" }
     ],
     "tarification": {
       "gratuit_initial": 60,
@@ -120,15 +195,44 @@
     "maps": "https://www.google.com/maps/search/?api=1&query=Parking+de+St-Gu%C3%A9rin+Rue+de+Saint-Gu%C3%A9rin+3+Sion",
     "places": 66,
     "hauteur": 2.20,
-    "prixH": 3.00,
+    "prixH": 2.00,
     "horaire": "24h/24",
     "ouvH": 0,
     "fermH": 24,
-    "note": "Durée max 3 jours",
     "regles": [
+      { "type": "premiere_h_gratuite", "label": "1ère heure toujours gratuite", "emoji": "🎁" },
       { "type": "gratuit_plage_quotidien", "hDeb": 12, "hFin": 13.5, "label": "Gratuit 12h–13h30", "emoji": "🍽️" },
-      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit vendredi 17h–24h", "emoji": "🎉" }
-    ]
+      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
+      { "type": "gratuit_plage_hebdo", "jour": 6, "hDeb": 0, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
+      { "type": "info", "label": "Facturation par tranches", "emoji": "📊" }
+    ],
+    "tarification": {
+      "gratuit_initial": 60,
+      "jour": {
+        "heures": [7.5, 19],
+        "arrondi": "ceil",
+        "paliers": [
+          { "jusqua": null, "tranche": 30, "prix": 1.00 }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [19, 7.5],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          { "jusqua": null, "tranche": 60, "prix": 0.20 }
+        ],
+        "plafond": 9999
+      }
+    },
+    "abonnements": {
+      "pendulaireMois": 110,
+      "residentMois": 90
+    },
+    "ticketPerdu": 20,
+    "source": "https://www.sion.ch/_docn/5243629/Tarifs_des_parkings_des_Roches-Brunes_et_St-Gu%C3%A9rin.pdf",
+    "dateTarif": "2024-07-15"
   },
   {
     "id": "potences",
@@ -151,10 +255,43 @@
     "maps": "https://www.google.com/maps/search/?api=1&query=Parking+des+Roches-Brunes+Avenue+de+Tourbillon+Sion",
     "places": 370,
     "hauteur": 2.00,
-    "prixH": 3.00,
+    "prixH": 2.00,
     "horaire": "24h/24",
     "ouvH": 0,
     "fermH": 24,
-    "regles": []
+    "regles": [
+      { "type": "premiere_h_gratuite", "label": "1ère heure toujours gratuite", "emoji": "🎁" },
+      { "type": "gratuit_plage_quotidien", "hDeb": 12, "hFin": 13.5, "label": "Gratuit 12h–13h30", "emoji": "🍽️" },
+      { "type": "gratuit_plage_hebdo", "jour": 5, "hDeb": 17, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
+      { "type": "gratuit_plage_hebdo", "jour": 6, "hDeb": 0, "hFin": 24, "label": "Gratuit ven. 17h – sam. 24h", "emoji": "🎉" },
+      { "type": "info", "label": "Facturation par tranches", "emoji": "📊" }
+    ],
+    "tarification": {
+      "gratuit_initial": 60,
+      "jour": {
+        "heures": [7.5, 19],
+        "arrondi": "ceil",
+        "paliers": [
+          { "jusqua": null, "tranche": 30, "prix": 1.00 }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [19, 7.5],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          { "jusqua": null, "tranche": 60, "prix": 0.20 }
+        ],
+        "plafond": 9999
+      }
+    },
+    "abonnements": {
+      "pendulaireMois": 110,
+      "residentMois": 90
+    },
+    "ticketPerdu": 20,
+    "source": "https://www.sion.ch/_docn/5243629/Tarifs_des_parkings_des_Roches-Brunes_et_St-Gu%C3%A9rin.pdf",
+    "dateTarif": "2024-07-15"
   }
 ]

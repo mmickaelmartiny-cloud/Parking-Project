@@ -652,6 +652,73 @@ body {
   box-shadow: 0 0 6px var(--y);
 }
 
+/* Chips spéciaux */
+.rule-chip.chip-granularity {
+  background: linear-gradient(135deg, rgba(59,130,246,.12), rgba(59,130,246,.05));
+  border-color: rgba(59,130,246,.3);
+  color: var(--accent2);
+}
+.rule-chip.chip-moto {
+  background: linear-gradient(135deg, rgba(242,201,76,.14), rgba(242,201,76,.04));
+  border-color: rgba(242,201,76,.35);
+  color: var(--y);
+  font-weight: 500;
+}
+
+/* Vehicle toggle */
+.vehicle-toggle {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 2rem 0;
+  background: rgba(0,5,18,.25);
+}
+.vehicle-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--b1);
+  border-radius: 9px;
+  background: rgba(15,20,50,.4);
+  color: var(--t2);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  min-height: 40px;
+}
+.vehicle-btn:hover {
+  border-color: var(--b3);
+  color: var(--t1);
+  background: rgba(59,130,246,.08);
+}
+.vehicle-btn.active {
+  border-color: var(--y);
+  background: linear-gradient(145deg, rgba(242,201,76,.14), rgba(242,201,76,.04));
+  color: var(--y);
+  box-shadow: 0 0 20px rgba(242,201,76,.15);
+}
+.vehicle-ico { font-size: 1.1rem; line-height: 1; }
+.vehicle-lbl { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; }
+
+html[data-theme="light"] .vehicle-toggle {
+  background: rgba(242,201,76,.04);
+}
+html[data-theme="light"] .vehicle-btn {
+  background: rgba(255,255,255,.6);
+  border-color: rgba(0,0,0,.08);
+  color: #4a4540;
+}
+html[data-theme="light"] .vehicle-btn.active {
+  background: linear-gradient(145deg, #F4C23D, #EDB82A);
+  color: #1a1510;
+  border-color: #D4A01F;
+}
+
 /* Form */
 .sim-body { padding: 2rem; }
 .sim-form {

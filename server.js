@@ -74,10 +74,11 @@ function calculer(parking, arrivee, depart) {
     }
     // Gratuit dans une plage horaire quotidienne (ex: 12h–13h30)
     const rMidi = parking.regles.find(r => r.type === 'gratuit_plage_quotidien');
+    let isMidiOrHebdo = false;
     if (rMidi && !isFree) {
       const tMin = h * 60 + t.getMinutes();
       if (tMin >= rMidi.hDeb * 60 && tMin < rMidi.hFin * 60) {
-        isFree = true; label = rMidi.label;
+        isFree = true; label = rMidi.label; isMidiOrHebdo = true;
       }
     }
     // Gratuit un jour de la semaine dans une plage horaire (ex: vendredi 17h–24h)
@@ -85,7 +86,7 @@ function calculer(parking, arrivee, depart) {
     if (rHebdo && !isFree && dow === rHebdo.jour) {
       const tMin = h * 60 + t.getMinutes();
       if (tMin >= rHebdo.hDeb * 60 && tMin < rHebdo.hFin * 60) {
-        isFree = true; label = rHebdo.label;
+        isFree = true; label = rHebdo.label; isMidiOrHebdo = true;
       }
     }
     if (rH1 && !isFree && minutesH1Left > 0 && h >= rH1.hDeb && h < rH1.hFin) {
@@ -96,6 +97,11 @@ function calculer(parking, arrivee, depart) {
     if (rH1Global && !isFree && minutesH1GlobLeft > 0) {
       isFree = true; isReduced = false; label = '1ère heure offerte';
       minutesH1GlobLeft--;
+    }
+    // Le crédit 1ère heure s'écoule chronologiquement, même pendant une plage gratuite
+    if (isMidiOrHebdo) {
+      if (minutesH1GlobLeft > 0) minutesH1GlobLeft--;
+      if (rH1 && minutesH1Left > 0 && h >= rH1.hDeb && h < rH1.hFin) minutesH1Left--;
     }
     if (rDemi && !isFree && minutesDemiLeft > 0) {
       isFree = true; isReduced = false; label = '30 min offertes';
@@ -210,8 +216,10 @@ function calculerProgressif(parking, arrivee, depart) {
   const segments = [];
 
   for (const g of groupes) {
-    // Plage gratuite (midi, week-end…) — ne consomme pas le crédit initial
+    // Plage gratuite (midi, week-end…) — le crédit de 1ère heure s'écoule
+    // chronologiquement même pendant cette plage (règle Ville de Sion).
     if (g.periode === 'gratuit') {
+      freeLeft = Math.max(0, freeLeft - g.minutes);
       segments.push({
         from: g.from,
         to:   new Date(g.from.getTime() + g.minutes * 60000),
@@ -262,6 +270,33 @@ function calculerProgressif(parking, arrivee, depart) {
   return { total, economies, segments };
 }
 
+// ── MOTEUR MOTO (tarif horaire linéaire) ─────────────────────────────────
+
+function calculerMoto(parking, arrivee, depart) {
+  if (!parking.moto) return null;
+  const totalMin = Math.round((depart - arrivee) / 60000);
+  if (totalMin <= 0) return null;
+
+  const tarifH = parking.moto.tarifH;
+  const heures = totalMin / 60;
+  const total  = Math.round(tarifH * heures * 100) / 100;
+
+  return {
+    total,
+    economies: 0,
+    segments: [{
+      from:    arrivee,
+      to:      depart,
+      minutes: totalMin,
+      tauxH:   tarifH,
+      cout:    total,
+      label:   'Tarif moto',
+      isFree:  false,
+      isReduced: false
+    }]
+  };
+}
+
 // ── ROUTES API ────────────────────────────────────────────────────────────
 
 app.get('/api/parkings', (req, res) => {
@@ -269,7 +304,7 @@ app.get('/api/parkings', (req, res) => {
 });
 
 app.post('/api/calculer', (req, res) => {
-  const { parkingId, arrivee, depart } = req.body;
+  const { parkingId, arrivee, depart, vehicule } = req.body;
 
   const parking = PARKINGS.find(p => p.id === parkingId);
   if (!parking) {
@@ -288,6 +323,13 @@ app.post('/api/calculer', (req, res) => {
   const dureeMin = (dtDepart - dtArrivee) / 60000;
   if (dureeMin > 7 * 24 * 60) {
     return res.status(400).json({ erreur: 'La durée maximum simulable est de 7 jours.' });
+  }
+
+  if (vehicule === 'moto') {
+    if (!parking.moto) {
+      return res.status(400).json({ erreur: 'Ce parking n\'accueille pas les motos.' });
+    }
+    return res.json({ parking, result: calculerMoto(parking, dtArrivee, dtDepart) });
   }
 
   const result = parking.tarification

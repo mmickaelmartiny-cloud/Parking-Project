@@ -118,6 +118,17 @@
       </button>
     </div>
 
+    <div class="vehicle-toggle" role="radiogroup" aria-label="Type de véhicule">
+      <button class="vehicle-btn active" id="vehCar" onclick="setVehicule('voiture')" role="radio" aria-checked="true">
+        <span class="vehicle-ico">🚗</span>
+        <span class="vehicle-lbl">Voiture</span>
+      </button>
+      <button class="vehicle-btn" id="vehMoto" onclick="setVehicule('moto')" role="radio" aria-checked="false">
+        <span class="vehicle-ico">🏍</span>
+        <span class="vehicle-lbl">Moto</span>
+      </button>
+    </div>
+
     <div class="sim-body">
       <div class="sim-form">
         <div class="form-field full" id="fieldParking">
