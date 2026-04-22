@@ -4,7 +4,8 @@
   "description": "Annuaire et simulateur de prix des parkings de Sion",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node tests/run-tests.js"
   },
   "dependencies": {
     "express": "^4.18.2"
