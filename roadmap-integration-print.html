@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Parkings Sion — Roadmap d'intégration</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0A1F3D;
+  --navy-2: #142F56;
+  --accent: #2B7FC9;
+  --accent-light: #5FA3DC;
+  --ink: #1A202C;
+  --ink-2: #4A5568;
+  --ink-3: #718096;
+  --bg: #FFFFFF;
+  --bg-2: #F7FAFC;
+  --bg-3: #EDF2F7;
+  --line: #E2E8F0;
+  --gr: #38A169;
+  --am: #D69E2E;
+  --re: #C53030;
+  --purple: #6B46C1;
+}
+@page { size: A4; margin: 14mm 14mm 16mm 14mm; }
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+  font-size: 10pt;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; color: var(--navy); }
+code { font-family: 'JetBrains Mono', monospace; font-size: 9pt; background: var(--bg-3); padding: 1px 5px; border-radius: 3px; color: var(--accent); }
+
+.cover {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+  color: white;
+  padding: 40mm 20mm;
+  margin: -14mm -14mm 10mm -14mm;
+  page-break-after: always;
+  min-height: 260mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.cover .tag {
+  display: inline-block;
+  padding: 5px 12px;
+  background: rgba(95,163,220,.2);
+  border: 1px solid rgba(95,163,220,.4);
+  border-radius: 20px;
+  font-size: 10pt;
+  color: var(--accent-light);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.cover h1 { font-size: 40pt; color: white; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 12px; }
+.cover .sub { font-size: 16pt; color: var(--accent-light); font-weight: 300; margin-bottom: 40px; }
+.cover .desc { font-size: 11pt; color: rgba(255,255,255,.8); max-width: 75%; margin-bottom: 30px; }
+.cover .meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 40px; max-width: 80%; }
+.cover .meta-item { padding: 12px 16px; background: rgba(255,255,255,.05); border-left: 2px solid var(--accent-light); border-radius: 4px; }
+.cover .meta-k { font-size: 9pt; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+.cover .meta-v { font-size: 12pt; color: white; font-weight: 500; }
+.cover-bottom { display: flex; justify-content: space-between; align-items: flex-end; font-size: 10pt; color: rgba(255,255,255,.6); }
+.cover-bottom strong { color: white; }
+
+.page-break { page-break-before: always; }
+.no-break { page-break-inside: avoid; }
+section { margin-bottom: 18px; }
+
+h2 {
+  font-size: 16pt;
+  margin: 14px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+h2 .num { color: var(--accent); font-weight: 700; font-size: 14pt; }
+h3 { font-size: 12pt; margin: 12px 0 6px; color: var(--navy-2); }
+h4 { font-size: 11pt; margin: 10px 0 4px; color: var(--ink); }
+p { margin-bottom: 7px; }
+ul, ol { margin-left: 20px; margin-bottom: 8px; }
+li { margin-bottom: 3px; }
+strong { color: var(--navy); }
+
+.lead {
+  font-size: 11pt;
+  color: var(--ink-2);
+  background: var(--bg-2);
+  padding: 12px 16px;
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 9pt; }
+th { background: var(--navy); color: white; text-align: left; padding: 7px 9px; font-weight: 600; font-size: 8.5pt; text-transform: uppercase; letter-spacing: .03em; }
+td { padding: 6px 9px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:nth-child(even) td { background: var(--bg-2); }
+td.c, th.c { text-align: center; }
+td.r, th.r { text-align: right; }
+
+.pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 8pt;
+  font-weight: 600;
+}
+.p-s { background: #E6F4EA; color: var(--gr); }
+.p-m { background: #FEF6E4; color: var(--am); }
+.p-l { background: #FDE8E8; color: var(--re); }
+.p-xl { background: #E9D8FD; color: var(--purple); }
+
+.prio-haute { color: var(--gr); font-weight: 700; }
+.prio-moyenne { color: var(--am); font-weight: 700; }
+.prio-basse { color: var(--ink-3); font-weight: 700; }
+
+.axis-card {
+  background: var(--bg-2);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--accent);
+}
+.axis-G { border-left-color: #6B46C1; }
+.axis-A { border-left-color: var(--re); }
+.axis-B { border-left-color: var(--gr); }
+.axis-C { border-left-color: var(--am); }
+.axis-D { border-left-color: #E53E3E; }
+.axis-E { border-left-color: var(--accent); }
+.axis-F { border-left-color: var(--ink-3); }
+
+.axis-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; gap: 10px; }
+.axis-title { font-family: 'Space Grotesk', sans-serif; font-size: 13pt; font-weight: 700; color: var(--navy); }
+.axis-date { font-size: 9pt; color: var(--ink-3); font-weight: 500; white-space: nowrap; }
+.axis-goal { font-size: 10pt; color: var(--ink-2); font-style: italic; margin-bottom: 8px; }
+
+.gantt {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--navy);
+  color: var(--accent-light);
+  padding: 14px 18px;
+  border-radius: 6px;
+  font-size: 9pt;
+  line-height: 1.6;
+  white-space: pre;
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+.matrix {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg-2);
+  padding: 14px 18px;
+  border-radius: 6px;
+  font-size: 9pt;
+  line-height: 1.5;
+  white-space: pre;
+  margin: 10px 0;
+  border: 1px solid var(--line);
+}
+
+.callout {
+  background: linear-gradient(135deg, rgba(43,127,201,.08), rgba(43,127,201,.02));
+  border: 1px solid rgba(43,127,201,.2);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin: 12px 0;
+}
+.callout-title { font-family: 'Space Grotesk', sans-serif; font-size: 11pt; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+
+.warn {
+  background: #FFF5F5;
+  border-left: 3px solid var(--re);
+  padding: 8px 12px;
+  font-size: 9.5pt;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+.warn strong { color: var(--re); }
+
+.footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-3);
+  font-size: 9pt;
+}
+
+.budget-total {
+  background: var(--navy);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 13pt;
+  font-family: 'Space Grotesk', sans-serif;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.budget-total .hours { color: var(--accent-light); }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div>
+    <div class="tag">Roadmap tactique · Intégration d'axes</div>
+    <h1>Roadmap<br>d'intégration</h1>
+    <div class="sub">7 axes d'évolutivité · 2026–2027</div>
+    <div class="desc">Plan de déploiement des axes annoncés dans le one-pager de partenariat : places temps réel, parkings moto, bornes EV, commerces partenaires, mobilité douce, P+R, intégration sion.ch.</div>
+    <div class="meta-grid">
+      <div class="meta-item"><div class="meta-k">Produit</div><div class="meta-v">Parkings Sion</div></div>
+      <div class="meta-item"><div class="meta-k">Version</div><div class="meta-v">v1.0</div></div>
+      <div class="meta-item"><div class="meta-k">Date</div><div class="meta-v">22 avril 2026</div></div>
+      <div class="meta-item"><div class="meta-k">Horizon</div><div class="meta-v">Q2 2026 → Q2 2027</div></div>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div><strong>Mickael Martiny</strong> · Sion, Valais</div>
+    <div>parking-sion.up.railway.app</div>
+  </div>
+</div>
+
+<!-- Vue d'ensemble -->
+<section>
+  <h2><span class="num">1</span> Vue d'ensemble des 7 axes</h2>
+  <table>
+    <thead>
+      <tr><th style="width:30px">#</th><th>Axe</th><th>Dépendance critique</th><th class="c">Effort</th><th class="c">Priorité</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>A</strong></td><td><strong>Places en temps réel</strong></td><td>API exploitants / Ville</td><td class="c"><span class="pill p-l">L</span></td><td class="c prio-haute">Haute</td></tr>
+      <tr><td><strong>B</strong></td><td><strong>Parkings moto / 2-roues</strong></td><td>Données Ville ou relevé terrain</td><td class="c"><span class="pill p-m">M</span></td><td class="c prio-haute">Haute</td></tr>
+      <tr><td><strong>C</strong></td><td><strong>Bornes de recharge EV</strong></td><td>API OpenChargeMap / ChargeMap</td><td class="c"><span class="pill p-m">M</span></td><td class="c prio-moyenne">Moyenne</td></tr>
+      <tr><td><strong>D</strong></td><td><strong>Commerces partenaires</strong> (Migros, Coop…)</td><td>Conventions directes commerçants</td><td class="c"><span class="pill p-l">L</span></td><td class="c prio-moyenne">Moyenne</td></tr>
+      <tr><td><strong>E</strong></td><td><strong>Mobilité douce</strong> (vélos, trottinettes)</td><td>API PubliBike / opérateurs</td><td class="c"><span class="pill p-m">M</span></td><td class="c prio-basse">Basse</td></tr>
+      <tr><td><strong>F</strong></td><td><strong>P+R</strong> (Park & Ride)</td><td>Collaboration CFF / Car Postal</td><td class="c"><span class="pill p-l">L</span></td><td class="c prio-basse">Basse</td></tr>
+      <tr><td><strong>G</strong></td><td><strong>Intégration sion.ch</strong></td><td>Décision politique Ville</td><td class="c"><span class="pill p-m">M</span></td><td class="c prio-haute">Haute</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:9pt;color:var(--ink-3);margin-top:4px"><strong>Légende effort</strong> · S = 1–3 jours · M = 1–3 semaines · L = 1–3 mois · XL = 3+ mois</p>
+</section>
+
+<!-- Calendrier -->
+<section>
+  <h2><span class="num">2</span> Calendrier en sprints</h2>
+  <div class="gantt">2026                             2027
+│Q2     │Q3           │Q4           │Q1           │Q2
+├───────┼─────────────┼─────────────┼─────────────┼─────────
+│  S0   │  B   C   G  │  A-1   D    │  E    F     │  A-2
+│       │             │             │             │
+Socle    Quick wins     Adoption      Extension     Consolidation</div>
+</section>
+
+<!-- Sprint 0 -->
+<section class="page-break">
+  <h2><span class="num">3</span> Sprint 0 — Socle technique</h2>
+  <div class="lead"><strong>Mai–Juin 2026</strong> · 4 semaines · <strong>Objectif</strong> : préparer l'architecture pour accueillir les 7 axes sans dette technique.</div>
+  <table>
+    <thead><tr><th style="width:50px">#</th><th>Livrable</th><th>Axe visé</th><th class="c">Effort</th></tr></thead>
+    <tbody>
+      <tr><td>S0.1</td><td><strong>Refonte data model</strong> : schéma multi-entités (parkings, bornes, stations vélos, commerces)</td><td>Tous</td><td class="c"><span class="pill p-m">M</span></td></tr>
+      <tr><td>S0.2</td><td><strong>Base de données</strong> (JSON → PostgreSQL Railway) avec migrations</td><td>Tous</td><td class="c"><span class="pill p-m">M</span></td></tr>
+      <tr><td>S0.3</td><td><strong>API REST versionnée</strong> <code>/api/v2/*</code> avec OpenAPI spec</td><td>Tous</td><td class="c"><span class="pill p-m">M</span></td></tr>
+      <tr><td>S0.4</td><td><strong>Architecture géographique</strong> : GPS normalisé, tuiles Leaflet/MapLibre</td><td>A, B, C, E, F</td><td class="c"><span class="pill p-m">M</span></td></tr>
+      <tr><td>S0.5</td><td><strong>CI/CD GitHub Actions</strong> : tests + déploiement auto Railway</td><td>Tous</td><td class="c"><span class="pill p-s">S</span></td></tr>
+      <tr><td>S0.6</td><td><strong>Design system documenté</strong> (tokens extensibles)</td><td>Tous</td><td class="c"><span class="pill p-s">S</span></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:9.5pt;color:var(--ink-2);font-style:italic">Livrable visible : aucun côté usager. Investissement indispensable pour éviter la dette technique.</p>
+</section>
+
+<!-- Axes A–G -->
+<section>
+  <h2><span class="num">4</span> Phases par axe</h2>
+
+  <!-- A -->
+  <div class="axis-card axis-A no-break">
+    <div class="axis-head"><span class="axis-title">A · Places en temps réel</span><span class="axis-date">Q3 2026 → Q1 2027</span></div>
+    <div class="axis-goal">Impact × 10 pour l'usager. Le seul facteur vraiment différenciant.</div>
+    <ul>
+      <li><strong>A-0 Prototype</strong> (juillet 26) : 1 parking pilote (Cour de Gare ou Planta). Méthode : API exploitant → scraping → capteurs IoT. Statut <code>disponible / presque plein / complet</code>.</li>
+      <li><strong>A-1 Généralisation</strong> (Q4 26) : 7 parkings via convention Ville. Chiffres exacts + graphique 24h historique + prédiction.</li>
+      <li><strong>A-2 Temps réel complet</strong> (Q1 27) : WebSocket, notifs push "place libérée", historique 7/30/365 jours.</li>
+    </ul>
+    <div class="warn"><strong>⚠️ Bloquant</strong> : accord formel avec au moins un exploitant ou la Ville. Fallback capteurs IoT LoRa (Swisscom) coûteux.</div>
+  </div>
+
+  <!-- B -->
+  <div class="axis-card axis-B no-break">
+    <div class="axis-head"><span class="axis-title">B · Parkings moto / 2-roues</span><span class="axis-date">Juillet 2026 · 2 semaines</span></div>
+    <div class="axis-goal">Quick win à haute valeur : segment ignoré par tous les outils concurrents.</div>
+    <ul>
+      <li><strong>B.1 Recensement</strong> : relevé terrain ou demande Ville. ~15–20 zones (gratuites pour la plupart). Données : adresse, GPS, places, horodateur, tarif.</li>
+      <li><strong>B.2 Intégration produit</strong> : type parking ∈ <code>{voiture, moto, velo_securise}</code>. Toggle UI "🚗 Voiture / 🏍 Moto". Simulateur adapté.</li>
+      <li><strong>B.3 SEO</strong> : page dédiée <code>/parkings-moto-sion</code>. Requête cible : "parking moto Sion".</li>
+    </ul>
+  </div>
+
+  <!-- C -->
+  <div class="axis-card axis-C no-break">
+    <div class="axis-head"><span class="axis-title">C · Bornes de recharge EV</span><span class="axis-date">Août 2026 · 3 semaines</span></div>
+    <ul>
+      <li><strong>C.1 Source de données</strong> : <code>OpenChargeMap API</code> (open data, CH couvert). Backup : ChargeMap / scraping evpass.ch.</li>
+      <li><strong>C.2 Intégration</strong> : entité <code>borne_ev</code> (GPS, opérateur, kW, connecteurs, CHF/kWh). Carte avec filtre "⚡".</li>
+      <li><strong>C.3 Tarification combinée</strong> : simulateur "me garer 3h ET recharger". Recommandation parking avec borne intégrée.</li>
+    </ul>
+  </div>
+
+  <!-- D -->
+  <div class="axis-card axis-D no-break">
+    <div class="axis-head"><span class="axis-title">D · Commerces partenaires (Migros, Coop…)</span><span class="axis-date">Septembre–Novembre 2026</span></div>
+    <div class="axis-goal">L'axe le plus incertain : dépend de négociations commerciales.</div>
+    <ul>
+      <li><strong>D.1 Pré-démarchage</strong> (septembre) : Migros Métropole, Coop Sion, commerçants Grand-Pont. Pitch : "validation ticket parking".</li>
+      <li><strong>D.2 MVP 1–2 partenaires</strong> (octobre) : page "Où valider mon ticket ?" Carte commerces proches de chaque parking.</li>
+      <li><strong>D.3 Extension</strong> (novembre) : onboarding 10+ commerçants. Dashboard commerçant minimal.</li>
+      <li><strong>D.4 Modèle économique</strong> (décembre) : gratuit / commission 0.10 CHF validation / forfait 150 CHF/an.</li>
+    </ul>
+    <div class="warn"><strong>⚠️ Bloquant</strong> : accords commerciaux. Négociation Migros/Coop centralisée (3–6 mois). Alternative : commencer par commerçants indépendants.</div>
+  </div>
+
+  <!-- E -->
+  <div class="axis-card axis-E no-break">
+    <div class="axis-head"><span class="axis-title">E · Mobilité douce (vélos, trottinettes)</span><span class="axis-date">Q1 2027 · 4 semaines</span></div>
+    <ul>
+      <li><strong>E.1 Vélos libre-service</strong> : API PubliBike (si Sion couvert) ou vélos communaux.</li>
+      <li><strong>E.2 Trottinettes</strong> : Lime, Tier, Voi — à confirmer présence à Sion.</li>
+      <li><strong>E.3 UX</strong> : carte unifiée 🚗 🏍 ⚡ 🚲 🛴. Recommandation "dernier km" : Potences (gratuit) + vélo pour centre.</li>
+    </ul>
+  </div>
+
+  <!-- F -->
+  <div class="axis-card axis-F no-break">
+    <div class="axis-head"><span class="axis-title">F · P+R (Park & Ride)</span><span class="axis-date">Q1 2027 · 6 semaines</span></div>
+    <ul>
+      <li><strong>F.1 Recensement P+R</strong> : CFF Sion Gare, P+R Uvrier, Brignon. Car Postal connexions régionales.</li>
+      <li><strong>F.2 Intégration TP</strong> : API CFF Hafas. Itinéraire "voiture → gare → train → centre". Coût comparé.</li>
+      <li><strong>F.3 Recommandation intelligente</strong> : "Samedi marché : P+R + bus = 8 CHF vs Planta = 15 CHF". Émissions CO2.</li>
+    </ul>
+  </div>
+
+  <!-- G -->
+  <div class="axis-card axis-G no-break">
+    <div class="axis-head"><span class="axis-title">G · Intégration sion.ch</span><span class="axis-date">Avril 2026 → Q4 2026 · transversal</span></div>
+    <div class="axis-goal">Porte d'entrée politique : sans ça, le reste reste confidentiel.</div>
+    <ul>
+      <li><strong>G.1 Prise de contact</strong> (avril–mai 26) : service mobilité + développement durable. RDV, alignement gouvernance.</li>
+      <li><strong>G.2 Widget embarquable</strong> (juin–juillet 26) : <code>&lt;iframe src="..."&gt;</code>. Version complète + mini-widget.</li>
+      <li><strong>G.3 Sous-domaine officiel</strong> (septembre 26) : <code>parking.sion.ch</code> en CNAME. Co-branding.</li>
+      <li><strong>G.4 Convention</strong> (Q4 26) : mission, durée, indicateurs, RGPD, continuité service.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- Matrice -->
+<section class="page-break">
+  <h2><span class="num">5</span> Matrice effort × impact</h2>
+  <div class="matrix">         │ IMPACT USAGER
+         │
+    HAUT │   B            A          (D)
+         │  Moto       Temps réel   Commerces
+         │
+  MOYEN  │   C                       G
+         │  EV                     sion.ch
+         │
+    BAS  │               E           F
+         │           Mobilité      P+R
+         │            douce
+         └────────────────────────────────
+           FAIBLE     MOYEN      FORT    EFFORT</div>
+
+  <div class="callout">
+    <div class="callout-title">Séquence recommandée</div>
+    <ol>
+      <li><strong>G</strong> (sion.ch) — en parallèle de tout, démarrer maintenant</li>
+      <li><strong>S0</strong> (socle technique) — Mai–Juin 2026</li>
+      <li><strong>B</strong> (moto) — Juillet 2026 — quick win sans dépendance</li>
+      <li><strong>C</strong> (EV) — Août 2026 — quick win avec API publique</li>
+      <li><strong>A-0 prototype temps réel</strong> — Septembre 2026</li>
+      <li><strong>D</strong> (commerces MVP) — Oct–Nov 2026 — si négociations avancent</li>
+      <li><strong>A-1 temps réel généralisé</strong> — Q4 2026</li>
+      <li><strong>E + F</strong> — Q1 2027</li>
+    </ol>
+  </div>
+</section>
+
+<!-- Budget -->
+<section>
+  <h2><span class="num">6</span> Budget estimatif (développement bénévole)</h2>
+  <table>
+    <thead><tr><th>Phase</th><th class="r">Heures bénévoles</th><th class="r">Coûts externes</th></tr></thead>
+    <tbody>
+      <tr><td>S0 · Socle technique</td><td class="r">80 h</td><td class="r">0 CHF</td></tr>
+      <tr><td>A · Temps réel</td><td class="r">120 h</td><td class="r">0–5 000 CHF</td></tr>
+      <tr><td>B · Moto</td><td class="r">30 h</td><td class="r">0 CHF</td></tr>
+      <tr><td>C · EV</td><td class="r">40 h</td><td class="r">0 CHF</td></tr>
+      <tr><td>D · Commerces</td><td class="r">80 h</td><td class="r">0 CHF</td></tr>
+      <tr><td>E · Mobilité douce</td><td class="r">40 h</td><td class="r">0 CHF</td></tr>
+      <tr><td>F · P+R</td><td class="r">60 h</td><td class="r">0 CHF</td></tr>
+      <tr><td>G · sion.ch</td><td class="r">30 h</td><td class="r">0 CHF</td></tr>
+    </tbody>
+  </table>
+  <div class="budget-total">
+    <span>TOTAL</span>
+    <span class="hours">480 heures · 0–5 000 CHF</span>
+  </div>
+  <div class="callout" style="margin-top:14px">
+    <div class="callout-title">Recommandation financement Ville</div>
+    <p><strong>3 000 CHF/an</strong> pour maintenance + évolutions légères · <strong>15 000 CHF forfait</strong> pour phase A temps réel si infrastructure capteurs nécessaire.</p>
+  </div>
+</section>
+
+<!-- Jalons -->
+<section>
+  <h2><span class="num">7</span> Jalons de décision (go / no-go)</h2>
+  <table>
+    <thead>
+      <tr><th style="width:50px">Jalon</th><th>Date cible</th><th>Critère</th><th>Décision</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>J1</strong></td><td>Fin mai 2026</td><td>Réponse Ville de Sion</td><td>Si OK → convention. Sinon → sion.ch reporté</td></tr>
+      <tr><td><strong>J2</strong></td><td>Fin juillet 2026</td><td>100 visiteurs / semaine</td><td>Si oui → confirmer C & D. Sinon → focus A</td></tr>
+      <tr><td><strong>J3</strong></td><td>Fin octobre 2026</td><td>1 partenaire commerce signé</td><td>Si oui → scale D. Sinon → archiver D</td></tr>
+      <tr><td><strong>J4</strong></td><td>Fin 2026</td><td>1 exploitant fournit data temps réel</td><td>Si oui → généralisation A-1. Sinon → pivot capteurs</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="footer">
+  Parkings Sion · parking-sion.up.railway.app<br>
+  Roadmap d'intégration v1.0 · 22 avril 2026 · Mickael Martiny
+</div>
+
+</body>
+</html>

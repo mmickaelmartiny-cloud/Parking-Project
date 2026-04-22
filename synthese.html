@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synthèse · Parkings Sion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060913;
+  --s1: #0B1025;
+  --s2: #0F1432;
+  --s3: #14193E;
+  --y:  #F2C94C;
+  --y-glow: rgba(242,201,76,.22);
+  --accent: #3B82F6;
+  --accent-glow: rgba(59,130,246,.20);
+  --t1: #E6EAF4;
+  --t2: #7A82A0;
+  --t3: #5A6390;
+  --gr: #34D399;
+  --am: #FBBF24;
+  --re: #F87171;
+  --glass-border: rgba(59,130,246,.14);
+  --r: 16px;
+  --r-sm: 10px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--t1);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Mesh background */
+.mesh {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.mesh::before, .mesh::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+.mesh::before {
+  width: 65vw; height: 65vh;
+  left: -10vw; top: -15vh;
+  background: radial-gradient(ellipse at center, rgba(59,130,246,.10) 0%, transparent 65%);
+  animation: float 20s ease-in-out infinite alternate;
+}
+.mesh::after {
+  width: 55vw; height: 55vh;
+  right: -15vw; bottom: -20vh;
+  background: radial-gradient(ellipse at center, rgba(242,201,76,.07) 0%, transparent 65%);
+  animation: float 22s ease-in-out infinite alternate-reverse;
+}
+@keyframes float {
+  0%   { transform: translate(0,0) scale(1); }
+  100% { transform: translate(40px,-30px) scale(1.1); }
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(59,130,246,.08);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--gr);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--gr);
+}
+h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--t1) 0%, var(--accent) 50%, var(--y) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 14px;
+}
+.subtitle {
+  color: var(--t2);
+  font-size: 17px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.meta {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--t3);
+}
+
+/* Stats grid */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 50px;
+}
+.stat {
+  background: linear-gradient(145deg, var(--s1), var(--s2));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r);
+  padding: 22px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.stat::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.6;
+}
+.stat-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--y);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label {
+  font-size: 13px;
+  color: var(--t2);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* Section */
+section {
+  margin-bottom: 50px;
+}
+h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+h2 .icon {
+  width: 32px; height: 32px;
+  background: rgba(242,201,76,.1);
+  border: 1px solid rgba(242,201,76,.2);
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* Parking cards */
+.parkings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+.card {
+  background: linear-gradient(145deg, rgba(15,20,50,.6), rgba(11,16,37,.6));
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r);
+  padding: 22px;
+  position: relative;
+  transition: transform .25s ease, border-color .25s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(59,130,246,.35);
+}
+.card.free {
+  border-color: rgba(52,211,153,.35);
+  background: linear-gradient(145deg, rgba(52,211,153,.08), rgba(11,16,37,.6));
+}
+.card.best {
+  border-color: rgba(242,201,76,.35);
+  background: linear-gradient(145deg, rgba(242,201,76,.06), rgba(11,16,37,.6));
+}
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+.card h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--t1);
+}
+.card .addr {
+  font-size: 12px;
+  color: var(--t2);
+  margin-top: 3px;
+}
+.price-tag {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  background: rgba(242,201,76,.12);
+  color: var(--y);
+  border: 1px solid rgba(242,201,76,.25);
+  white-space: nowrap;
+}
+.price-tag.free {
+  background: rgba(52,211,153,.15);
+  color: var(--gr);
+  border-color: rgba(52,211,153,.3);
+}
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 16px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(59,130,246,.08);
+  border-bottom: 1px solid rgba(59,130,246,.08);
+  margin-bottom: 12px;
+}
+.info-item {
+  font-size: 12px;
+}
+.info-item .k {
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-size: 10px;
+  margin-bottom: 2px;
+}
+.info-item .v {
+  color: var(--t1);
+  font-weight: 500;
+}
+.rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.rule {
+  font-size: 11px;
+  padding: 4px 10px;
+  background: rgba(59,130,246,.08);
+  border: 1px solid rgba(59,130,246,.14);
+  border-radius: 999px;
+  color: var(--t1);
+}
+.note {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(251,191,36,.06);
+  border-left: 2px solid var(--am);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--t2);
+}
+
+/* Ranking */
+.ranking {
+  background: linear-gradient(145deg, var(--s1), var(--s2));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r);
+  padding: 28px;
+}
+.rank {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(59,130,246,.08);
+}
+.rank:last-child { border-bottom: none; }
+.rank-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--t3);
+  text-align: center;
+}
+.rank:nth-child(1) .rank-num { color: var(--y); }
+.rank:nth-child(2) .rank-num { color: #C0C5D6; }
+.rank:nth-child(3) .rank-num { color: #CD7F32; }
+.rank-info strong {
+  font-family: 'Space Grotesk', sans-serif;
+  display: block;
+  margin-bottom: 2px;
+}
+.rank-info span {
+  font-size: 12px;
+  color: var(--t2);
+}
+.rank-price {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: var(--y);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  margin-top: 60px;
+  padding-top: 30px;
+  border-top: 1px solid var(--glass-border);
+  color: var(--t3);
+  font-size: 13px;
+}
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+footer a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .container { padding: 40px 16px 60px; }
+  .parkings { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="mesh"></div>
+
+<div class="container">
+
+  <header>
+    <div class="badge">Synthèse · Avril 2026</div>
+    <h1>Parkings Sion</h1>
+    <p class="subtitle">Vue d'ensemble des 7 parkings publics de Sion — tarifs, horaires, spécificités et classement.</p>
+    <div class="meta">Source : <a href="https://parkings-sion.vercel.app" style="color:var(--accent);text-decoration:none">parkings-sion.vercel.app</a></div>
+  </header>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value">7</div>
+      <div class="stat-label">Parkings</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">2 618</div>
+      <div class="stat-label">Places au total</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">0–3</div>
+      <div class="stat-label">CHF / heure</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">1</div>
+      <div class="stat-label">Gratuit (Potences)</div>
+    </div>
+  </div>
+
+  <section>
+    <h2><span class="icon">🅿️</span> Les 7 parkings</h2>
+    <div class="parkings">
+
+      <div class="card best">
+        <div class="card-head">
+          <div>
+            <h3>Parking de la Planta</h3>
+            <div class="addr">Avenue de la Gare 41</div>
+          </div>
+          <div class="price-tag">3 CHF/h</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-item"><div class="k">Places</div><div class="v">570</div></div>
+          <div class="info-item"><div class="k">Hauteur</div><div class="v">2.10 m</div></div>
+          <div class="info-item"><div class="k">Horaire</div><div class="v">24h/24</div></div>
+          <div class="info-item"><div class="k">Tarif nuit</div><div class="v">1 → 0.20 CHF/h</div></div>
+        </div>
+        <div class="rules">
+          <span class="rule">🎁 1ère h gratuite</span>
+          <span class="rule">🍽️ 12h–13h30</span>
+          <span class="rule">🎉 Ven 17h → Sam 24h</span>
+          <span class="rule">📊 Tarif progressif</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Parking du Scex</h3>
+            <div class="addr">Rue du Scex</div>
+          </div>
+          <div class="price-tag">3 CHF/h</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-item"><div class="k">Places</div><div class="v">658</div></div>
+          <div class="info-item"><div class="k">Hauteur</div><div class="v">2.00 m</div></div>
+          <div class="info-item"><div class="k">Horaire</div><div class="v">24h/24</div></div>
+          <div class="info-item"><div class="k">Tarif nuit</div><div class="v">–50% (19h–8h)</div></div>
+        </div>
+        <div class="rules">
+          <span class="rule">🎁 1ère h gratuite</span>
+          <span class="rule">🍽️ 12h–13h30</span>
+          <span class="rule">🎉 Ven 17h–24h</span>
+          <span class="rule">🌙 Nuit –50%</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Parking de la Cible</h3>
+            <div class="addr">Rue des Tonneliers 3</div>
+          </div>
+          <div class="price-tag">3 CHF/h</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-item"><div class="k">Places</div><div class="v">204</div></div>
+          <div class="info-item"><div class="k">Hauteur</div><div class="v">2.00 m</div></div>
+          <div class="info-item"><div class="k">Horaire</div><div class="v">24h/24</div></div>
+          <div class="info-item"><div class="k">Tarif nuit</div><div class="v">—</div></div>
+        </div>
+        <div class="rules">
+          <span class="rule">🍽️ 12h–13h30</span>
+          <span class="rule">🎉 Ven 17h–24h</span>
+        </div>
+      </div>
+
+      <div class="card best">
+        <div class="card-head">
+          <div>
+            <h3>Parking Cour de Gare</h3>
+            <div class="addr">Avenue des Mayennets 31</div>
+          </div>
+          <div class="price-tag">2 CHF/h</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-item"><div class="k">Places</div><div class="v">300</div></div>
+          <div class="info-item"><div class="k">Hauteur</div><div class="v">2.20 m</div></div>
+          <div class="info-item"><div class="k">Plafond jour</div><div class="v">35 CHF</div></div>
+          <div class="info-item"><div class="k">Plafond nuit</div><div class="v">12 CHF</div></div>
+        </div>
+        <div class="rules">
+          <span class="rule">🎁 1ère h gratuite</span>
+          <span class="rule">🌙 Tarif réduit nuit/dim/fériés</span>
+          <span class="rule">📊 Tarif progressif</span>
+        </div>
+        <div class="note">Meilleur rapport qualité/prix pour stationnement prolongé</div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Parking de St-Guérin</h3>
+            <div class="addr">Rue de Saint-Guérin 3</div>
+          </div>
+          <div class="price-tag">3 CHF/h</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-item"><div class="k">Places</div><div class="v">66</div></div>
+          <div class="info-item"><div class="k">Hauteur</div><div class="v">2.20 m</div></div>
+          <div class="info-item"><div class="k">Horaire</div><div class="v">24h/24</div></div>
+          <div class="info-item"><div class="k">Durée max</div><div class="v">3 jours</div></div>
+        </div>
+        <div class="rules">
+          <span class="rule">🍽️ 12h–13h30</span>
+          <span class="rule">🎉 Ven 17h–24h</span>
+        </div>
+      </div>
+
+      <div class="card free">
+        <div class="card-head">
+          <div>
+            <h3>Parking des Potences</h3>
+            <div class="addr">Chemin des Potences</div>
+          </div>
+          <div class="price-tag free">GRATUIT</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-item"><div class="k">Places</div><div class="v">450</div></div>
+          <div class="info-item"><div class="k">Hauteur</div><div class="v">2.10 m</div></div>
+          <div class="info-item"><div class="k">Horaire</div><div class="v">24h/24</div></div>
+          <div class="info-item"><div class="k">Durée max</div><div class="v">10 heures</div></div>
+        </div>
+        <div class="note">100 % gratuit — idéal pour stationnement court/moyen en journée</div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h3>Parking des Roches-Brunes</h3>
+            <div class="addr">Avenue de Tourbillon</div>
+          </div>
+          <div class="price-tag">3 CHF/h</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-item"><div class="k">Places</div><div class="v">370</div></div>
+          <div class="info-item"><div class="k">Hauteur</div><div class="v">2.00 m</div></div>
+          <div class="info-item"><div class="k">Horaire</div><div class="v">24h/24</div></div>
+          <div class="info-item"><div class="k">Gratuités</div><div class="v">—</div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="icon">🏆</span> Classement meilleur prix</h2>
+    <div class="ranking">
+      <div class="rank">
+        <div class="rank-num">1</div>
+        <div class="rank-info">
+          <strong>Parking des Potences</strong>
+          <span>450 places · durée max 10h</span>
+        </div>
+        <div class="rank-price" style="color:var(--gr)">GRATUIT</div>
+      </div>
+      <div class="rank">
+        <div class="rank-num">2</div>
+        <div class="rank-info">
+          <strong>Parking Cour de Gare</strong>
+          <span>Plafond 35 CHF/j · 1ère h gratuite</span>
+        </div>
+        <div class="rank-price">2 CHF/h</div>
+      </div>
+      <div class="rank">
+        <div class="rank-num">3</div>
+        <div class="rank-info">
+          <strong>Parking de la Planta</strong>
+          <span>Nuit dégressive 1 → 0.20 CHF/h</span>
+        </div>
+        <div class="rank-price">3 CHF/h</div>
+      </div>
+      <div class="rank">
+        <div class="rank-num">4</div>
+        <div class="rank-info">
+          <strong>Parking du Scex</strong>
+          <span>Tarif nuit –50%</span>
+        </div>
+        <div class="rank-price">3 CHF/h</div>
+      </div>
+      <div class="rank">
+        <div class="rank-num">5</div>
+        <div class="rank-info">
+          <strong>Parking de la Cible / St-Guérin / Roches-Brunes</strong>
+          <span>Tarif plein · gratuités variables</span>
+        </div>
+        <div class="rank-price">3 CHF/h</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="icon">💡</span> Recommandations</h2>
+    <div class="parkings">
+      <div class="card">
+        <h3 style="margin-bottom:8px">⏱ Arrêt court (&lt;1h)</h3>
+        <p style="color:var(--t2);font-size:14px">Planta, Scex ou Cour de Gare — <strong style="color:var(--gr)">1ère heure gratuite</strong>.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:8px">☀️ Journée complète</h3>
+        <p style="color:var(--t2);font-size:14px"><strong style="color:var(--y)">Cour de Gare</strong> — plafond à 35 CHF/jour, le plus rentable.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:8px">🌙 Nuit / weekend</h3>
+        <p style="color:var(--t2);font-size:14px"><strong style="color:var(--y)">Planta</strong> en nuit (0.20 CHF/h dès 10h) ou gratuité ven 17h → sam 24h.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:8px">💰 Budget zéro</h3>
+        <p style="color:var(--t2);font-size:14px"><strong style="color:var(--gr)">Potences</strong> — gratuit jusqu'à 10h, 450 places.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Synthèse générée le 21 avril 2026 · Données : <a href="https://parkings-sion.vercel.app">parkings-sion.vercel.app</a></p>
+  </footer>
+
+</div>
+
+</body>
+</html>

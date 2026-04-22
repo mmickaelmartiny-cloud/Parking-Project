@@ -2,3 +2,8 @@ node_modules/
 .env
 .DS_Store
 .vercel
+
+# Exports et artefacts générés
+*.pdf
+parkings-sion.csv
+parkings-sion.md

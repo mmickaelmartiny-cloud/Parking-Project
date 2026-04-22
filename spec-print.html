@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Parkings Sion — Spec produit & Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0A1F3D;
+  --navy-2: #142F56;
+  --accent: #2B7FC9;
+  --accent-light: #5FA3DC;
+  --ink: #1A202C;
+  --ink-2: #4A5568;
+  --ink-3: #718096;
+  --bg: #FFFFFF;
+  --bg-2: #F7FAFC;
+  --bg-3: #EDF2F7;
+  --line: #E2E8F0;
+  --gr: #38A169;
+  --am: #D69E2E;
+  --re: #C53030;
+  --y: #D69E2E;
+}
+@page {
+  size: A4;
+  margin: 14mm 14mm 16mm 14mm;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+  font-size: 10.5pt;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+h1, h2, h3, h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--navy);
+}
+.cover {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+  color: white;
+  padding: 40mm 20mm;
+  margin: -14mm -14mm 10mm -14mm;
+  page-break-after: always;
+  min-height: 260mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.cover-top .tag {
+  display: inline-block;
+  padding: 5px 12px;
+  background: rgba(95,163,220,.2);
+  border: 1px solid rgba(95,163,220,.4);
+  border-radius: 20px;
+  font-size: 10pt;
+  color: var(--accent-light);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.cover h1 {
+  font-size: 44pt;
+  color: white;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.cover .sub {
+  font-size: 16pt;
+  color: var(--accent-light);
+  font-weight: 300;
+  margin-bottom: 40px;
+}
+.cover .meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 40px;
+  max-width: 80%;
+}
+.cover .meta-item { padding: 12px 16px; background: rgba(255,255,255,.05); border-left: 2px solid var(--accent-light); border-radius: 4px; }
+.cover .meta-k { font-size: 9pt; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+.cover .meta-v { font-size: 12pt; color: white; font-weight: 500; }
+.cover-bottom { display: flex; justify-content: space-between; align-items: flex-end; font-size: 10pt; color: rgba(255,255,255,.6); }
+.cover-bottom strong { color: white; }
+
+.page-break { page-break-before: always; }
+section { margin-bottom: 18px; }
+
+h2 {
+  font-size: 16pt;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+h2 .num {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 14pt;
+}
+h3 {
+  font-size: 12pt;
+  margin: 12px 0 6px;
+  color: var(--navy-2);
+}
+h4 {
+  font-size: 11pt;
+  margin: 10px 0 4px;
+  color: var(--ink);
+}
+p { margin-bottom: 8px; }
+ul, ol { margin-left: 20px; margin-bottom: 8px; }
+li { margin-bottom: 3px; }
+strong { color: var(--navy); }
+
+.lead {
+  font-size: 11pt;
+  color: var(--ink-2);
+  background: var(--bg-2);
+  padding: 12px 16px;
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 12px;
+  font-size: 9.5pt;
+}
+th {
+  background: var(--navy);
+  color: white;
+  text-align: left;
+  padding: 8px 10px;
+  font-weight: 600;
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+tr:nth-child(even) td { background: var(--bg-2); }
+td.c, th.c { text-align: center; }
+td.r, th.r { text-align: right; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 10px 0 16px;
+}
+.stat {
+  background: var(--bg-2);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 12px 14px;
+}
+.stat-v {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20pt;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.stat-l {
+  font-size: 8.5pt;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.phase {
+  background: var(--bg-2);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--accent);
+}
+.phase.p2 { border-left-color: #6B46C1; }
+.phase.p3 { border-left-color: var(--gr); }
+.phase.p4 { border-left-color: var(--am); }
+.phase-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.phase-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13pt;
+  font-weight: 700;
+  color: var(--navy);
+}
+.phase-date {
+  font-size: 10pt;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+.phase-goal {
+  font-size: 10pt;
+  color: var(--ink-2);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.kpi-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 8.5pt;
+  font-weight: 600;
+}
+.kpi-s { background: #E6F4EA; color: var(--gr); }
+.kpi-m { background: #FEF6E4; color: var(--am); }
+.kpi-l { background: #FDE8E8; color: var(--re); }
+
+.checklist li { list-style: none; margin-left: 0; padding-left: 20px; position: relative; }
+.checklist li::before { content: '✓'; position: absolute; left: 0; color: var(--gr); font-weight: 700; }
+
+footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-3);
+  font-size: 9pt;
+}
+
+.toc {
+  background: var(--bg-2);
+  padding: 18px 22px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+.toc ol { margin-left: 20px; columns: 2; column-gap: 30px; font-size: 10pt; }
+.toc li { margin-bottom: 4px; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.callout {
+  background: linear-gradient(135deg, rgba(43,127,201,.08), rgba(43,127,201,.02));
+  border: 1px solid rgba(43,127,201,.2);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin: 12px 0;
+}
+.callout-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.risk-h { color: var(--re); font-weight: 700; }
+.risk-m { color: var(--am); font-weight: 700; }
+.risk-l { color: var(--gr); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-top">
+    <div class="tag">Spécification produit · Roadmap 2026–2027</div>
+    <h1>Parkings Sion</h1>
+    <div class="sub">Simulateur de tarifs & plateforme de mobilité urbaine</div>
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="meta-k">Produit</div>
+        <div class="meta-v">Parkings Sion v1.0</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-k">Auteur</div>
+        <div class="meta-v">Mickael Martiny</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-k">Date</div>
+        <div class="meta-v">Avril 2026</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-k">URL production</div>
+        <div class="meta-v">parking-sion.up.railway.app</div>
+      </div>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div><strong>Parkings Sion</strong> · Civic tech Valais</div>
+    <div>Document interne · v1.0</div>
+  </div>
+</div>
+
+<!-- TOC -->
+<section>
+  <h2><span class="num">—</span> Sommaire</h2>
+  <div class="toc">
+    <ol>
+      <li>Vision</li>
+      <li>Utilisateurs & cas d'usage</li>
+      <li>État actuel (v1.0)</li>
+      <li>Spécification fonctionnelle</li>
+      <li>Roadmap 4 phases</li>
+      <li>KPIs de succès</li>
+      <li>Modèle économique</li>
+      <li>Risques & mitigations</li>
+      <li>Prochaines étapes</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 1 -->
+<section>
+  <h2><span class="num">1</span> Vision</h2>
+  <div class="lead">
+    <strong>Parkings Sion</strong> est un service web public, gratuit et indépendant, qui supprime l'incertitude tarifaire du stationnement à Sion. L'utilisateur obtient en quelques secondes <strong>quel parking est le moins cher pour sa durée réelle</strong>, avec une UI moderne et un calcul minute par minute intégrant toutes les spécificités locales.
+  </div>
+  <p>À terme, le produit devient <strong>le guichet numérique unique de la mobilité urbaine sédunoise</strong> : tarifs, disponibilité temps réel, <strong>parkings moto</strong>, <strong>bornes électriques</strong>, <strong>commerces partenaires</strong> (Migros, Coop), mobilité douce, P+R, intégration sion.ch.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-v">7</div><div class="stat-l">Parkings couverts</div></div>
+    <div class="stat"><div class="stat-v">2 618</div><div class="stat-l">Places recensées</div></div>
+    <div class="stat"><div class="stat-v">0–3</div><div class="stat-l">CHF / heure</div></div>
+    <div class="stat"><div class="stat-v">100%</div><div class="stat-l">Gratuit usager</div></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <h2><span class="num">2</span> Utilisateurs & cas d'usage</h2>
+  <table>
+    <thead>
+      <tr><th>Persona</th><th>Besoin</th><th>Cas d'usage dominant</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Résident occasionnel</strong></td><td>Savoir où se garer pour ses courses</td><td>Arrêt court &lt; 1 h — 1ère heure gratuite</td></tr>
+      <tr><td><strong>Pendulaire / actif</strong></td><td>Stationnement journée à coût maîtrisé</td><td>Meilleur plafond journalier</td></tr>
+      <tr><td><strong>Sortie soir / week-end</strong></td><td>Profiter des gratuités</td><td>Fenêtres gratuites ven 17h → sam 24h</td></tr>
+      <tr><td><strong>Famille visiteurs</strong></td><td>Premier séjour à Sion</td><td>Simulateur pour horaires inhabituels</td></tr>
+      <tr><td><strong>Services municipaux</strong></td><td>Outil communication tarifaire citoyen</td><td>API / intégration sion.ch</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 3 -->
+<section class="page-break">
+  <h2><span class="num">3</span> État actuel — v1.0 livré</h2>
+
+  <h3>Fonctionnalités en production</h3>
+  <ul class="checklist">
+    <li>Annuaire des <strong>7 parkings</strong> (2 618 places)</li>
+    <li>Mode <strong>simulation simple</strong> (1 parking, plage horaire)</li>
+    <li>Mode <strong>comparaison</strong> (7 parkings, classement + économies)</li>
+    <li>Moteur de calcul <strong>minute par minute</strong> (Node.js/Express)</li>
+    <li>Règles complexes : 1ère h gratuite, plages hebdomadaires, tarifs nuit, fériés suisses</li>
+    <li>Tarification progressive (Planta &amp; Cour de Gare)</li>
+    <li>Liens Google Maps, <strong>PWA</strong>, mode hors-ligne</li>
+    <li>Thème <strong>Dark Premium Blue</strong> + mode clair, responsive</li>
+    <li>Double déploiement : Railway + Vercel</li>
+  </ul>
+
+  <h3>Stack technique</h3>
+  <table>
+    <tr><td><strong>Backend</strong></td><td>Node.js 22 · Express 4.18 · JSON statique</td></tr>
+    <tr><td><strong>Frontend</strong></td><td>HTML/CSS/JS vanilla · PWA (Service Worker)</td></tr>
+    <tr><td><strong>Hosting</strong></td><td>Railway (prod) · Vercel (miroir)</td></tr>
+    <tr><td><strong>Data</strong></td><td><code>data/parkings.json</code> versionné Git</td></tr>
+  </table>
+</section>
+
+<!-- 4 -->
+<section>
+  <h2><span class="num">4</span> Spécification fonctionnelle</h2>
+
+  <h3>4.1 API publique</h3>
+  <table>
+    <thead>
+      <tr><th>Endpoint</th><th style="width:80px">Méthode</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>/api/parkings</code></td><td class="c">GET</td><td>Liste complète des parkings (JSON)</td></tr>
+      <tr><td><code>/api/calculer</code></td><td class="c">POST</td><td>Calcul du coût pour un parking + plage horaire</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.2 Types de règles tarifaires supportées</h3>
+  <table>
+    <thead><tr><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>premiere_h_gratuite</code></td><td>1ère heure offerte</td></tr>
+      <tr><td><code>h1_plage</code></td><td>1ère heure gratuite dans une plage horaire</td></tr>
+      <tr><td><code>gratuit_dim_feries</code></td><td>Gratuité dim. &amp; jours fériés suisses</td></tr>
+      <tr><td><code>tarif_nuit</code> / <code>_dim_feries</code></td><td>Réduction nocturne % ou tarif fixe</td></tr>
+      <tr><td><code>gratuit_plage_quotidien</code> / <code>_hebdo</code></td><td>Plages gratuites récurrentes</td></tr>
+      <tr><td><code>tarification.paliers</code></td><td>Tarif progressif par tranche (Planta, Gare)</td></tr>
+      <tr><td><code>plafond</code></td><td>Plafond journalier (Gare : 35 / 12 CHF)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 5 -->
+<section class="page-break">
+  <h2><span class="num">5</span> Roadmap produit</h2>
+
+  <!-- Phase 1 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="phase-title">🎯 Phase 1 — Consolidation</span>
+      <span class="phase-date">Q2 2026 · en cours</span>
+    </div>
+    <div class="phase-goal">Fiabiliser, crédibiliser, ouvrir la discussion avec la Ville.</div>
+    <table>
+      <thead><tr><th>#</th><th>Livrable</th><th>Valeur</th><th class="c">Effort</th></tr></thead>
+      <tbody>
+        <tr><td>1.1</td><td>One-pager partenariat Ville de Sion ✅</td><td>Porte d'entrée institutionnelle</td><td class="c"><span class="kpi-badge kpi-s">S</span></td></tr>
+        <tr><td>1.2</td><td>Analytics (Plausible / Umami)</td><td>Mesurer l'usage réel</td><td class="c"><span class="kpi-badge kpi-s">S</span></td></tr>
+        <tr><td>1.3</td><td>Page "À propos" + mentions légales</td><td>Crédibilité</td><td class="c"><span class="kpi-badge kpi-s">S</span></td></tr>
+        <tr><td>1.4</td><td>Formulaire de feedback utilisateur</td><td>Boucle d'amélioration</td><td class="c"><span class="kpi-badge kpi-s">S</span></td></tr>
+        <tr><td>1.5</td><td>Tests unitaires moteur de calcul</td><td>Robustesse</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>1.6</td><td>Monitoring (Sentry / Better Stack)</td><td>Détection d'erreurs prod</td><td class="c"><span class="kpi-badge kpi-s">S</span></td></tr>
+        <tr><td>1.7</td><td>SEO : sitemap, OG, schema.org</td><td>Découvrabilité Google</td><td class="c"><span class="kpi-badge kpi-s">S</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="phase p2">
+    <div class="phase-head">
+      <span class="phase-title">🚀 Phase 2 — Expansion fonctionnelle & couverture</span>
+      <span class="phase-date">Q3 2026</span>
+    </div>
+    <div class="phase-goal">Devenir l'outil de référence pour tout véhicule stationnant à Sion.</div>
+    <table>
+      <thead><tr><th>#</th><th>Livrable</th><th>Valeur</th><th class="c">Effort</th></tr></thead>
+      <tbody>
+        <tr><td>2.1</td><td>Géolocalisation : parking le plus proche</td><td>Confort usager</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>2.2</td><td><strong>Parkings moto / 2-roues</strong> — inventaire &amp; tarifs dédiés</td><td>Élargit la cible</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>2.3</td><td><strong>Bornes de recharge EV</strong> — localisation &amp; disponibilité</td><td>Transition énergétique</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>2.4</td><td>Favoris (localStorage)</td><td>Rétention</td><td class="c"><span class="kpi-badge kpi-s">S</span></td></tr>
+        <tr><td>2.5</td><td>Historique de simulations</td><td>Utilité récurrente</td><td class="c"><span class="kpi-badge kpi-s">S</span></td></tr>
+        <tr><td>2.6</td><td>Estimation carburant/émissions</td><td>Mobilité responsable</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>2.7</td><td>Partage lien de simulation (URL paramétrée)</td><td>Viralité</td><td class="c"><span class="kpi-badge kpi-s">S</span></td></tr>
+        <tr><td>2.8</td><td>Mode hors-ligne complet (PWA avancée)</td><td>Résilience</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>2.9</td><td>Widget iframe embarquable (sion.ch)</td><td>Distribution</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>2.10</td><td>Version anglais / allemand</td><td>Tourisme</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="phase p3">
+    <div class="phase-head">
+      <span class="phase-title">🏙 Phase 3 — Temps réel, Commerces & Partenariat institutionnel</span>
+      <span class="phase-date">Q4 2026</span>
+    </div>
+    <div class="phase-goal">Devenir un service municipal officiel et un pont entre stationnement et commerces locaux.</div>
+    <table>
+      <thead><tr><th>#</th><th>Livrable</th><th>Valeur</th><th class="c">Effort</th></tr></thead>
+      <tbody>
+        <tr><td>3.1</td><td><strong>Disponibilité temps réel</strong> (places libres)</td><td>Valeur métier majeure</td><td class="c"><span class="kpi-badge kpi-l">L</span></td></tr>
+        <tr><td>3.2</td><td>Intégration officielle sion.ch</td><td>Légitimité &amp; audience</td><td class="c"><span class="kpi-badge kpi-l">L</span></td></tr>
+        <tr><td>3.3</td><td><strong>Commerces partenaires</strong> — validation ticket (Migros, Coop, centre-ville)</td><td>Bénéfice concret client + commerçant</td><td class="c"><span class="kpi-badge kpi-l">L</span></td></tr>
+        <tr><td>3.4</td><td>Page commerces partenaires : liste, réductions, codes parking</td><td>Visibilité locale</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>3.5</td><td>Alertes push (place libre, événement)</td><td>Engagement</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>3.6</td><td>Tableau de bord Ville (stats, saturation)</td><td>Aide à la décision publique</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>3.7</td><td>Convention de partenariat + SLA</td><td>Pérennité</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>3.8</td><td>Back-office tarifs (autonomie Ville)</td><td>Autonomie opérationnelle</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Phase 4 -->
+  <div class="phase p4">
+    <div class="phase-head">
+      <span class="phase-title">🌱 Phase 4 — Mobilité urbaine intégrée</span>
+      <span class="phase-date">2027</span>
+    </div>
+    <div class="phase-goal">Élargir au-delà du stationnement voiture.</div>
+    <table>
+      <thead><tr><th>#</th><th>Livrable</th><th>Valeur</th><th class="c">Effort</th></tr></thead>
+      <tbody>
+        <tr><td>4.1</td><td>P+R avec correspondances transports publics</td><td>Mobilité douce</td><td class="c"><span class="kpi-badge kpi-l">L</span></td></tr>
+        <tr><td>4.2</td><td>Mobilité douce : vélos, trottinettes</td><td>Plateforme mobilité</td><td class="c"><span class="kpi-badge kpi-l">L</span></td></tr>
+        <tr><td>4.3</td><td>Recommandation multimodale</td><td>Différenciation</td><td class="c"><span class="kpi-badge kpi-l">L</span></td></tr>
+        <tr><td>4.4</td><td><strong>Marketplace commerces élargi</strong> — fidélité, bons plans, événementiel</td><td>Écosystème local</td><td class="c"><span class="kpi-badge kpi-l">L</span></td></tr>
+        <tr><td>4.5</td><td>Open Data : API publique documentée</td><td>Écosystème dev</td><td class="c"><span class="kpi-badge kpi-m">M</span></td></tr>
+        <tr><td>4.6</td><td>App mobile native (optionnelle)</td><td>UX premium</td><td class="c"><span class="kpi-badge kpi-l">XL</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="page-break">
+  <h2><span class="num">6</span> KPIs de succès</h2>
+  <table>
+    <thead>
+      <tr><th>Indicateur</th><th class="r">Baseline</th><th class="r">Cible Q4 2026</th><th class="r">Cible 2027</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Visiteurs uniques / mois</td><td class="r">—</td><td class="r">2 000</td><td class="r">8 000</td></tr>
+      <tr><td>Simulations / mois</td><td class="r">—</td><td class="r">5 000</td><td class="r">25 000</td></tr>
+      <tr><td>Ville de Sion utilisatrice officielle</td><td class="r">❌</td><td class="r">✅</td><td class="r">—</td></tr>
+      <tr><td>Taux de rétention 30j</td><td class="r">—</td><td class="r">20 %</td><td class="r">35 %</td></tr>
+      <tr><td>Temps médian simulation → décision</td><td class="r">—</td><td class="r">&lt; 20 s</td><td class="r">&lt; 10 s</td></tr>
+      <tr><td>Lighthouse Performance</td><td class="r">85</td><td class="r">≥ 90</td><td class="r">≥ 95</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 7 -->
+<section>
+  <h2><span class="num">7</span> Modèle économique</h2>
+  <table>
+    <thead><tr><th>Piste</th><th class="c" style="width:80px">Status</th><th>Commentaire</th></tr></thead>
+    <tbody>
+      <tr><td>Service gratuit pour l'usager</td><td class="c">✅</td><td>Principe fondateur, non négociable</td></tr>
+      <tr><td>Partenariat Ville de Sion</td><td class="c">🎯</td><td>Financement maintenance + évolutions</td></tr>
+      <tr><td>Subvention canton / fonds mobilité</td><td class="c">🔍</td><td>À explorer si adoption confirmée</td></tr>
+      <tr><td>API premium pour exploitants</td><td class="c">🔮</td><td>Phase 3+ uniquement</td></tr>
+      <tr><td><strong>Partenariats commerces</strong> (Migros, Coop, centre-ville)</td><td class="c">🎯</td><td>Commission discrète / co-financement, sans publicité intrusive</td></tr>
+      <tr><td>Donations / sponsoring local</td><td class="c">❌</td><td>Incompatible avec neutralité</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 8 -->
+<section>
+  <h2><span class="num">8</span> Risques & mitigations</h2>
+  <table>
+    <thead>
+      <tr><th>Risque</th><th class="c">Impact</th><th class="c">Proba.</th><th>Mitigation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Évolution tarifs non remontée</td><td class="c risk-h">Élevé</td><td class="c">M</td><td>Partenariat Ville = flux officiel. Veille manuelle mensuelle</td></tr>
+      <tr><td>Absence d'API disponibilité temps réel</td><td class="c risk-m">Moyen</td><td class="c">H</td><td>Scraping léger / partenariat exploitants Phase 3</td></tr>
+      <tr><td>Concurrence app privée (Parkopedia, EasyPark)</td><td class="c risk-l">Faible</td><td class="c">B</td><td>Différenciation = gratuit + local + exhaustivité</td></tr>
+      <tr><td>Dépendance hosting (Railway/Vercel)</td><td class="c risk-l">Faible</td><td class="c">B</td><td>Double déploiement déjà en place</td></tr>
+      <tr><td>Charge maintenance bénévole</td><td class="c risk-m">Moyen</td><td class="c">M</td><td>Tests + monitoring = MTTR réduit</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 9 -->
+<section>
+  <h2><span class="num">9</span> Prochaines étapes immédiates</h2>
+  <div class="callout">
+    <div class="callout-title">Sprint Avril–Mai 2026</div>
+    <ol>
+      <li><strong>Prendre contact avec la Ville de Sion</strong> (service mobilité / développement durable) — envoi du one-pager</li>
+      <li>Installer <strong>Plausible Analytics</strong> pour mesurer l'usage réel</li>
+      <li>Ajouter <strong>Sentry</strong> pour le monitoring d'erreurs production</li>
+      <li>Rédiger la <strong>page "À propos"</strong> + mentions légales</li>
+      <li>Prioriser Phase 2 à partir du premier feedback utilisateurs (géoloc, favoris, partage)</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  Parkings Sion · parking-sion.up.railway.app · parkings-sion.vercel.app<br>
+  Spécification produit v1.0 · Avril 2026 · Mickael Martiny
+</footer>
+
+</body>
+</html>
