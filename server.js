@@ -277,8 +277,9 @@ function calculerMoto(parking, arrivee, depart) {
   const totalMin = Math.round((depart - arrivee) / 60000);
   if (totalMin <= 0) return null;
 
+  // Facturation par tranche d'1h entamée (toute heure commencée est due)
   const tarifH = parking.moto.tarifH;
-  const heures = totalMin / 60;
+  const heures = Math.ceil(totalMin / 60);
   const total  = Math.round(tarifH * heures * 100) / 100;
 
   return {
@@ -290,7 +291,7 @@ function calculerMoto(parking, arrivee, depart) {
       minutes: totalMin,
       tauxH:   tarifH,
       cout:    total,
-      label:   'Tarif moto',
+      label:   `Tarif moto (${heures}h × ${tarifH.toFixed(2)} CHF)`,
       isFree:  false,
       isReduced: false
     }]

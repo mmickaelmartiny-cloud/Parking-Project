@@ -60,7 +60,7 @@ const TESTS = [
   // ── G · Tarif moto ─────────────────────────────────────────────────────
   { id: 'G1', cat: 'Moto',    parking: 'planta',         ar: '2026-04-20T09:00', dp: '2026-04-20T10:00', veh: 'moto',    expected: 0.50,  desc: 'Planta moto · 1h × 0.50 CHF' },
   { id: 'G2', cat: 'Moto',    parking: 'planta',         ar: '2026-04-20T09:00', dp: '2026-04-20T11:00', veh: 'moto',    expected: 1.00,  desc: 'Planta moto · 2h × 0.50 CHF' },
-  { id: 'G3', cat: 'Moto',    parking: 'scex',           ar: '2026-04-20T12:30', dp: '2026-04-20T14:00', veh: 'moto',    expected: 0.75,  desc: 'Scex moto · 1h30 (linéaire, midi ignoré)' },
+  { id: 'G3', cat: 'Moto',    parking: 'scex',           ar: '2026-04-20T12:30', dp: '2026-04-20T14:00', veh: 'moto',    expected: 1.00,  desc: 'Scex moto · 1h30 → 2h facturées (tranche d\'1h) × 0.50' },
   { id: 'G4', cat: 'Moto',    parking: 'cible',          ar: '2026-04-20T09:00', dp: '2026-04-20T11:00', veh: 'moto',    expected: 'ERR', desc: 'Cible moto · doit refuser (pas de tarif moto)' }
 ];
 
