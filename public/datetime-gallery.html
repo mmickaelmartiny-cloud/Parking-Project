@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galerie pickers date/heure — Parkings Sion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --bg: #F7F7F9;
+      --surface: #FFFFFF;
+      --surface-2: #F4F5F7;
+      --ink: #0F172A;
+      --ink-2: #334155;
+      --ink-3: #64748B;
+      --ink-4: #94A3B8;
+      --line: #E5E7EB;
+      --line-2: #CBD5E1;
+      --accent: #1D4ED8;
+      --accent-bg: #EFF6FF;
+      --green: #059669;
+      --green-bg: #D1FAE5;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      margin: 0;
+      padding: 24px;
+      line-height: 1.5;
+    }
+    .header {
+      max-width: 1400px;
+      margin: 0 auto 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    h1 { margin: 0; font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; }
+    .sub {
+      color: var(--ink-3);
+      font-size: 0.85rem;
+      margin-top: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .btn {
+      padding: 8px 14px;
+      border: 1px solid var(--line-2);
+      background: var(--surface);
+      color: var(--ink);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.12s;
+    }
+    .btn:hover { border-color: var(--ink); }
+    .btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+
+    .grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(15,23,42,.05);
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .card-title .num {
+      display: inline-flex;
+      width: 22px; height: 22px;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+    .card-subtitle {
+      color: var(--ink-3);
+      font-size: 0.78rem;
+      margin-bottom: 16px;
+    }
+    .card-subtitle .tag {
+      display: inline-block;
+      background: var(--surface-2);
+      color: var(--ink-2);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .field {
+      margin-bottom: 12px;
+    }
+    .field-label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 6px;
+    }
+    .input, select, input[type="datetime-local"], input[type="date"], input[type="time"] {
+      padding: 9px 12px;
+      border: 1px solid var(--line-2);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 0.88rem;
+      width: 100%;
+      outline: none;
+    }
+    .input:focus, select:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="time"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(29,78,216,.12);
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .chip {
+      padding: 5px 10px;
+      border: 1px solid var(--line-2);
+      background: var(--surface);
+      color: var(--ink-2);
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.74rem;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.12s;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .chip:active { transform: scale(0.97); }
+    .chip.primary { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+
+    /* Duration control */
+    .duration-row {
+      display: grid;
+      grid-template-columns: 36px 1fr 36px;
+      gap: 8px;
+      align-items: center;
+    }
+    .duration-btn {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--line-2);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .duration-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+    .duration-display {
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: var(--surface-2);
+      padding: 8px;
+      border-radius: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+    .duration-slider {
+      width: 100%;
+      margin-top: 10px;
+      accent-color: var(--accent);
+    }
+
+    /* Stepper */
+    .stepper {
+      display: grid;
+      grid-template-columns: 44px 44px 1fr 44px 44px;
+      gap: 6px;
+      align-items: stretch;
+    }
+    .stepper button {
+      padding: 0;
+      height: auto;
+      border: 1px solid var(--line-2);
+      background: var(--surface);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .stepper button:hover { background: var(--accent); color: white; border-color: var(--accent); }
+    .stepper input { border-radius: 6px; }
+
+    /* Result readout */
+    .result {
+      margin-top: 16px;
+      padding: 12px 14px;
+      background: var(--green-bg);
+      border: 1px solid var(--green);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: #065F46;
+    }
+    .result-label {
+      display: block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 4px;
+    }
+    .result-value { font-weight: 500; }
+    .result-duration {
+      font-weight: 700;
+      color: #065F46;
+    }
+
+    /* Dark mode */
+    body.dark {
+      --bg: #0F172A;
+      --surface: #1E293B;
+      --surface-2: #273449;
+      --ink: #F1F5F9;
+      --ink-2: #CBD5E1;
+      --ink-3: #94A3B8;
+      --ink-4: #64748B;
+      --line: #334155;
+      --line-2: #475569;
+      --accent: #60A5FA;
+      --accent-bg: #1E3A8A33;
+      --green: #34D399;
+      --green-bg: #064E3B55;
+    }
+    body.dark input[type="datetime-local"],
+    body.dark input[type="date"],
+    body.dark input[type="time"],
+    body.dark select { color-scheme: dark; }
+    body.dark .result { color: #A7F3D0; }
+    body.dark .result-duration { color: #A7F3D0; }
+
+    footer {
+      max-width: 1400px;
+      margin: 24px auto 0;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--ink-3);
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Galerie pickers date/heure — Parkings Sion</h1>
+    <div class="sub">5 options · chaque carte met à jour la période en direct</div>
+  </div>
+  <div>
+    <button class="btn" id="toggleDark">Dark mode</button>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- ──────────────────────── 1. NATIF ──────────────────────── -->
+  <div class="card" data-option="1">
+    <div class="card-title"><span class="num">1</span>Natif (actuel)</div>
+    <div class="card-subtitle">
+      <span class="tag">Baseline</span>
+      <span>Deux &lt;input type="datetime-local"&gt;. Le rendu varie selon OS/navigateur.</span>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="o1-arr">Arrivée</label>
+      <input type="datetime-local" id="o1-arr">
+    </div>
+    <div class="field">
+      <label class="field-label" for="o1-dep">Départ</label>
+      <input type="datetime-local" id="o1-dep">
+    </div>
+    <div class="result">
+      <span class="result-label">Résultat</span>
+      <span class="result-value" id="o1-res">—</span>
+    </div>
+  </div>
+
+  <!-- ──────────────────────── 2. QUICK PRESETS ──────────────────────── -->
+  <div class="card" data-option="2">
+    <div class="card-title"><span class="num">2</span>Quick presets</div>
+    <div class="card-subtitle">
+      <span class="tag">Recommandé · minimal</span>
+      <span>Inputs natifs + chips pour remplir rapidement.</span>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Arrivée</label>
+      <input type="datetime-local" id="o2-arr">
+      <div class="chips">
+        <button class="chip" data-o2-arr="now">Maintenant</button>
+        <button class="chip" data-o2-arr="+15">+15 min</button>
+        <button class="chip" data-o2-arr="+30">+30 min</button>
+        <button class="chip" data-o2-arr="+60">Dans 1h</button>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Départ</label>
+      <input type="datetime-local" id="o2-dep">
+      <div class="chips">
+        <button class="chip" data-o2-dep="+30">+30 min</button>
+        <button class="chip" data-o2-dep="+60">+1h</button>
+        <button class="chip" data-o2-dep="+120">+2h</button>
+        <button class="chip" data-o2-dep="+240">+4h</button>
+        <button class="chip" data-o2-dep="+480">+8h</button>
+        <button class="chip" data-o2-dep="tonight-18">Ce soir 18h</button>
+        <button class="chip" data-o2-dep="tomorrow-9">Demain 9h</button>
+      </div>
+    </div>
+    <div class="result">
+      <span class="result-label">Résultat</span>
+      <span class="result-value" id="o2-res">—</span>
+    </div>
+  </div>
+
+  <!-- ──────────────────────── 3. DURATION-FIRST ──────────────────────── -->
+  <div class="card" data-option="3">
+    <div class="card-title"><span class="num">3</span>Durée d'abord</div>
+    <div class="card-subtitle">
+      <span class="tag">Le plus fluide</span>
+      <span>Arrivée présélectionnée + durée ajustable.</span>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="o3-arr-mode">Arrivée</label>
+      <select id="o3-arr-mode">
+        <option value="now">Maintenant</option>
+        <option value="+15">Dans 15 min</option>
+        <option value="+30">Dans 30 min</option>
+        <option value="+60">Dans 1h</option>
+        <option value="tonight-18">Ce soir 18h</option>
+        <option value="tomorrow-9">Demain 9h</option>
+        <option value="custom">Personnalisé…</option>
+      </select>
+      <input type="datetime-local" id="o3-arr-custom" style="display:none; margin-top:8px">
+    </div>
+    <div class="field">
+      <label class="field-label">Durée</label>
+      <div class="duration-row">
+        <button class="duration-btn" id="o3-minus">−</button>
+        <div class="duration-display" id="o3-display">2h 00min</div>
+        <button class="duration-btn" id="o3-plus">+</button>
+      </div>
+      <input type="range" id="o3-slider" class="duration-slider" min="15" max="600" step="15" value="120">
+      <div class="chips" style="margin-top:10px">
+        <button class="chip" data-o3-dur="30">30min</button>
+        <button class="chip" data-o3-dur="60">1h</button>
+        <button class="chip" data-o3-dur="120">2h</button>
+        <button class="chip" data-o3-dur="240">4h</button>
+        <button class="chip" data-o3-dur="480">8h</button>
+        <button class="chip" data-o3-dur="1440">24h</button>
+      </div>
+    </div>
+    <div class="result">
+      <span class="result-label">Résultat</span>
+      <span class="result-value" id="o3-res">—</span>
+    </div>
+  </div>
+
+  <!-- ──────────────────────── 4. FLATPICKR ──────────────────────── -->
+  <div class="card" data-option="4">
+    <div class="card-title"><span class="num">4</span>Flatpickr (lib ~50 KB)</div>
+    <div class="card-subtitle">
+      <span class="tag">Uniforme cross-OS</span>
+      <span>Calendrier + time picker intégré, locale FR, même rendu partout.</span>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="o4-arr">Arrivée</label>
+      <input type="text" id="o4-arr" class="input" placeholder="Cliquer pour choisir">
+    </div>
+    <div class="field">
+      <label class="field-label" for="o4-dep">Départ</label>
+      <input type="text" id="o4-dep" class="input" placeholder="Cliquer pour choisir">
+    </div>
+    <div class="result">
+      <span class="result-label">Résultat</span>
+      <span class="result-value" id="o4-res">—</span>
+    </div>
+  </div>
+
+  <!-- ──────────────────────── 5. STEPPERS ──────────────────────── -->
+  <div class="card" data-option="5">
+    <div class="card-title"><span class="num">5</span>Steppers (±15 / ±1h)</div>
+    <div class="card-subtitle">
+      <span class="tag">Ajustement rapide</span>
+      <span>Inputs natifs entourés de boutons ± 15 min / ± 1h.</span>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Arrivée</label>
+      <div class="stepper">
+        <button data-o5="arr-60">−1h</button>
+        <button data-o5="arr-15">−15</button>
+        <input type="datetime-local" id="o5-arr">
+        <button data-o5="arr+15">+15</button>
+        <button data-o5="arr+60">+1h</button>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Départ</label>
+      <div class="stepper">
+        <button data-o5="dep-60">−1h</button>
+        <button data-o5="dep-15">−15</button>
+        <input type="datetime-local" id="o5-dep">
+        <button data-o5="dep+15">+15</button>
+        <button data-o5="dep+60">+1h</button>
+      </div>
+    </div>
+    <div class="result">
+      <span class="result-label">Résultat</span>
+      <span class="result-value" id="o5-res">—</span>
+    </div>
+  </div>
+
+</div>
+
+<footer>Testez chaque option sur desktop et mobile. Quand vous avez choisi, dites-moi laquelle intégrer au simulateur.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+<script>
+// ────── Helpers ──────
+const pad = n => String(n).padStart(2, '0');
+const toInputValue = d => {
+  const dd = new Date(d); dd.setSeconds(0, 0);
+  return `${dd.getFullYear()}-${pad(dd.getMonth()+1)}-${pad(dd.getDate())}T${pad(dd.getHours())}:${pad(dd.getMinutes())}`;
+};
+const fmtH = d => new Date(d).toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' });
+const fmtD = d => new Date(d).toLocaleDateString('fr-CH', { weekday: 'short', day: 'numeric', month: 'short' });
+const fmtDuree = min => {
+  const h = Math.floor(min / 60), m = Math.round(min % 60);
+  if (h === 0) return `${m} min`;
+  if (m === 0) return `${h}h`;
+  return `${h}h ${m}min`;
+};
+
+function fromPreset(base, preset) {
+  const now = base ? new Date(base) : new Date();
+  now.setSeconds(0, 0);
+  if (preset === 'now') return new Date();
+  if (preset.startsWith('+')) {
+    const min = parseInt(preset.slice(1), 10);
+    return new Date(now.getTime() + min * 60000);
+  }
+  if (preset === 'tonight-18') {
+    const d = new Date(); d.setHours(18, 0, 0, 0);
+    if (d <= new Date()) d.setDate(d.getDate() + 1);
+    return d;
+  }
+  if (preset === 'tomorrow-9') {
+    const d = new Date(); d.setDate(d.getDate() + 1); d.setHours(9, 0, 0, 0);
+    return d;
+  }
+  return now;
+}
+
+function updateResult(id, arr, dep) {
+  const el = document.getElementById(id);
+  if (!arr || !dep) { el.textContent = '—'; return; }
+  const a = new Date(arr), d = new Date(dep);
+  if (isNaN(a) || isNaN(d)) { el.textContent = 'Dates invalides'; return; }
+  if (d <= a) { el.innerHTML = `<span style="color:#DC2626">⚠️ Départ avant arrivée</span>`; return; }
+  const mins = (d - a) / 60000;
+  el.innerHTML = `${fmtD(a)} ${fmtH(a)} → ${fmtD(d)} ${fmtH(d)} · <span class="result-duration">${fmtDuree(mins)}</span>`;
+}
+
+// Defaults
+const NOW = new Date(); NOW.setSeconds(0, 0);
+const LATER = new Date(NOW.getTime() + 2 * 3600000);
+const NOW_STR = toInputValue(NOW);
+const LATER_STR = toInputValue(LATER);
+
+// ────── Option 1 : Natif ──────
+(function() {
+  const arr = document.getElementById('o1-arr'), dep = document.getElementById('o1-dep');
+  arr.value = NOW_STR; dep.value = LATER_STR;
+  const update = () => updateResult('o1-res', arr.value, dep.value);
+  arr.addEventListener('change', update); dep.addEventListener('change', update);
+  update();
+})();
+
+// ────── Option 2 : Quick presets ──────
+(function() {
+  const arr = document.getElementById('o2-arr'), dep = document.getElementById('o2-dep');
+  arr.value = NOW_STR; dep.value = LATER_STR;
+  const update = () => updateResult('o2-res', arr.value, dep.value);
+  arr.addEventListener('change', update); dep.addEventListener('change', update);
+
+  document.querySelectorAll('[data-o2-arr]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      arr.value = toInputValue(fromPreset(null, btn.dataset.o2Arr));
+      update();
+    });
+  });
+  document.querySelectorAll('[data-o2-dep]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = btn.dataset.o2Dep;
+      dep.value = toInputValue(p.startsWith('+') ? fromPreset(arr.value, p) : fromPreset(null, p));
+      update();
+    });
+  });
+  update();
+})();
+
+// ────── Option 3 : Duration-first ──────
+(function() {
+  const mode = document.getElementById('o3-arr-mode');
+  const custom = document.getElementById('o3-arr-custom');
+  const display = document.getElementById('o3-display');
+  const slider = document.getElementById('o3-slider');
+  const btnMinus = document.getElementById('o3-minus');
+  const btnPlus = document.getElementById('o3-plus');
+  let duration = 120; // minutes
+  custom.value = NOW_STR;
+
+  function getArrival() {
+    const v = mode.value;
+    if (v === 'custom') return new Date(custom.value);
+    return fromPreset(null, v);
+  }
+  function render() {
+    display.textContent = fmtDuree(duration);
+    slider.value = duration;
+    const arr = getArrival();
+    const dep = new Date(arr.getTime() + duration * 60000);
+    updateResult('o3-res', arr.toISOString(), dep.toISOString());
+  }
+  function setDuration(m) {
+    duration = Math.max(15, Math.min(600, m));
+    render();
+  }
+  mode.addEventListener('change', () => {
+    custom.style.display = mode.value === 'custom' ? 'block' : 'none';
+    render();
+  });
+  custom.addEventListener('change', render);
+  slider.addEventListener('input', () => setDuration(parseInt(slider.value, 10)));
+  btnMinus.addEventListener('click', () => setDuration(duration - 15));
+  btnPlus.addEventListener('click', () => setDuration(duration + 15));
+  document.querySelectorAll('[data-o3-dur]').forEach(b => {
+    b.addEventListener('click', () => setDuration(parseInt(b.dataset.o3Dur, 10)));
+  });
+  render();
+})();
+
+// ────── Option 4 : Flatpickr ──────
+(function() {
+  const opts = {
+    enableTime: true,
+    time_24hr: true,
+    dateFormat: 'Y-m-d H:i',
+    altInput: true,
+    altFormat: 'D j M · H:i',
+    locale: flatpickr.l10ns.fr,
+    minuteIncrement: 15
+  };
+  const fpArr = flatpickr('#o4-arr', { ...opts, defaultDate: NOW, onChange: update });
+  const fpDep = flatpickr('#o4-dep', { ...opts, defaultDate: LATER, onChange: update });
+  function update() {
+    const a = fpArr.selectedDates[0], d = fpDep.selectedDates[0];
+    updateResult('o4-res', a, d);
+  }
+  update();
+})();
+
+// ────── Option 5 : Steppers ──────
+(function() {
+  const arr = document.getElementById('o5-arr'), dep = document.getElementById('o5-dep');
+  arr.value = NOW_STR; dep.value = LATER_STR;
+  const update = () => updateResult('o5-res', arr.value, dep.value);
+  arr.addEventListener('change', update); dep.addEventListener('change', update);
+
+  document.querySelectorAll('[data-o5]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const m = btn.dataset.o5.match(/^(arr|dep)([+-]\d+)$/);
+      if (!m) return;
+      const target = m[1] === 'arr' ? arr : dep;
+      const delta = parseInt(m[2], 10);
+      if (!target.value) return;
+      const d = new Date(target.value);
+      d.setMinutes(d.getMinutes() + delta);
+      target.value = toInputValue(d);
+      update();
+    });
+  });
+  update();
+})();
+
+// ────── Dark mode toggle ──────
+document.getElementById('toggleDark').addEventListener('click', e => {
+  document.body.classList.toggle('dark');
+  e.target.classList.toggle('active');
+});
+</script>
+
+</body>
+</html>
