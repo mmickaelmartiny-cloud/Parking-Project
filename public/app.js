@@ -356,7 +356,7 @@ function setVehicule(v) {
   const prev = sel.value;
   sel.innerHTML = '';
   const eligibles = v === 'moto'
-    ? allParkings.filter(p => p.moto || p.prixH === 0)
+    ? allParkings.filter(p => p.moto)
     : allParkings;
   eligibles.forEach(p => {
     const opt = document.createElement('option');
@@ -534,7 +534,7 @@ async function comparer() {
 
   try {
     const eligibles = currentVehicule === 'moto'
-      ? allParkings.filter(p => p.moto || p.prixH === 0)
+      ? allParkings.filter(p => p.moto)
       : allParkings;
 
     const results = await Promise.all(
