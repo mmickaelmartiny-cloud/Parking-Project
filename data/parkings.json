@@ -96,8 +96,8 @@
     "source": "https://www.sion.ch/_docn/6894088/Tarifs_du_parking_de_la_Planta.pdf",
     "dateTarif": "2026-03-25",
     "coords": {
-      "lat": 46.2294,
-      "lng": 7.3576
+      "lat": 46.23294,
+      "lng": 7.35769
     }
   },
   {
@@ -197,8 +197,8 @@
     "source": "https://www.sion.ch/_docn/6894097/Tarifs_du_parking_du_Scex.pdf",
     "dateTarif": "2026-03-25",
     "coords": {
-      "lat": 46.229,
-      "lng": 7.3555
+      "lat": 46.23222,
+      "lng": 7.36367
     }
   },
   {
@@ -294,8 +294,8 @@
     "source": "https://www.sion.ch/_docn/5243635/Tarifs_du_parkings_de_la_Cible.pdf",
     "dateTarif": "2024-07-15",
     "coords": {
-      "lat": 46.2332,
-      "lng": 7.3602
+      "lat": 46.23588,
+      "lng": 7.36149
     }
   },
   {
@@ -375,8 +375,8 @@
       }
     },
     "coords": {
-      "lat": 46.2247,
-      "lng": 7.3603
+      "lat": 46.22826,
+      "lng": 7.3628
     }
   },
   {
@@ -467,8 +467,8 @@
     "source": "https://www.sion.ch/_docn/5243629/Tarifs_des_parkings_des_Roches-Brunes_et_St-Gu%C3%A9rin.pdf",
     "dateTarif": "2024-07-15",
     "coords": {
-      "lat": 46.2314,
-      "lng": 7.3499
+      "lat": 46.22697,
+      "lng": 7.34996
     }
   },
   {
@@ -485,8 +485,8 @@
     "note": "Gratuit, durée max 10h",
     "regles": [],
     "coords": {
-      "lat": 46.2342,
-      "lng": 7.346
+      "lat": 46.22606,
+      "lng": 7.34297
     }
   },
   {
@@ -577,8 +577,8 @@
     "source": "https://www.sion.ch/_docn/5243629/Tarifs_des_parkings_des_Roches-Brunes_et_St-Gu%C3%A9rin.pdf",
     "dateTarif": "2024-07-15",
     "coords": {
-      "lat": 46.2359,
-      "lng": 7.3648
+      "lat": 46.23201,
+      "lng": 7.36869
     }
   }
 ]
