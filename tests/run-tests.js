@@ -58,9 +58,9 @@ const TESTS = [
   { id: 'F2', cat: 'Plafond', parking: 'gare',           ar: '2026-04-20T09:00', dp: '2026-04-20T19:00', veh: 'voiture', expected: 27.00, desc: 'Gare · 9h-19h (paliers jour, sous plafond)' },
 
   // ── G · Tarif moto ─────────────────────────────────────────────────────
-  { id: 'G1', cat: 'Moto',    parking: 'planta',         ar: '2026-04-20T09:00', dp: '2026-04-20T10:00', veh: 'moto',    expected: 0.50,  desc: 'Planta moto · 1h × 0.50 CHF' },
-  { id: 'G2', cat: 'Moto',    parking: 'planta',         ar: '2026-04-20T09:00', dp: '2026-04-20T11:00', veh: 'moto',    expected: 1.00,  desc: 'Planta moto · 2h × 0.50 CHF' },
-  { id: 'G3', cat: 'Moto',    parking: 'scex',           ar: '2026-04-20T12:30', dp: '2026-04-20T14:00', veh: 'moto',    expected: 1.00,  desc: 'Scex moto · 1h30 → 2h facturées (tranche d\'1h) × 0.50' },
+  { id: 'G1', cat: 'Moto',    parking: 'planta',         ar: '2026-04-20T09:00', dp: '2026-04-20T10:00', veh: 'moto',    expected: 0.00,  desc: 'Planta moto · 1h stay = 1ère heure gratuite → 0 CHF' },
+  { id: 'G2', cat: 'Moto',    parking: 'planta',         ar: '2026-04-20T09:00', dp: '2026-04-20T11:00', veh: 'moto',    expected: 0.50,  desc: 'Planta moto · 2h stay - 1h gratuite = 1h billable × 0.50 CHF' },
+  { id: 'G3', cat: 'Moto',    parking: 'scex',           ar: '2026-04-20T12:30', dp: '2026-04-20T14:00', veh: 'moto',    expected: 0.50,  desc: 'Scex moto · 1h30 (midi consomme crédit, 30min billable = 1h tranche × 0.50)' },
   { id: 'G4', cat: 'Moto',    parking: 'cible',          ar: '2026-04-20T09:00', dp: '2026-04-20T11:00', veh: 'moto',    expected: 'ERR', desc: 'Cible moto · doit refuser (pas de tarif moto)' }
 ];
 

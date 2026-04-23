@@ -277,25 +277,120 @@ function calculerMoto(parking, arrivee, depart) {
   const totalMin = Math.round((depart - arrivee) / 60000);
   if (totalMin <= 0) return null;
 
-  // Facturation par tranche d'1h entamée (toute heure commencée est due)
   const tarifH = parking.moto.tarifH;
-  const heures = Math.ceil(totalMin / 60);
-  const total  = Math.round(tarifH * heures * 100) / 100;
 
-  return {
-    total,
-    economies: 0,
-    segments: [{
-      from:    arrivee,
-      to:      depart,
-      minutes: totalMin,
+  // Applique les mêmes règles de gratuité que pour les voitures.
+  const rH1       = parking.regles.find(r => r.type === 'h1_plage');
+  const rH1Global = parking.regles.find(r => r.type === 'premiere_h_gratuite');
+  const rDemi     = parking.regles.find(r => r.type === 'demi_h_gratuite');
+  const rSam      = parking.regles.find(r => r.type === 'gratuit_sam_apres');
+  const rMidi     = parking.regles.find(r => r.type === 'gratuit_plage_quotidien');
+  const rHebdo    = parking.regles.find(r => r.type === 'gratuit_plage_hebdo');
+
+  let minutesH1Left     = rH1       ? 60 : 0;
+  let minutesH1GlobLeft = rH1Global ? 60 : 0;
+  let minutesDemiLeft   = rDemi     ? 30 : 0;
+
+  const minutes = [];
+  for (let i = 0; i < totalMin; i++) {
+    const t   = new Date(arrivee.getTime() + i * 60000);
+    const h   = t.getHours();
+    const dow = t.getDay();
+
+    let isFree = false, label = 'Tarif moto';
+    let isMidiOrHebdo = false;
+
+    if (parking.regles.some(r => r.type === 'gratuit_dim') && dow === 0) {
+      isFree = true; label = 'Gratuit — dimanche';
+    }
+    if (parking.regles.some(r => r.type === 'gratuit_dim_feries')) {
+      if (dow === 0)        { isFree = true; label = 'Gratuit — dimanche'; }
+      else if (estFerie(t)) { isFree = true; label = 'Gratuit — jour férié'; }
+    }
+    if (rSam && dow === 6 && h >= rSam.hApres) {
+      isFree = true; label = 'Gratuit — samedi ≥ 12h';
+    }
+    if (rMidi && !isFree) {
+      const tMin = h * 60 + t.getMinutes();
+      if (tMin >= rMidi.hDeb * 60 && tMin < rMidi.hFin * 60) {
+        isFree = true; label = rMidi.label; isMidiOrHebdo = true;
+      }
+    }
+    if (rHebdo && !isFree && dow === rHebdo.jour) {
+      const tMin = h * 60 + t.getMinutes();
+      if (tMin >= rHebdo.hDeb * 60 && tMin < rHebdo.hFin * 60) {
+        isFree = true; label = rHebdo.label; isMidiOrHebdo = true;
+      }
+    }
+    if (rH1 && !isFree && minutesH1Left > 0 && h >= rH1.hDeb && h < rH1.hFin) {
+      isFree = true; label = '1ère heure offerte';
+      minutesH1Left--;
+    }
+    if (rH1Global && !isFree && minutesH1GlobLeft > 0) {
+      isFree = true; label = '1ère heure offerte';
+      minutesH1GlobLeft--;
+    }
+    if (isMidiOrHebdo) {
+      if (minutesH1GlobLeft > 0) minutesH1GlobLeft--;
+      if (rH1 && minutesH1Left > 0 && h >= rH1.hDeb && h < rH1.hFin) minutesH1Left--;
+    }
+    if (rDemi && !isFree && minutesDemiLeft > 0) {
+      isFree = true; label = '30 min offertes';
+      minutesDemiLeft--;
+    }
+
+    minutes.push({ t, label, isFree });
+  }
+
+  // Facturation moto : tranche d'1h entamée sur les minutes non gratuites
+  const billableMin = minutes.filter(m => !m.isFree).length;
+  const heures      = Math.ceil(billableMin / 60);
+  const total       = Math.round(tarifH * heures * 100) / 100;
+
+  // Économies = ce qu'on aurait payé sans les règles de gratuité
+  const sansRemise = Math.ceil(totalMin / 60) * tarifH;
+  const economies  = Math.max(0, Math.round((sansRemise - total) * 100) / 100);
+
+  // Segments : grouper les minutes gratuites consécutives par label + un seul
+  // segment récapitulatif pour la totalité des minutes facturées.
+  const segments = [];
+  let i = 0, firstBillT = null, lastBillT = null;
+  while (i < minutes.length) {
+    const cur = minutes[i];
+    let j = i + 1;
+    while (j < minutes.length && minutes[j].isFree === cur.isFree && minutes[j].label === cur.label) j++;
+    const count = j - i;
+    if (cur.isFree) {
+      segments.push({
+        from:    cur.t,
+        to:      new Date(cur.t.getTime() + count * 60000),
+        minutes: count,
+        tauxH:   0,
+        cout:    0,
+        label:   cur.label,
+        isFree:  true,
+        isReduced: false
+      });
+    } else {
+      if (!firstBillT) firstBillT = cur.t;
+      lastBillT = new Date(cur.t.getTime() + count * 60000);
+    }
+    i = j;
+  }
+  if (billableMin > 0) {
+    segments.push({
+      from:    firstBillT,
+      to:      lastBillT,
+      minutes: billableMin,
       tauxH:   tarifH,
       cout:    total,
       label:   `Tarif moto (${heures}h × ${tarifH.toFixed(2)} CHF)`,
       isFree:  false,
       isReduced: false
-    }]
-  };
+    });
+  }
+
+  return { total, economies, segments };
 }
 
 // ── ROUTES API ────────────────────────────────────────────────────────────
