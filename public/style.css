@@ -1048,24 +1048,65 @@ html[data-theme="dark"] .icon-sun  { display: block; }
     border-left: none;
     border-right: none;
     border-bottom: none;
+    transition: max-height 0.35s cubic-bezier(0.16,1,0.3,1);
   }
+
+  /* Grip = bouton plein-width tactile */
   .panel-grip {
-    display: block;
-    position: absolute;
-    top: 6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 24px;
+    padding: 7px 0 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    font: inherit;
+    color: inherit;
+  }
+  .panel-grip::before {
+    content: '';
+    width: 42px;
     height: 4px;
     background: var(--line-2);
     border-radius: 2px;
-    z-index: 10;
+    transition: background 0.15s, width 0.15s;
   }
-  .panel-header { padding-top: 1.125rem; }
+  .panel-grip:hover::before,
+  .panel-grip:active::before { background: var(--ink-3); width: 56px; }
+
+  /* Panel replié : visible que le grip + un teaser */
+  .panel.panel--collapsed { max-height: 58px; }
+  .panel.panel--collapsed .panel-header,
+  .panel.panel--collapsed .panel-scroll { display: none; }
+  .panel.panel--collapsed .panel-grip { height: 58px; padding-top: 10px; }
+  .panel.panel--collapsed .panel-grip::after {
+    content: '7 parkings · appuyer pour ouvrir';
+    position: absolute;
+    top: 24px;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ink-3);
+    letter-spacing: 0;
+  }
+
   #map { bottom: 0; }
   .map-recenter {
     bottom: calc(75vh + 0.75rem);
     right: 1rem;
+    transition: bottom 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+  body:has(.panel.panel--collapsed) .map-recenter {
+    bottom: calc(58px + 0.75rem);
   }
   .sim-form { grid-template-columns: 1fr; }
 }
@@ -1073,6 +1114,7 @@ html[data-theme="dark"] .icon-sun  { display: block; }
 @media (max-width: 400px) {
   .panel { max-height: 80vh; }
   .map-recenter { bottom: calc(80vh + 0.5rem); width: 40px; height: 40px; }
+  body:has(.panel.panel--collapsed) .map-recenter { bottom: calc(58px + 0.75rem); }
 }
 
 /* ── REDUCED MOTION ─────────────────────────────────── */

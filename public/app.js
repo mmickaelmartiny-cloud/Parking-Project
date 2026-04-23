@@ -228,6 +228,19 @@ async function init() {
   setDefaults();
   setMode('all');
   document.getElementById('btnRecenter').addEventListener('click', recenter);
+
+  // Mobile : grip pour replier/déplier le panel
+  const grip = document.getElementById('panelGrip');
+  const panel = document.getElementById('panel');
+  if (grip && panel) {
+    grip.addEventListener('click', () => {
+      const collapsed = panel.classList.toggle('panel--collapsed');
+      grip.setAttribute('aria-expanded', String(!collapsed));
+      grip.setAttribute('aria-label', collapsed ? 'Ouvrir le panneau' : 'Replier le panneau');
+      // Recalage du map après transition (évite tiles coupées)
+      if (map) setTimeout(() => map.invalidateSize(), 380);
+    });
+  }
 }
 
 // ── MODE (single / all) ───────────────────────────────────────────────────
