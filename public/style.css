@@ -69,50 +69,53 @@ body {
   z-index: 0;
   background: var(--bg);
 }
-.leaflet-container {
+.maplibregl-map {
   font-family: var(--sans);
   background: var(--bg);
 }
-html[data-theme="dark"] .leaflet-tile-pane {
-  filter: saturate(1.6) contrast(1.15) brightness(1.05);
-}
-html[data-theme="dark"] .leaflet-control-attribution {
-  background: rgba(30,41,59,.85) !important;
-  color: #94A3B8 !important;
-}
-html[data-theme="dark"] .leaflet-control-attribution a { color: #CBD5E1 !important; }
 
-.leaflet-control-zoom {
+.maplibregl-ctrl-group {
   border: none !important;
   box-shadow: var(--shadow-md) !important;
   border-radius: var(--r-sm) !important;
   overflow: hidden;
+  background: var(--surface) !important;
 }
-.leaflet-control-zoom a {
+.maplibregl-ctrl-group button {
   background: var(--surface) !important;
   color: var(--ink) !important;
-  border: none !important;
   border-bottom: 1px solid var(--line) !important;
-  font-weight: 500;
 }
-.leaflet-control-zoom a:last-child { border-bottom: none !important; }
-.leaflet-control-zoom a:hover { background: var(--surface-2) !important; }
-html[data-theme="dark"] .leaflet-control-zoom a {
+.maplibregl-ctrl-group button:last-child { border-bottom: none !important; }
+.maplibregl-ctrl-group button:hover { background: var(--surface-2) !important; }
+html[data-theme="dark"] .maplibregl-ctrl-group { background: #1E293B !important; }
+html[data-theme="dark"] .maplibregl-ctrl-group button {
   background: #1E293B !important;
-  color: #F1F5F9 !important;
   border-bottom-color: #334155 !important;
 }
-html[data-theme="dark"] .leaflet-control-zoom a:hover { background: #334155 !important; }
-
-.leaflet-control-attribution {
-  background: rgba(255,255,255,.85) !important;
-  font-size: 10px !important;
-  padding: 2px 6px !important;
-  border-radius: 0 !important;
+html[data-theme="dark"] .maplibregl-ctrl-group button:hover { background: #334155 !important; }
+html[data-theme="dark"] .maplibregl-ctrl-icon {
+  filter: invert(0.9);
 }
+
+.maplibregl-ctrl-attrib {
+  font-size: 10px !important;
+  border-radius: var(--r-xs) !important;
+}
+.maplibregl-ctrl-attrib.maplibregl-compact {
+  background: var(--surface) !important;
+  color: var(--ink-3) !important;
+}
+.maplibregl-ctrl-attrib a { color: var(--ink-3) !important; }
+html[data-theme="dark"] .maplibregl-ctrl-attrib.maplibregl-compact {
+  background: #1E293B !important;
+  color: #CBD5E1 !important;
+}
+html[data-theme="dark"] .maplibregl-ctrl-attrib a { color: #CBD5E1 !important; }
 
 /* Marker custom */
 .parking-marker {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,6 +135,7 @@ html[data-theme="dark"] .leaflet-control-zoom a:hover { background: #334155 !imp
   transition: transform 0.12s, box-shadow 0.12s;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
+  will-change: transform;
 }
 .parking-marker::after {
   content: '';
