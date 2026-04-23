@@ -1,6 +1,6 @@
 // ── THÈME ─────────────────────────────────────────────────────────────────
 
-const THEME_COLORS = { dark: '#060913', light: '#EDB82A' };
+const THEME_COLORS = { dark: '#0F172A', light: '#FFFFFF' };
 
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
@@ -10,12 +10,12 @@ function applyTheme(theme) {
 
 function initTheme() {
   const saved = localStorage.getItem('theme');
-  const preferred = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   applyTheme(saved || preferred);
 }
 
 function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
   const next = current === 'dark' ? 'light' : 'dark';
   applyTheme(next);
   localStorage.setItem('theme', next);
@@ -23,30 +23,142 @@ function toggleTheme() {
 
 // ── SERVICE WORKER ─────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js');
-  });
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
 }
 
 initTheme();
 
 // ── FORMATAGE ─────────────────────────────────────────────────────────────
 
-function fmtH(d) {
-  return new Date(d).toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' });
-}
-function fmtD(d) {
-  return new Date(d).toLocaleDateString('fr-CH', { weekday: 'short', day: 'numeric', month: 'short' });
-}
+const fmtH = d => new Date(d).toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' });
+const fmtD = d => new Date(d).toLocaleDateString('fr-CH', { weekday: 'short', day: 'numeric', month: 'short' });
+const fmtChf = v => Number(v).toFixed(2);
 function fmtDuree(min) {
   const h = Math.floor(min / 60), m = Math.round(min % 60);
   if (h === 0) return `${m} min`;
   if (m === 0) return `${h}h`;
   return `${h}h ${m}min`;
 }
-function fmtChf(v) { return Number(v).toFixed(2); }
 
-// ── RENDU DES CARTES ──────────────────────────────────────────────────────
+function priceClass(chf) {
+  if (chf === 0) return 'price-free';
+  if (chf <= 1.50) return 'price-low';
+  if (chf <= 2.50) return 'price-mid';
+  return 'price-high';
+}
+
+// ── ÉTAT ──────────────────────────────────────────────────────────────────
+
+let currentMode = 'all';
+let currentVehicule = 'voiture';
+let allParkings = [];
+let map = null;
+let markers = {};       // id -> Leaflet marker
+let markerEls = {};     // id -> HTMLElement du marker (pour update classes)
+let activeId = null;
+
+// ── CARTE ─────────────────────────────────────────────────────────────────
+
+const SION_CENTER = [46.2311, 7.3589];
+
+function initMap(parkings) {
+  map = L.map('map', {
+    center: SION_CENTER,
+    zoom: 15,
+    zoomControl: true,
+    attributionControl: true,
+    scrollWheelZoom: true
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+
+  parkings.forEach(p => addMarker(p));
+
+  const group = L.featureGroup(Object.values(markers));
+  map.fitBounds(group.getBounds(), { padding: [60, 60], maxZoom: 16 });
+
+  // Zoom controls en bas à droite, plus propre
+  map.zoomControl.setPosition('bottomleft');
+}
+
+function addMarker(p) {
+  if (!p.coords) return;
+  const priceStr = p.prixH === 0 ? 'Gratuit' : `${fmtChf(p.prixH)}`;
+  const cls = priceClass(p.prixH);
+
+  const icon = L.divIcon({
+    className: '',
+    html: `<div class="parking-marker ${cls}" data-id="${p.id}">${priceStr}</div>`,
+    iconSize: null,
+    iconAnchor: [25, 40]
+  });
+
+  const m = L.marker([p.coords.lat, p.coords.lng], { icon, riseOnHover: true })
+    .addTo(map)
+    .bindTooltip(p.nom, { direction: 'top', offset: [0, -36], opacity: 0.95 });
+
+  m.on('click', () => focusParking(p.id, { pan: false }));
+
+  markers[p.id] = m;
+
+  // Stocker l'élément DOM du marker pour manipuler les classes
+  queueMicrotask(() => {
+    const el = m.getElement()?.querySelector('.parking-marker');
+    if (el) markerEls[p.id] = el;
+  });
+}
+
+function updateMarkerPrice(id, chf, { isBest = false } = {}) {
+  const el = markerEls[id];
+  if (!el) return;
+  el.classList.remove('price-free', 'price-low', 'price-mid', 'price-high', 'is-best');
+  el.classList.add(priceClass(chf));
+  if (isBest) el.classList.add('is-best');
+  el.textContent = chf === 0 ? 'Gratuit' : fmtChf(chf);
+}
+
+function resetMarkers() {
+  allParkings.forEach(p => {
+    const el = markerEls[p.id];
+    if (!el) return;
+    el.classList.remove('price-free', 'price-low', 'price-mid', 'price-high', 'is-best');
+    el.classList.add(priceClass(p.prixH));
+    el.textContent = p.prixH === 0 ? 'Gratuit' : fmtChf(p.prixH);
+  });
+  setActive(null);
+}
+
+function setActive(id) {
+  if (activeId && markerEls[activeId]) markerEls[activeId].classList.remove('is-active');
+  document.querySelectorAll('.parking-row.is-active').forEach(r => r.classList.remove('is-active'));
+  activeId = id;
+  if (id && markerEls[id]) markerEls[id].classList.add('is-active');
+  if (id) {
+    const row = document.querySelector(`.parking-row[data-id="${id}"]`);
+    if (row) row.classList.add('is-active');
+  }
+}
+
+function focusParking(id, { pan = true } = {}) {
+  const p = allParkings.find(x => x.id === id);
+  if (!p) return;
+  setActive(id);
+  if (pan && p.coords) map.setView([p.coords.lat, p.coords.lng], Math.max(map.getZoom(), 16), { animate: true });
+  const sel = document.getElementById('selParking');
+  if (sel && [...sel.options].some(o => o.value === id)) sel.value = id;
+}
+
+function recenter() {
+  if (!map) return;
+  const group = L.featureGroup(Object.values(markers));
+  map.fitBounds(group.getBounds(), { padding: [60, 60], maxZoom: 16, animate: true });
+  setActive(null);
+}
+
+// ── RENDU DES ROWS ────────────────────────────────────────────────────────
 
 async function init() {
   const res = await fetch('/api/parkings');
@@ -56,85 +168,53 @@ async function init() {
   const grid = document.getElementById('parkingGrid');
   const sel  = document.getElementById('selParking');
 
-  parkings.forEach((p, idx) => {
+  parkings.forEach(p => {
     const isFree   = p.prixH === 0;
-    const priceStr = isFree ? 'Gratuit' : `CHF ${Number(p.prixH).toFixed(2)}`;
+    const priceStr = isFree ? 'Gratuit' : fmtChf(p.prixH);
+    const cls = priceClass(p.prixH);
 
-    const trancheJour = p.tarification?.jour?.paliers?.[0]?.tranche;
-    const motoChip    = p.moto ? `<span class="rule-chip chip-moto">🏍 Moto ${p.moto.tarifH.toFixed(2)} CHF/h</span>` : '';
-    const trancheChip = trancheJour ? `<span class="rule-chip chip-granularity">⏱ Tranches de ${trancheJour} min</span>` : '';
+    const row = document.createElement('div');
+    row.className = 'parking-row';
+    row.dataset.id = p.id;
+    row.tabIndex = 0;
+    row.setAttribute('role', 'button');
+    row.setAttribute('aria-label', `Voir ${p.nom} sur la carte`);
 
-    const rulesHTML = (p.regles.length || trancheJour || p.moto)
-      ? `<div class="rules-list">${p.regles.map(r =>
-          `<span class="rule-chip">${r.emoji || ''} ${r.label}</span>`).join('')}
-          ${trancheChip}
-          ${motoChip}
-          ${p.note ? `<span class="rule-chip">ℹ️ ${p.note}</span>` : ''}
-         </div>`
-      : (p.note
-        ? `<div class="rules-list"><span class="rule-chip">ℹ️ ${p.note}</span></div>`
-        : `<div class="no-rules">Aucune réduction spéciale</div>`);
-
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.tabIndex = 0;
-    card.setAttribute('role', 'button');
-    card.setAttribute('aria-label', `Simuler le prix pour ${p.nom}`);
-    card.style.animationDelay = `${idx * 55}ms`;
-
-    card.innerHTML = `
-      <div class="card-top">
-        <div class="card-name-block">
-          <div class="card-title">${p.nom}</div>
-          <div class="card-addr"><a href="${p.maps}" target="_blank" rel="noopener" class="maps-link" onclick="event.stopPropagation()">📍 ${p.adresse}</a></div>
-        </div>
-        <div class="price-badge">
-          <span class="price-amount${isFree ? ' is-free' : ''}">${priceStr}</span>
-          <span class="price-unit">par heure</span>
-        </div>
+    row.innerHTML = `
+      <div class="row-price ${cls}">${priceStr}</div>
+      <div class="row-info">
+        <div class="row-name">${p.nom}</div>
+        <div class="row-addr">${p.adresse}</div>
       </div>
-      <div class="card-body">
-        <div class="stats-row">
-          <div class="stat-box">
-            <span class="stat-val">${p.places}</span>
-            <span class="stat-lbl">Places</span>
-          </div>
-          <div class="stat-box">
-            <span class="stat-val">${Number(p.hauteur).toFixed(2)} m</span>
-            <span class="stat-lbl">Hauteur</span>
-          </div>
-          <div class="stat-box">
-            <span class="stat-val" style="font-size:0.72rem;line-height:1.4">${p.horaire}</span>
-            <span class="stat-lbl">Horaires</span>
-          </div>
-        </div>
-        ${rulesHTML}
-      </div>
-      <div class="card-go-hint">Simuler →</div>`;
+      <div class="row-stats">
+        <span class="row-places">${p.places} pl.</span>
+        <span class="row-height">${Number(p.hauteur).toFixed(2)} m</span>
+      </div>`;
 
-    const go = () => {
-      document.getElementById('selParking').value = p.id;
-      setMode('single');
-      document.querySelector('.simulator').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-    card.addEventListener('click', go);
-    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
-    grid.appendChild(card);
+    row.addEventListener('click', () => focusParking(p.id));
+    row.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); focusParking(p.id); }
+    });
+    grid.appendChild(row);
 
     const opt = document.createElement('option');
     opt.value = p.id; opt.textContent = p.nom;
     sel.appendChild(opt);
   });
 
+  // Init carte (Leaflet doit être chargé — le script est en defer donc DOMContentLoaded l'attend)
+  if (typeof L !== 'undefined') {
+    initMap(parkings);
+  } else {
+    window.addEventListener('load', () => initMap(parkings));
+  }
+
   setDefaults();
   setMode('all');
+  document.getElementById('btnRecenter').addEventListener('click', recenter);
 }
 
 // ── MODE (single / all) ───────────────────────────────────────────────────
-
-let currentMode = 'all';
-let currentVehicule = 'voiture';
-let allParkings = [];
 
 function setVehicule(v) {
   currentVehicule = v;
@@ -159,6 +239,7 @@ function setVehicule(v) {
 
   document.getElementById('result').className = 'result';
   document.getElementById('comparison').className = 'comparison';
+  resetMarkers();
 }
 
 function setMode(mode) {
@@ -180,12 +261,13 @@ function setMode(mode) {
     btn.textContent = 'Comparer les parkings';
     btn.onclick = comparer;
   } else {
-    document.getElementById('simTitle').textContent = 'Calculez votre tarif exact';
-    document.getElementById('simSubtitle').textContent = 'Toutes les spécificités tarifaires sont automatiquement prises en compte';
+    document.getElementById('simTitle').textContent = 'Calculer pour un parking';
+    document.getElementById('simSubtitle').textContent = 'Tarif exact et détail de facturation';
     document.getElementById('simIcon').textContent = '◈';
     btn.textContent = 'Calculer le prix';
     btn.onclick = simuler;
   }
+  resetMarkers();
 }
 
 // ── SIMULATEUR ────────────────────────────────────────────────────────────
@@ -213,30 +295,26 @@ async function simuler() {
   const arStr = document.getElementById('inpArrivee').value;
   const dpStr = document.getElementById('inpDepart').value;
 
-  function showErr(msg) {
-    alertEl.innerHTML = `⚠️&nbsp; ${msg}`;
-    alertEl.className = 'alert error visible';
-  }
+  function showErr(msg) { alertEl.innerHTML = `⚠️&nbsp; ${msg}`; alertEl.className = 'alert error visible'; }
 
   if (!arStr || !dpStr) { showErr('Veuillez renseigner l\'heure d\'arrivée et de départ.'); return; }
 
   const arrivee = new Date(arStr);
   const depart  = new Date(dpStr);
 
-  if (depart <= arrivee)                           { showErr('L\'heure de départ doit être postérieure à l\'heure d\'arrivée.'); return; }
-  if ((depart - arrivee) / 60000 > 7 * 24 * 60)   { showErr('La durée maximum simulable est de 7 jours.'); return; }
+  if (depart <= arrivee)                         { showErr('L\'heure de départ doit être postérieure à l\'heure d\'arrivée.'); return; }
+  if ((depart - arrivee) / 60000 > 7 * 24 * 60) { showErr('La durée maximum simulable est de 7 jours.'); return; }
 
   btn.disabled = true;
   btn.textContent = 'Calcul en cours…';
 
   try {
     const res = await fetch('/api/calculer', {
-      method:  'POST',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ parkingId: pid, arrivee: arStr, depart: dpStr, vehicule: currentVehicule })
+      body: JSON.stringify({ parkingId: pid, arrivee: arStr, depart: dpStr, vehicule: currentVehicule })
     });
     const data = await res.json();
-
     if (!res.ok) { showErr(data.erreur || 'Erreur serveur.'); return; }
 
     const { parking, result } = data;
@@ -249,16 +327,14 @@ async function simuler() {
 
     const savEl = document.getElementById('resSavings');
     if (result.economies > 0.005) {
-      savEl.textContent = `Économie appliquée : CHF ${fmtChf(result.economies)}`;
+      savEl.textContent = `Économie : CHF ${fmtChf(result.economies)}`;
       savEl.style.display = 'block';
-    } else {
-      savEl.style.display = 'none';
-    }
+    } else { savEl.style.display = 'none'; }
 
     const tbody = document.getElementById('breakdownBody');
     tbody.innerHTML = '';
     result.segments.forEach(seg => {
-      const dotColor  = seg.isFree ? '#3DCF8F' : (seg.isReduced ? '#D97706' : '#5C5750');
+      const dotColor  = seg.isFree ? '#059669' : (seg.isReduced ? '#EA580C' : '#64748B');
       const costClass = seg.isFree ? 'cost-free' : (seg.isReduced ? 'cost-reduced' : 'cost-normal');
       const costText  = seg.isFree ? 'Gratuit' : `CHF ${fmtChf(seg.cout)}`;
       const tarifText = seg.isFree ? '—' : `CHF ${fmtChf(seg.tauxH)}/h`;
@@ -266,14 +342,11 @@ async function simuler() {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>
-          <div class="seg-name">
-            <span class="seg-dot" style="background:${dotColor}"></span>
-            <span>${seg.label}</span>
-          </div>
+          <div class="seg-name"><span class="seg-dot" style="background:${dotColor}"></span><span>${seg.label}</span></div>
           <div class="seg-time">${fmtD(seg.from)} ${fmtH(seg.from)} – ${fmtH(seg.to)}</div>
         </td>
         <td>${fmtDuree(seg.minutes)}</td>
-        <td style="color:var(--t3)">${tarifText}</td>
+        <td style="color:var(--ink-3)">${tarifText}</td>
         <td><span class="${costClass}">${costText}</span></td>`;
       tbody.appendChild(tr);
     });
@@ -281,21 +354,23 @@ async function simuler() {
     const footerEl = document.getElementById('resultFooter');
     const noteEl   = document.getElementById('resultNote');
     if (parking.ouvH !== 0 || parking.fermH !== 24) {
-      noteEl.textContent = `Ce parking est ouvert de ${parking.ouvH}h à ${parking.fermH}h. Vérifiez que votre séjour respecte ces horaires.`;
+      noteEl.textContent = `Ce parking est ouvert de ${parking.ouvH}h à ${parking.fermH}h.`;
       footerEl.style.display = 'flex';
-    } else {
-      footerEl.style.display = 'none';
+    } else { footerEl.style.display = 'none'; }
+
+    // Mettre à jour le marker pour montrer le tarif calculé
+    resetMarkers();
+    updateMarkerPrice(parking.id, result.total, { isBest: true });
+    setActive(parking.id);
+    if (map && parking.coords) {
+      map.setView([parking.coords.lat, parking.coords.lng], Math.max(map.getZoom(), 16), { animate: true });
     }
 
     resultEl.className = 'result';
     requestAnimationFrame(() => { resultEl.className = 'result visible'; });
 
-  } catch (err) {
-    showErr('Impossible de contacter le serveur.');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Calculer le prix';
-  }
+  } catch (err) { showErr('Impossible de contacter le serveur.'); }
+  finally { btn.disabled = false; btn.textContent = 'Calculer le prix'; }
 }
 
 // ── COMPARATEUR ───────────────────────────────────────────────────────────
@@ -311,10 +386,7 @@ async function comparer() {
   const arStr = document.getElementById('inpArrivee').value;
   const dpStr = document.getElementById('inpDepart').value;
 
-  function showErr(msg) {
-    alertEl.innerHTML = `⚠️&nbsp; ${msg}`;
-    alertEl.className = 'alert error visible';
-  }
+  function showErr(msg) { alertEl.innerHTML = `⚠️&nbsp; ${msg}`; alertEl.className = 'alert error visible'; }
 
   if (!arStr || !dpStr) { showErr('Veuillez renseigner l\'heure d\'arrivée et de départ.'); return; }
 
@@ -328,17 +400,16 @@ async function comparer() {
   btn.textContent = 'Calcul en cours…';
 
   try {
-    const parkingsList = await fetch('/api/parkings').then(r => r.json());
     const eligibles = currentVehicule === 'moto'
-      ? parkingsList.filter(p => p.moto || p.prixH === 0)
-      : parkingsList;
+      ? allParkings.filter(p => p.moto || p.prixH === 0)
+      : allParkings;
 
     const results = await Promise.all(
       eligibles.map(p =>
         fetch('/api/calculer', {
-          method:  'POST',
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ parkingId: p.id, arrivee: arStr, depart: dpStr, vehicule: currentVehicule })
+          body: JSON.stringify({ parkingId: p.id, arrivee: arStr, depart: dpStr, vehicule: currentVehicule })
         })
         .then(r => r.json())
         .then(data => ({ parking: data.parking, result: data.result }))
@@ -361,6 +432,12 @@ async function comparer() {
     const list = document.getElementById('compList');
     list.innerHTML = '';
 
+    // Mettre à jour tous les markers avec les prix calculés
+    resetMarkers();
+    results.forEach((item, idx) => {
+      if (item.result) updateMarkerPrice(item.parking.id, item.result.total, { isBest: idx === 0 });
+    });
+
     results.forEach((item, idx) => {
       const { parking, result } = item;
       const isBest   = idx === 0 && result;
@@ -370,7 +447,6 @@ async function comparer() {
 
       const row = document.createElement('div');
       row.className = 'comp-row' + (isBest ? ' comp-row-best' : '');
-      row.style.animationDelay = `${idx * 60}ms`;
 
       const rankHTML = isBest
         ? `<span class="comp-rank best"><span class="trophy">🏆</span></span>`
@@ -378,8 +454,8 @@ async function comparer() {
 
       const amountHTML = result
         ? `<div class="comp-amount${isFree ? ' is-free' : ''}">CHF ${fmtChf(result.total)}</div>
-           ${hasSaving ? `<div class="comp-saving">− CHF ${fmtChf(result.economies)} économisé</div>` : ''}`
-        : `<div class="comp-amount" style="color:var(--t3)">—</div>`;
+           ${hasSaving ? `<div class="comp-saving">− CHF ${fmtChf(result.economies)}</div>` : ''}`
+        : `<div class="comp-amount" style="color:var(--ink-4)">—</div>`;
 
       const barClass = isFree ? 'bar-free' : (isBest ? 'bar-best' : '');
 
@@ -387,26 +463,26 @@ async function comparer() {
         ${rankHTML}
         <div class="comp-info">
           <div class="comp-name">${parking.nom}</div>
-          <div class="comp-addr"><a href="${parking.maps}" target="_blank" rel="noopener" class="maps-link" onclick="event.stopPropagation()">📍 ${parking.adresse}</a></div>
+          <div class="comp-addr">${parking.adresse}</div>
         </div>
         <div class="comp-right">${amountHTML}</div>
-        <div class="comp-bar-wrap">
-          <div class="comp-bar ${barClass}" style="width:${barPct}%"></div>
-        </div>`;
+        <div class="comp-bar-wrap"><div class="comp-bar ${barClass}" style="width:${barPct}%"></div></div>`;
 
+      row.addEventListener('click', () => focusParking(parking.id));
       list.appendChild(row);
     });
 
     compEl.className = 'comparison';
     requestAnimationFrame(() => { compEl.className = 'comparison visible'; });
 
-  } catch (err) {
-    showErr('Impossible de contacter le serveur.');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Comparer les parkings';
-  }
+  } catch (err) { showErr('Impossible de contacter le serveur.'); }
+  finally { btn.disabled = false; btn.textContent = 'Comparer les parkings'; }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
-init();
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
