@@ -680,8 +680,7 @@ async function comparer() {
         : `<span class="comp-rank">${idx + 1}</span>`;
 
       const amountHTML = result
-        ? `<div class="comp-amount${isFree ? ' is-free' : ''}">CHF ${fmtChf(result.total)}</div>
-           ${hasSaving ? `<div class="comp-saving">− CHF ${fmtChf(result.economies)}</div>` : ''}`
+        ? `<div class="comp-amount${isFree ? ' is-free' : ''}">CHF ${fmtChf(result.total)}</div>`
         : `<div class="comp-amount" style="color:var(--ink-4)">—</div>`;
 
       const barClass = isFree ? 'bar-free' : (isBest ? 'bar-best' : '');
