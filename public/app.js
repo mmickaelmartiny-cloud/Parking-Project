@@ -96,17 +96,23 @@ function addMarker(p) {
   const priceStr = p.prixH === 0 ? 'Gratuit' : fmtChf(p.prixH);
   const cls = priceClass(p.prixH);
 
-  const el = document.createElement('div');
-  el.className = `parking-marker ${cls}`;
-  el.dataset.id = p.id;
-  el.textContent = priceStr;
-  el.title = p.nom;
-  el.addEventListener('click', e => {
+  // Wrap : positionné par MapLibre (ne pas transformer)
+  const wrap = document.createElement('div');
+  wrap.className = 'parking-marker-wrap';
+  wrap.dataset.id = p.id;
+  wrap.title = p.nom;
+  wrap.addEventListener('click', e => {
     e.stopPropagation();
     focusParking(p.id, { pan: false });
   });
 
-  const m = new maplibregl.Marker({ element: el, anchor: 'bottom' })
+  // Inner : visuel, libre de se transformer (hover/best)
+  const el = document.createElement('div');
+  el.className = `parking-marker ${cls}`;
+  el.textContent = priceStr;
+  wrap.appendChild(el);
+
+  const m = new maplibregl.Marker({ element: wrap, anchor: 'bottom', offset: [0, 7] })
     .setLngLat([p.coords.lng, p.coords.lat])
     .addTo(map);
 
