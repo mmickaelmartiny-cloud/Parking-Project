@@ -366,6 +366,27 @@ function setVehicule(v) {
   });
   if (eligibles.find(p => p.id === prev)) sel.value = prev;
 
+  // Filtrer les rows du panel et les markers sur la carte
+  const eligibleIds = new Set(eligibles.map(p => p.id));
+  allParkings.forEach(p => {
+    const show = eligibleIds.has(p.id);
+    const row = document.querySelector(`.parking-row[data-id="${p.id}"]`);
+    if (row) row.style.display = show ? '' : 'none';
+    const m = markers[p.id];
+    if (m) {
+      const el = m.getElement();
+      if (el) el.style.display = show ? '' : 'none';
+    }
+  });
+
+  // Label dynamique de la section liste
+  const lbl = document.getElementById('sectionLabelText');
+  if (lbl) {
+    lbl.textContent = v === 'moto'
+      ? `${eligibles.length} parking${eligibles.length > 1 ? 's' : ''} moto`
+      : `Les ${eligibles.length} parkings`;
+  }
+
   document.getElementById('result').className = 'result';
   document.getElementById('comparison').className = 'comparison';
   resetMarkers();
