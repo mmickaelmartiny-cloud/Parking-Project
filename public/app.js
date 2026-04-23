@@ -70,9 +70,10 @@ function initMap(parkings) {
     scrollWheelZoom: true
   });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap'
+  L.tileLayer('https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg', {
+    maxZoom: 18,
+    minZoom: 8,
+    attribution: '&copy; <a href="https://www.swisstopo.admin.ch/" target="_blank" rel="noopener">swisstopo</a>'
   }).addTo(map);
 
   parkings.forEach(p => addMarker(p));
@@ -184,7 +185,12 @@ async function init() {
       <div class="row-price ${cls}">${priceStr}</div>
       <div class="row-info">
         <div class="row-name">${p.nom}</div>
-        <div class="row-addr">${p.adresse}</div>
+        <div class="row-addr">
+          <a href="${p.maps}" target="_blank" rel="noopener" class="row-maps-link" onclick="event.stopPropagation()" aria-label="Itinéraire Google Maps vers ${p.nom}">
+            <span>${p.adresse}</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+          </a>
+        </div>
       </div>
       <div class="row-stats">
         <span class="row-places">${p.places} pl.</span>
@@ -325,6 +331,10 @@ async function simuler() {
       `${fmtD(arStr)} ${fmtH(arStr)} → ${fmtD(dpStr)} ${fmtH(dpStr)}  ·  ${fmtDuree(dureeMin)}`;
     document.getElementById('resTotal').textContent = fmtChf(result.total);
 
+    const mapsLink = document.getElementById('resMapsLink');
+    if (parking.maps) { mapsLink.href = parking.maps; mapsLink.style.display = 'inline-flex'; }
+    else { mapsLink.style.display = 'none'; }
+
     const savEl = document.getElementById('resSavings');
     if (result.economies > 0.005) {
       savEl.textContent = `Économie : CHF ${fmtChf(result.economies)}`;
@@ -463,7 +473,12 @@ async function comparer() {
         ${rankHTML}
         <div class="comp-info">
           <div class="comp-name">${parking.nom}</div>
-          <div class="comp-addr">${parking.adresse}</div>
+          <div class="comp-addr">
+            <a href="${parking.maps}" target="_blank" rel="noopener" class="row-maps-link" onclick="event.stopPropagation()" aria-label="Itinéraire Google Maps vers ${parking.nom}">
+              <span>${parking.adresse}</span>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+            </a>
+          </div>
         </div>
         <div class="comp-right">${amountHTML}</div>
         <div class="comp-bar-wrap"><div class="comp-bar ${barClass}" style="width:${barPct}%"></div></div>`;

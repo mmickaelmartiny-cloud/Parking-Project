@@ -821,6 +821,54 @@ select.field-input {
   text-overflow: ellipsis;
   letter-spacing: -0.005em;
 }
+
+.row-maps-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--ink-3);
+  text-decoration: none;
+  transition: color 0.12s;
+  max-width: 100%;
+  overflow: hidden;
+}
+.row-maps-link > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.row-maps-link svg {
+  flex-shrink: 0;
+  opacity: 0.55;
+  transition: opacity 0.12s, transform 0.12s;
+}
+.row-maps-link:hover { color: var(--accent); }
+.row-maps-link:hover svg { opacity: 1; transform: translate(1px, -1px); }
+.comp-addr .row-maps-link { font-family: var(--mono); font-size: 0.62rem; }
+html[data-theme="dark"] .row-maps-link { color: var(--ink-3); }
+html[data-theme="dark"] .row-maps-link:hover { color: var(--accent); }
+
+.res-maps-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.55rem;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+  border-radius: var(--r-xs);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+.res-maps-link:hover { background: var(--accent); color: white; }
+.res-maps-link svg { flex-shrink: 0; }
+html[data-theme="dark"] .res-maps-link:hover { color: #0F172A; }
+
 .row-stats {
   font-family: var(--mono);
   font-size: 0.65rem;
