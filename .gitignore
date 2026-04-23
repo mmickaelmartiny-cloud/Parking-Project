@@ -7,3 +7,4 @@ node_modules/
 *.pdf
 parkings-sion.csv
 parkings-sion.md
+tests/report.html

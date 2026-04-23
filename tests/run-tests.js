@@ -225,7 +225,11 @@ async function main() {
   process.exit(allPassed ? 0 : 1);
 }
 
-main().catch(err => {
-  console.error(`${C.red}Erreur fatale :${C.reset}`, err);
-  process.exit(2);
-});
+module.exports = { TESTS, runTest, waitForServer, PORT, BASE };
+
+if (require.main === module) {
+  main().catch(err => {
+    console.error(`${C.red}Erreur fatale :${C.reset}`, err);
+    process.exit(2);
+  });
+}
