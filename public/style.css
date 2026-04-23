@@ -73,8 +73,11 @@ body {
   font-family: var(--sans);
   background: var(--bg);
 }
-html[data-theme="dark"] .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9); }
-html[data-theme="dark"] .leaflet-control-attribution { filter: invert(1) hue-rotate(180deg); }
+html[data-theme="dark"] .leaflet-control-attribution {
+  background: rgba(30,41,59,.85) !important;
+  color: #94A3B8 !important;
+}
+html[data-theme="dark"] .leaflet-control-attribution a { color: #CBD5E1 !important; }
 
 .leaflet-control-zoom {
   border: none !important;

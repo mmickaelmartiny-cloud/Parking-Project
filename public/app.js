@@ -19,6 +19,10 @@ function toggleTheme() {
   const next = current === 'dark' ? 'light' : 'dark';
   applyTheme(next);
   localStorage.setItem('theme', next);
+  if (map && lightTiles && darkTiles) {
+    if (next === 'dark') { map.removeLayer(lightTiles); darkTiles.addTo(map); }
+    else                 { map.removeLayer(darkTiles);  lightTiles.addTo(map); }
+  }
 }
 
 // ── SERVICE WORKER ─────────────────────────────────────────────────────────
@@ -56,6 +60,7 @@ let map = null;
 let markers = {};       // id -> Leaflet marker
 let markerEls = {};     // id -> HTMLElement du marker (pour update classes)
 let activeId = null;
+let lightTiles = null, darkTiles = null;
 
 // ── CARTE ─────────────────────────────────────────────────────────────────
 
@@ -70,11 +75,16 @@ function initMap(parkings) {
     scrollWheelZoom: true
   });
 
-  L.tileLayer('https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg', {
-    maxZoom: 18,
+  const tileOpts = {
+    subdomains: 'abcd',
+    maxZoom: 19,
     minZoom: 8,
-    attribution: '&copy; <a href="https://www.swisstopo.admin.ch/" target="_blank" rel="noopener">swisstopo</a>'
-  }).addTo(map);
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'
+  };
+  lightTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', tileOpts);
+  darkTiles  = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', tileOpts);
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  (currentTheme === 'dark' ? darkTiles : lightTiles).addTo(map);
 
   parkings.forEach(p => addMarker(p));
 
