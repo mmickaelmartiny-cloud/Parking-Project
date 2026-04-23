@@ -19,7 +19,10 @@ function toggleTheme() {
   const next = current === 'dark' ? 'light' : 'dark';
   applyTheme(next);
   localStorage.setItem('theme', next);
-  if (map) map.setStyle(next === 'dark' ? DARK_STYLE : LIGHT_STYLE);
+  if (map && lightTiles && darkTiles) {
+    if (next === 'dark') { map.removeLayer(lightTiles); darkTiles.addTo(map); }
+    else                 { map.removeLayer(darkTiles);  lightTiles.addTo(map); }
+  }
 }
 
 // ── SERVICE WORKER ─────────────────────────────────────────────────────────
@@ -54,64 +57,73 @@ let currentMode = 'all';
 let currentVehicule = 'voiture';
 let allParkings = [];
 let map = null;
-let markers = {};       // id -> maplibregl.Marker
-let markerEls = {};     // id -> HTMLElement du marker
+let markers = {};       // id -> Leaflet marker
+let markerEls = {};     // id -> HTMLElement du marker (pour update classes)
 let activeId = null;
+let lightTiles = null, darkTiles = null;
 
 // ── CARTE ─────────────────────────────────────────────────────────────────
 
-const SION_CENTER = { lng: 7.3589, lat: 46.2311 };
-const LIGHT_STYLE = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
-const DARK_STYLE  = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
-
-function currentStyleUrl() {
-  const t = document.documentElement.getAttribute('data-theme') || 'light';
-  return t === 'dark' ? DARK_STYLE : LIGHT_STYLE;
-}
+const SION_CENTER = [46.2311, 7.3589];
 
 function initMap(parkings) {
-  map = new maplibregl.Map({
-    container: 'map',
-    style: currentStyleUrl(),
-    center: [SION_CENTER.lng, SION_CENTER.lat],
-    zoom: 14,
-    minZoom: 8,
-    maxZoom: 19,
-    attributionControl: { compact: true }
+  map = L.map('map', {
+    center: SION_CENTER,
+    zoom: 15,
+    zoomControl: true,
+    attributionControl: true,
+    scrollWheelZoom: true
   });
 
-  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-left');
+  const tileOpts = {
+    subdomains: 'abcd',
+    maxZoom: 19,
+    minZoom: 8,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'
+  };
+  lightTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', tileOpts);
+  darkTiles  = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+    maxZoom: 20,
+    minZoom: 8,
+    attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank" rel="noopener">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OSM</a>'
+  });
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  (currentTheme === 'dark' ? darkTiles : lightTiles).addTo(map);
 
   parkings.forEach(p => addMarker(p));
 
-  const bounds = new maplibregl.LngLatBounds();
-  parkings.forEach(p => { if (p.coords) bounds.extend([p.coords.lng, p.coords.lat]); });
-  if (!bounds.isEmpty()) {
-    map.fitBounds(bounds, { padding: 60, maxZoom: 16, duration: 0 });
-  }
+  const group = L.featureGroup(Object.values(markers));
+  map.fitBounds(group.getBounds(), { padding: [60, 60], maxZoom: 16 });
+
+  // Zoom controls en bas à droite, plus propre
+  map.zoomControl.setPosition('bottomleft');
 }
 
 function addMarker(p) {
   if (!p.coords) return;
-  const priceStr = p.prixH === 0 ? 'Gratuit' : fmtChf(p.prixH);
+  const priceStr = p.prixH === 0 ? 'Gratuit' : `${fmtChf(p.prixH)}`;
   const cls = priceClass(p.prixH);
 
-  const el = document.createElement('div');
-  el.className = `parking-marker ${cls}`;
-  el.dataset.id = p.id;
-  el.textContent = priceStr;
-  el.title = p.nom;
-  el.addEventListener('click', e => {
-    e.stopPropagation();
-    focusParking(p.id, { pan: false });
+  const icon = L.divIcon({
+    className: '',
+    html: `<div class="parking-marker ${cls}" data-id="${p.id}">${priceStr}</div>`,
+    iconSize: null,
+    iconAnchor: [25, 40]
   });
 
-  const m = new maplibregl.Marker({ element: el, anchor: 'bottom' })
-    .setLngLat([p.coords.lng, p.coords.lat])
-    .addTo(map);
+  const m = L.marker([p.coords.lat, p.coords.lng], { icon, riseOnHover: true })
+    .addTo(map)
+    .bindTooltip(p.nom, { direction: 'top', offset: [0, -36], opacity: 0.95 });
+
+  m.on('click', () => focusParking(p.id, { pan: false }));
 
   markers[p.id] = m;
-  markerEls[p.id] = el;
+
+  // Stocker l'élément DOM du marker pour manipuler les classes
+  queueMicrotask(() => {
+    const el = m.getElement()?.querySelector('.parking-marker');
+    if (el) markerEls[p.id] = el;
+  });
 }
 
 function updateMarkerPrice(id, chf, { isBest = false } = {}) {
@@ -149,24 +161,15 @@ function focusParking(id, { pan = true } = {}) {
   const p = allParkings.find(x => x.id === id);
   if (!p) return;
   setActive(id);
-  if (pan && p.coords && map) {
-    map.flyTo({
-      center: [p.coords.lng, p.coords.lat],
-      zoom: Math.max(map.getZoom(), 16),
-      duration: 650
-    });
-  }
+  if (pan && p.coords) map.setView([p.coords.lat, p.coords.lng], Math.max(map.getZoom(), 16), { animate: true });
   const sel = document.getElementById('selParking');
   if (sel && [...sel.options].some(o => o.value === id)) sel.value = id;
 }
 
 function recenter() {
   if (!map) return;
-  const bounds = new maplibregl.LngLatBounds();
-  allParkings.forEach(p => { if (p.coords) bounds.extend([p.coords.lng, p.coords.lat]); });
-  if (!bounds.isEmpty()) {
-    map.fitBounds(bounds, { padding: 60, maxZoom: 16, duration: 650 });
-  }
+  const group = L.featureGroup(Object.values(markers));
+  map.fitBounds(group.getBounds(), { padding: [60, 60], maxZoom: 16, animate: true });
   setActive(null);
 }
 
@@ -219,8 +222,8 @@ async function init() {
     sel.appendChild(opt);
   });
 
-  // Init carte (MapLibre GL, chargé en defer)
-  if (typeof maplibregl !== 'undefined') {
+  // Init carte (Leaflet doit être chargé — le script est en defer donc DOMContentLoaded l'attend)
+  if (typeof L !== 'undefined') {
     initMap(parkings);
   } else {
     window.addEventListener('load', () => initMap(parkings));
