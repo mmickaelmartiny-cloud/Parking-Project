@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galerie de tuiles — Parkings Sion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #F7F7F9;
+      color: #0F172A;
+      margin: 0;
+      padding: 24px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .header {
+      max-width: 1400px;
+      margin: 0 auto 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+    .sub {
+      color: #64748B;
+      font-size: 0.88rem;
+      margin-top: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .btn {
+      padding: 8px 14px;
+      border: 1px solid #CBD5E1;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.12s;
+    }
+    .btn:hover { border-color: #0F172A; }
+    .btn.active { background: #0F172A; color: white; border-color: #0F172A; }
+    .grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(15,23,42,.08), 0 1px 2px rgba(15,23,42,.04);
+      transition: background 0.2s;
+    }
+    .card-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid #E5E7EB;
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+    }
+    .card-provider {
+      color: #64748B;
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 2px;
+    }
+    .map { height: 260px; background: #F4F5F7; }
+    .leaflet-container { font-family: 'Inter', sans-serif; }
+
+    /* Night-mode simulator */
+    body.night-sim { background: #0B1220; color: #F1F5F9; }
+    body.night-sim .sub { color: #94A3B8; }
+    body.night-sim .card { background: #1E293B; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
+    body.night-sim .card-head { border-bottom-color: #334155; }
+    body.night-sim .card-provider { color: #94A3B8; }
+    body.night-sim .btn { background: #1E293B; color: #F1F5F9; border-color: #334155; }
+    body.night-sim .btn.active { background: #60A5FA; color: #0F172A; border-color: #60A5FA; }
+    body.night-sim .leaflet-tile-pane {
+      filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.85);
+    }
+
+    /* Markers */
+    .parking-marker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      height: 26px;
+      padding: 0 7px;
+      background: white;
+      border: 2px solid #0F172A;
+      border-radius: 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #0F172A;
+      box-shadow: 0 2px 6px rgba(0,0,0,.2);
+      white-space: nowrap;
+      position: relative;
+    }
+    .parking-marker.free { background: #D1FAE5; border-color: #065F46; color: #065F46; }
+    .parking-marker.low  { background: #FEF3C7; border-color: #B45309; color: #78350F; }
+    .parking-marker.mid  { background: #FED7AA; border-color: #EA580C; color: #7C2D12; }
+    .parking-marker.high { background: #FECACA; border-color: #DC2626; color: #7F1D1D; }
+
+    footer {
+      max-width: 1400px;
+      margin: 24px auto 0;
+      font-size: 0.75rem;
+      color: #64748B;
+      text-align: center;
+    }
+    body.night-sim footer { color: #94A3B8; }
+    footer a { color: inherit; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Galerie de tuiles — Parkings Sion</h1>
+    <div class="sub">9 options · centrées sur Sion · 7 markers de parking · clic sur "Night" pour simuler le dark mode</div>
+  </div>
+  <div class="controls">
+    <button class="btn" id="toggleNight">Night-mode</button>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>
+  Les tuiles Swisstopo (wmts.geo.admin.ch) et CartoDB (basemaps.cartocdn.com) sont gratuites et libres d'accès.
+  OSM standard : respectez leur <a href="https://operations.osmfoundation.org/policies/tiles/" target="_blank" rel="noopener">tile usage policy</a>.
+</footer>
+
+<script>
+const PARKINGS = [
+  { id:'planta',        nom:'Planta',        prixH:3.00, coords:[46.23294,7.35769] },
+  { id:'scex',          nom:'Scex',          prixH:3.00, coords:[46.23222,7.36367] },
+  { id:'cible',         nom:'Cible',         prixH:2.00, coords:[46.23588,7.36149] },
+  { id:'gare',          nom:'Cour de Gare',  prixH:2.00, coords:[46.22826,7.36280] },
+  { id:'st-guerin',     nom:'St-Guérin',     prixH:1.50, coords:[46.22697,7.34996] },
+  { id:'potences',      nom:'Potences',      prixH:0.00, coords:[46.22606,7.34297] },
+  { id:'roches-brunes', nom:'Roches-Brunes', prixH:0.00, coords:[46.23201,7.36869] }
+];
+
+const TILES = [
+  { title: 'CartoDB Voyager',
+    provider: 'basemaps.cartocdn.com/rastertiles/voyager (light actuel)',
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    opts: { subdomains:'abcd', attribution:'© OpenStreetMap © CARTO', maxZoom: 19 }},
+  { title: 'CartoDB Positron',
+    provider: 'basemaps.cartocdn.com/light_all',
+    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    opts: { subdomains:'abcd', attribution:'© OpenStreetMap © CARTO', maxZoom: 19 }},
+  { title: 'OpenStreetMap standard',
+    provider: 'tile.openstreetmap.org',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    opts: { subdomains:'abc', attribution:'© OpenStreetMap', maxZoom: 19 }},
+  { title: 'Swisstopo · Pixelkarte couleur',
+    provider: 'ch.swisstopo.pixelkarte-farbe',
+    url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg',
+    opts: { attribution:'© swisstopo', maxZoom: 18 }},
+  { title: 'Swisstopo · Pixelkarte gris',
+    provider: 'ch.swisstopo.pixelkarte-grau',
+    url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg',
+    opts: { attribution:'© swisstopo', maxZoom: 18 }},
+  { title: 'Swisstopo · TLM3D couleur',
+    provider: 'ch.swisstopo.swisstlm3d-karte-farbe',
+    url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swisstlm3d-karte-farbe/default/current/3857/{z}/{x}/{y}.png',
+    opts: { attribution:'© swisstopo', maxZoom: 18 }},
+  { title: 'Swisstopo · TLM3D gris',
+    provider: 'ch.swisstopo.swisstlm3d-karte-grau',
+    url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swisstlm3d-karte-grau/default/current/3857/{z}/{x}/{y}.png',
+    opts: { attribution:'© swisstopo', maxZoom: 18 }},
+  { title: 'Swisstopo · Pixelkarte hivernale',
+    provider: 'ch.swisstopo.pixelkarte-farbe-winter',
+    url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe-winter/default/current/3857/{z}/{x}/{y}.jpeg',
+    opts: { attribution:'© swisstopo', maxZoom: 18 }},
+  { title: 'Swisstopo · Swissimage (aérien)',
+    provider: 'ch.swisstopo.swissimage',
+    url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg',
+    opts: { attribution:'© swisstopo', maxZoom: 20 }}
+];
+
+function priceClass(chf) {
+  if (chf === 0) return 'free';
+  if (chf <= 1.50) return 'low';
+  if (chf <= 2.50) return 'mid';
+  return 'high';
+}
+
+function renderMap(def, idx) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  const mapId = `map-${idx}`;
+  card.innerHTML = `
+    <div class="card-head">
+      <div class="card-title">${def.title}</div>
+      <div class="card-provider">${def.provider}</div>
+    </div>
+    <div class="map" id="${mapId}"></div>`;
+  document.getElementById('grid').appendChild(card);
+
+  const map = L.map(mapId, {
+    center: [46.2311, 7.3589],
+    zoom: 14,
+    zoomControl: false,
+    attributionControl: false,
+    scrollWheelZoom: false
+  });
+  L.tileLayer(def.url, def.opts).addTo(map);
+
+  PARKINGS.forEach(p => {
+    const priceStr = p.prixH === 0 ? 'Gratuit' : p.prixH.toFixed(2);
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="parking-marker ${priceClass(p.prixH)}">${priceStr}</div>`,
+      iconSize: null,
+      iconAnchor: [25, 13]
+    });
+    L.marker(p.coords, { icon }).addTo(map).bindTooltip(p.nom, { direction: 'top' });
+  });
+}
+
+TILES.forEach(renderMap);
+
+document.getElementById('toggleNight').addEventListener('click', e => {
+  document.body.classList.toggle('night-sim');
+  e.target.classList.toggle('active');
+  e.target.textContent = document.body.classList.contains('night-sim') ? 'Retour light' : 'Night-mode';
+});
+</script>
+</body>
+</html>
