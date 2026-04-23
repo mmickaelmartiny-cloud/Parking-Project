@@ -529,6 +529,75 @@ async function simuler() {
 
 // ── COMPARATEUR ───────────────────────────────────────────────────────────
 
+function renderCompDetail(parking, result, arStr, dpStr) {
+  const dureeMin = (new Date(dpStr) - new Date(arStr)) / 60000;
+  const segRows = result.segments.map(seg => {
+    const dotColor  = seg.isFree ? '#059669' : (seg.isReduced ? '#EA580C' : '#64748B');
+    const costClass = seg.isFree ? 'cost-free' : (seg.isReduced ? 'cost-reduced' : 'cost-normal');
+    const costText  = seg.isFree ? 'Gratuit' : `CHF ${fmtChf(seg.cout)}`;
+    const tarifText = seg.isFree ? '—' : `CHF ${fmtChf(seg.tauxH)}/h`;
+    return `
+      <tr>
+        <td>
+          <div class="seg-name"><span class="seg-dot" style="background:${dotColor}"></span><span>${seg.label}</span></div>
+          <div class="seg-time">${fmtD(seg.from)} ${fmtH(seg.from)} – ${fmtH(seg.to)}</div>
+        </td>
+        <td>${fmtDuree(seg.minutes)}</td>
+        <td style="color:var(--ink-3)">${tarifText}</td>
+        <td><span class="${costClass}">${costText}</span></td>
+      </tr>`;
+  }).join('');
+
+  const mapsLink = parking.maps
+    ? `<a class="res-maps-link" href="${parking.maps}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+         <span>Itinéraire Google Maps</span>
+       </a>`
+    : '';
+
+  const footer = (parking.ouvH !== 0 || parking.fermH !== 24)
+    ? `<div class="comp-detail-footer">
+         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+         <span>Ouvert de ${parking.ouvH}h à ${parking.fermH}h</span>
+       </div>`
+    : '';
+
+  return `
+    <div class="comp-detail-header">
+      <div class="comp-detail-period">${fmtD(arStr)} ${fmtH(arStr)} → ${fmtD(dpStr)} ${fmtH(dpStr)} · ${fmtDuree(dureeMin)}</div>
+      ${mapsLink}
+    </div>
+    <div class="breakdown">
+      <div class="breakdown-head">Détail de facturation</div>
+      <table class="breakdown-table">
+        <thead>
+          <tr><th>Période</th><th>Durée</th><th>Tarif</th><th>Montant</th></tr>
+        </thead>
+        <tbody>${segRows}</tbody>
+      </table>
+    </div>
+    ${footer}
+  `;
+}
+
+function toggleCompExpand(entry) {
+  const list = entry.parentElement;
+  const wasOpen = entry.classList.contains('is-expanded');
+  // Fermer toutes les autres
+  list.querySelectorAll('.comp-entry.is-expanded').forEach(e => {
+    e.classList.remove('is-expanded');
+    const d = e.querySelector('.comp-detail');
+    if (d) d.hidden = true;
+  });
+  if (!wasOpen) {
+    const detail = entry.querySelector('.comp-detail');
+    if (detail) {
+      detail.hidden = false;
+      entry.classList.add('is-expanded');
+    }
+  }
+}
+
 async function comparer() {
   const alertEl = document.getElementById('alertError');
   const compEl  = document.getElementById('comparison');
@@ -599,6 +668,10 @@ async function comparer() {
       const barPct   = result ? (isFree ? 0 : Math.max((result.total / maxTotal) * 100, 3)) : 100;
       const hasSaving = result && result.economies > 0.005;
 
+      const entry = document.createElement('article');
+      entry.className = 'comp-entry';
+      entry.dataset.id = parking.id;
+
       const row = document.createElement('div');
       row.className = 'comp-row' + (isBest ? ' comp-row-best' : '');
 
@@ -612,6 +685,10 @@ async function comparer() {
         : `<div class="comp-amount" style="color:var(--ink-4)">—</div>`;
 
       const barClass = isFree ? 'bar-free' : (isBest ? 'bar-best' : '');
+      const canExpand = !!result;
+      const chevron = canExpand
+        ? `<svg class="comp-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>`
+        : '';
 
       row.innerHTML = `
         ${rankHTML}
@@ -624,11 +701,25 @@ async function comparer() {
             </a>
           </div>
         </div>
-        <div class="comp-right">${amountHTML}</div>
+        <div class="comp-right">${amountHTML}${chevron}</div>
         <div class="comp-bar-wrap"><div class="comp-bar ${barClass}" style="width:${barPct}%"></div></div>`;
 
-      row.addEventListener('click', () => focusParking(parking.id));
-      list.appendChild(row);
+      entry.appendChild(row);
+
+      if (canExpand) {
+        const detail = document.createElement('div');
+        detail.className = 'comp-detail';
+        detail.hidden = true;
+        detail.innerHTML = renderCompDetail(parking, result, arStr, dpStr);
+        entry.appendChild(detail);
+      }
+
+      row.addEventListener('click', () => {
+        focusParking(parking.id);
+        toggleCompExpand(entry);
+      });
+
+      list.appendChild(entry);
     });
 
     compEl.className = 'comparison';
