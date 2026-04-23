@@ -73,6 +73,9 @@ body {
   font-family: var(--sans);
   background: var(--bg);
 }
+html[data-theme="dark"] .leaflet-tile-pane {
+  filter: saturate(1.6) contrast(1.15) brightness(1.05);
+}
 html[data-theme="dark"] .leaflet-control-attribution {
   background: rgba(30,41,59,.85) !important;
   color: #94A3B8 !important;
