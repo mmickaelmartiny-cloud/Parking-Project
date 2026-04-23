@@ -114,12 +114,6 @@ html[data-theme="dark"] .maplibregl-ctrl-attrib.maplibregl-compact {
 html[data-theme="dark"] .maplibregl-ctrl-attrib a { color: #CBD5E1 !important; }
 
 /* Marker custom */
-.parking-marker-wrap {
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
 .parking-marker {
   position: relative;
   display: flex;
@@ -137,10 +131,11 @@ html[data-theme="dark"] .maplibregl-ctrl-attrib a { color: #CBD5E1 !important; }
   color: var(--ink);
   box-shadow: 0 2px 8px rgba(15,23,42,.25);
   white-space: nowrap;
-  transition: transform 0.15s cubic-bezier(0.16,1,0.3,1), box-shadow 0.12s, background 0.12s;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
-  transform-origin: center bottom;
+  will-change: transform;
 }
 .parking-marker::after {
   content: '';
