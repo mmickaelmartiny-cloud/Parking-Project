@@ -229,17 +229,117 @@ async function init() {
   setMode('all');
   document.getElementById('btnRecenter').addEventListener('click', recenter);
 
-  // Mobile : grip pour replier/déplier le panel
+  initBottomSheet();
+}
+
+// ── BOTTOM SHEET (mobile) ────────────────────────────────────────────────
+// 3 snap points : collapsed (58px) / half (45vh) / full (75vh)
+// Drag sur la grip avec snap velocity-aware, persistance localStorage
+function initBottomSheet() {
   const grip = document.getElementById('panelGrip');
   const panel = document.getElementById('panel');
-  if (grip && panel) {
-    grip.addEventListener('click', () => {
-      const collapsed = panel.classList.toggle('panel--collapsed');
-      grip.setAttribute('aria-expanded', String(!collapsed));
-      grip.setAttribute('aria-label', collapsed ? 'Ouvrir le panneau' : 'Replier le panneau');
-      // Recalage du map après transition (évite tiles coupées)
-      if (map) setTimeout(() => map.invalidateSize(), 380);
-    });
+  if (!grip || !panel) return;
+
+  const isMobile = () => window.innerWidth <= 768;
+  const snapCollapsed = 58;
+  const snapHalf = () => window.innerHeight * 0.45;
+  const snapFull = () => window.innerHeight * (window.innerWidth <= 400 ? 0.80 : 0.75);
+
+  let state = 'full';
+  let dragging = false, startY = 0, startH = 0, moveTotal = 0;
+  let lastY = 0, lastT = 0, vY = 0;
+
+  const LABELS = {
+    collapsed: 'Ouvrir le panneau',
+    half:      'Agrandir le panneau',
+    full:      'Replier le panneau'
+  };
+  const CYCLE_NEXT = { collapsed: 'half', half: 'full', full: 'collapsed' };
+
+  function apply(next) {
+    if (!['collapsed', 'half', 'full'].includes(next)) next = 'full';
+    state = next;
+    if (isMobile()) {
+      try { localStorage.setItem('panelState', state); } catch (_) {}
+    }
+    panel.classList.remove('panel--collapsed', 'panel--half', 'panel--full');
+    panel.style.maxHeight = '';
+    panel.classList.add(`panel--${state}`);
+    grip.setAttribute('aria-expanded', String(state !== 'collapsed'));
+    grip.setAttribute('aria-label', LABELS[state]);
+    if (map) setTimeout(() => map.invalidateSize(), 380);
+  }
+
+  function onDown(e) {
+    if (!isMobile()) return;
+    dragging = true;
+    startY = e.clientY;
+    startH = panel.getBoundingClientRect().height;
+    moveTotal = 0;
+    lastY = e.clientY;
+    lastT = performance.now();
+    vY = 0;
+    panel.style.transition = 'none';
+    panel.classList.remove('panel--collapsed', 'panel--half', 'panel--full');
+    try { grip.setPointerCapture(e.pointerId); } catch (_) {}
+    e.preventDefault();
+  }
+
+  function onMove(e) {
+    if (!dragging) return;
+    const dy = startY - e.clientY;
+    const h = Math.max(snapCollapsed, Math.min(window.innerHeight * 0.95, startH + dy));
+    panel.style.maxHeight = `${h}px`;
+    moveTotal += Math.abs(e.clientY - lastY);
+    const now = performance.now();
+    const dt = now - lastT;
+    if (dt > 0) vY = (lastY - e.clientY) / dt;  // px/ms, >0 = drag up
+    lastY = e.clientY;
+    lastT = now;
+  }
+
+  function onUp(e) {
+    if (!dragging) return;
+    dragging = false;
+    panel.style.transition = '';
+
+    if (moveTotal < 6) {
+      // tap → cycle d'état
+      apply(CYCLE_NEXT[state] || 'full');
+      return;
+    }
+
+    const h = panel.getBoundingClientRect().height;
+    const snaps = { collapsed: snapCollapsed, half: snapHalf(), full: snapFull() };
+    let target;
+    if (Math.abs(vY) > 0.4) {
+      if (vY > 0) target = h > snaps.half ? 'full' : 'half';
+      else        target = h < snaps.half ? 'collapsed' : 'half';
+    } else {
+      target = Object.keys(snaps).reduce((a, b) =>
+        Math.abs(h - snaps[a]) < Math.abs(h - snaps[b]) ? a : b);
+    }
+    apply(target);
+  }
+
+  grip.addEventListener('pointerdown', onDown);
+  grip.addEventListener('pointermove', onMove);
+  grip.addEventListener('pointerup', onUp);
+  grip.addEventListener('pointercancel', onUp);
+  grip.addEventListener('click', e => e.preventDefault());  // suppr synthetic click
+  grip.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      apply(CYCLE_NEXT[state] || 'full');
+    }
+  });
+
+  // Restore state (mobile only)
+  if (isMobile()) {
+    const saved = (() => { try { return localStorage.getItem('panelState'); } catch (_) { return null; }})();
+    apply(['collapsed', 'half', 'full'].includes(saved) ? saved : 'full');
+  } else {
+    apply('full');
   }
 }
 

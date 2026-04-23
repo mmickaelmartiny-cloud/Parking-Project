@@ -1081,13 +1081,16 @@ html[data-theme="dark"] .icon-sun  { display: block; }
   .panel-grip:hover::before,
   .panel-grip:active::before { background: var(--ink-3); width: 56px; }
 
-  /* Panel replié : visible que le grip + un teaser */
+  /* 3 snap points : collapsed / half / full */
+  .panel.panel--full      { max-height: 75vh; }
+  .panel.panel--half      { max-height: 45vh; }
   .panel.panel--collapsed { max-height: 58px; }
+
   .panel.panel--collapsed .panel-header,
   .panel.panel--collapsed .panel-scroll { display: none; }
   .panel.panel--collapsed .panel-grip { height: 58px; padding-top: 10px; }
   .panel.panel--collapsed .panel-grip::after {
-    content: '7 parkings · appuyer pour ouvrir';
+    content: '7 parkings · tirer pour ouvrir';
     position: absolute;
     top: 24px;
     left: 0; right: 0;
@@ -1105,16 +1108,17 @@ html[data-theme="dark"] .icon-sun  { display: block; }
     right: 1rem;
     transition: bottom 0.35s cubic-bezier(0.16,1,0.3,1);
   }
-  body:has(.panel.panel--collapsed) .map-recenter {
-    bottom: calc(58px + 0.75rem);
-  }
+  body:has(.panel.panel--half) .map-recenter      { bottom: calc(45vh + 0.75rem); }
+  body:has(.panel.panel--collapsed) .map-recenter { bottom: calc(58px + 0.75rem); }
+
   .sim-form { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 400px) {
-  .panel { max-height: 80vh; }
+  .panel.panel--full { max-height: 80vh; }
   .map-recenter { bottom: calc(80vh + 0.5rem); width: 40px; height: 40px; }
-  body:has(.panel.panel--collapsed) .map-recenter { bottom: calc(58px + 0.75rem); }
+  body:has(.panel.panel--half) .map-recenter      { bottom: calc(45vh + 0.5rem); }
+  body:has(.panel.panel--collapsed) .map-recenter { bottom: calc(58px + 0.5rem); }
 }
 
 /* ── REDUCED MOTION ─────────────────────────────────── */
