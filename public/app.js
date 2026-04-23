@@ -19,6 +19,10 @@ function toggleTheme() {
   const next = current === 'dark' ? 'light' : 'dark';
   applyTheme(next);
   localStorage.setItem('theme', next);
+  if (map && lightTiles && darkTiles) {
+    if (next === 'dark') { map.removeLayer(lightTiles); darkTiles.addTo(map); }
+    else                 { map.removeLayer(darkTiles);  lightTiles.addTo(map); }
+  }
 }
 
 // ── SERVICE WORKER ─────────────────────────────────────────────────────────
@@ -56,7 +60,7 @@ let map = null;
 let markers = {};       // id -> Leaflet marker
 let markerEls = {};     // id -> HTMLElement du marker (pour update classes)
 let activeId = null;
-let lightTiles = null;
+let lightTiles = null, darkTiles = null;
 
 // ── CARTE ─────────────────────────────────────────────────────────────────
 
@@ -77,9 +81,10 @@ function initMap(parkings) {
     minZoom: 8,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'
   };
-  // Une seule tuile (Voyager, colorée). Mode sombre : filtre CSS night-mode
   lightTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', tileOpts);
-  lightTiles.addTo(map);
+  darkTiles  = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png', tileOpts);
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  (currentTheme === 'dark' ? darkTiles : lightTiles).addTo(map);
 
   parkings.forEach(p => addMarker(p));
 
