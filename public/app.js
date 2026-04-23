@@ -361,7 +361,7 @@ function setVehicule(v) {
   eligibles.forEach(p => {
     const opt = document.createElement('option');
     opt.value = p.id;
-    opt.textContent = p.nom + (v === 'moto' && p.moto ? ` — ${p.moto.tarifH.toFixed(2)} CHF/h` : '');
+    opt.textContent = p.nom;
     sel.appendChild(opt);
   });
   if (eligibles.find(p => p.id === prev)) sel.value = prev;
