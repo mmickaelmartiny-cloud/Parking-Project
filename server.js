@@ -207,12 +207,16 @@ function calculerProgressif(parking, arrivee, depart) {
   const gratuitQuot  = parking.regles.find(r => r.type === 'gratuit_plage_quotidien');
   const gratuitHebdo = parking.regles.filter(r => r.type === 'gratuit_plage_hebdo');
 
-  // 1. Classer chaque minute en gratuit / jour / nuit
+  const dateKey = (t) =>
+    `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+
+  // 1. Classer chaque minute en gratuit / jour / nuit (+ jour calendaire)
   const mData = [];
   for (let i = 0; i < totalMin; i++) {
     const t     = new Date(arrivee.getTime() + i * 60000);
     const hFrac = t.getHours() + t.getMinutes() / 60;
     const dow   = t.getDay();
+    const dk    = dateKey(t);
 
     // Plages gratuites prioritaires
     let isFreeP = false, freeLabel = '';
@@ -228,29 +232,33 @@ function calculerProgressif(parking, arrivee, depart) {
     }
 
     if (isFreeP) {
-      mData.push({ t, periode: 'gratuit', label: freeLabel });
+      mData.push({ t, periode: 'gratuit', label: freeLabel, dk });
     } else {
       const isNuitH    = hFrac >= tarif.nuit.heures[0] || hFrac < tarif.nuit.heures[1];
       const isDimFerie = tarif.nuit.dimFeries && (dow === 0 || estFerie(t));
-      mData.push({ t, periode: (isNuitH || isDimFerie) ? 'nuit' : 'jour' });
+      mData.push({ t, periode: (isNuitH || isDimFerie) ? 'nuit' : 'jour', dk });
     }
   }
 
-  // 2. Regrouper les minutes consécutives par période (et label pour gratuit)
+  // 2. Regrouper les minutes consécutives par (période, jour calendaire)
+  //    Le découpage par jour permet de réinitialiser le plafond chaque jour.
   const groupes = [];
   let gi = 0;
   while (gi < totalMin) {
     const cur = mData[gi];
     let gj = gi + 1;
-    while (gj < totalMin && mData[gj].periode === cur.periode
+    while (gj < totalMin
+           && mData[gj].periode === cur.periode
+           && mData[gj].dk === cur.dk
            && (cur.periode !== 'gratuit' || mData[gj].label === cur.label)) gj++;
-    groupes.push({ from: cur.t, minutes: gj - gi, periode: cur.periode, label: cur.label });
+    groupes.push({ from: cur.t, minutes: gj - gi, periode: cur.periode, label: cur.label, dk: cur.dk });
     gi = gj;
   }
 
-  // 3. Appliquer la période gratuite initiale, puis facturer
+  // 3. Appliquer la période gratuite initiale, puis facturer.
+  //    Cumul keyé par "date|période" → plafond réinitialisé chaque jour.
   let freeLeft = tarif.gratuit_initial;
-  const cumul  = { jour: 0, nuit: 0 };
+  const cumul  = {};
   const segments = [];
 
   for (const g of groupes) {
@@ -282,9 +290,10 @@ function calculerProgressif(parking, arrivee, depart) {
 
     if (billable > 0) {
       const config    = tarif[g.periode];
-      const startCum  = cumul[g.periode];
-      cumul[g.periode] += billable;
-      const costAfter  = coutProgressif(config, cumul[g.periode]);
+      const key       = `${g.dk}|${g.periode}`;
+      const startCum  = cumul[key] || 0;
+      cumul[key]      = startCum + billable;
+      const costAfter  = coutProgressif(config, cumul[key]);
       const costBefore = coutProgressif(config, startCum);
       const segCost    = Math.round((costAfter - costBefore) * 100) / 100;
       const isNuit     = g.periode === 'nuit';

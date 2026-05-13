@@ -68,6 +68,7 @@ const TESTS = [
   { id: 'F6', cat: 'Gare',    parking: 'gare',           ar: '2026-04-20T09:00', dp: '2026-04-20T14:00', veh: 'voiture', expected: 6.00,  desc: 'Gare · 5h00 jour (bascule palier 3, 2 CHF/h)' },
   { id: 'F7', cat: 'Gare',    parking: 'gare',           ar: '2026-04-20T22:00', dp: '2026-04-21T06:00', veh: 'voiture', expected: 8.00,  desc: 'Gare · 22h→6h (nuit 8h × 1 CHF/h linéaire)' },
   { id: 'F8', cat: 'Gare',    parking: 'gare',           ar: '2026-03-19T00:00', dp: '2026-03-20T00:00', veh: 'voiture', expected: 12.00, desc: 'Gare · St-Joseph férié VS 24h (plafond nuit 12 CHF)' },
+  { id: 'F9', cat: 'Gare',    parking: 'gare',           ar: '2026-05-13T07:30', dp: '2026-05-18T19:30', veh: 'voiture', expected: 140.00, desc: 'Gare · séjour 132h (plafonds réinit/jour, Ascension incluse)' },
 
   // ── G · Tarif moto ─────────────────────────────────────────────────────
   { id: 'G1', cat: 'Moto',    parking: 'planta',         ar: '2026-04-20T09:00', dp: '2026-04-20T10:00', veh: 'moto',    expected: 0.00,  desc: 'Planta moto · 1h stay = 1ère heure gratuite → 0 CHF' },
