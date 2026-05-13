@@ -53,9 +53,15 @@ const TESTS = [
   { id: 'E1', cat: 'Férié',   parking: 'planta',         ar: '2026-04-26T10:00', dp: '2026-04-26T12:00', veh: 'voiture', expected: 1.00,  desc: 'Planta · dimanche 10h-12h (= tarif nuit)' },
   { id: 'E2', cat: 'Férié',   parking: 'planta',         ar: '2026-05-01T10:00', dp: '2026-05-01T12:00', veh: 'voiture', expected: 1.00,  desc: 'Planta · 1er mai (férié) 10h-12h' },
 
-  // ── F · Plafonds Cour de Gare ─────────────────────────────────────────
-  { id: 'F1', cat: 'Plafond', parking: 'gare',           ar: '2026-04-26T00:00', dp: '2026-04-27T00:00', veh: 'voiture', expected: 12.00, desc: 'Gare · dimanche 24h (plafond nuit 12 CHF)' },
-  { id: 'F2', cat: 'Plafond', parking: 'gare',           ar: '2026-04-20T09:00', dp: '2026-04-20T19:00', veh: 'voiture', expected: 27.00, desc: 'Gare · 9h-19h (paliers jour, sous plafond)' },
+  // ── F · Cour de Gare (paliers jour/nuit, plafonds) ────────────────────
+  { id: 'F1', cat: 'Gare',    parking: 'gare',           ar: '2026-04-26T00:00', dp: '2026-04-27T00:00', veh: 'voiture', expected: 12.00, desc: 'Gare · dimanche 24h (plafond nuit 12 CHF)' },
+  { id: 'F2', cat: 'Gare',    parking: 'gare',           ar: '2026-04-20T09:00', dp: '2026-04-20T19:00', veh: 'voiture', expected: 16.00, desc: 'Gare · 9h-19h (1.50 + 3.50 + 11.00, sous plafond 35)' },
+  { id: 'F3', cat: 'Gare',    parking: 'gare',           ar: '2026-04-20T09:00', dp: '2026-04-20T09:30', veh: 'voiture', expected: 1.50,  desc: 'Gare · 30 min jour (forfait 1ère h)' },
+  { id: 'F4', cat: 'Gare',    parking: 'gare',           ar: '2026-04-20T09:00', dp: '2026-04-20T10:30', veh: 'voiture', expected: 2.00,  desc: 'Gare · 1h30 jour (1.50 + 0.50, palier 2)' },
+  { id: 'F5', cat: 'Gare',    parking: 'gare',           ar: '2026-04-20T09:00', dp: '2026-04-20T13:30', veh: 'voiture', expected: 5.00,  desc: 'Gare · 4h30 jour (fin palier 2, 1 CHF/h)' },
+  { id: 'F6', cat: 'Gare',    parking: 'gare',           ar: '2026-04-20T09:00', dp: '2026-04-20T14:00', veh: 'voiture', expected: 6.00,  desc: 'Gare · 5h00 jour (bascule palier 3, 2 CHF/h)' },
+  { id: 'F7', cat: 'Gare',    parking: 'gare',           ar: '2026-04-20T22:00', dp: '2026-04-21T06:00', veh: 'voiture', expected: 8.00,  desc: 'Gare · 22h→6h (nuit 8h × 1 CHF/h linéaire)' },
+  { id: 'F8', cat: 'Gare',    parking: 'gare',           ar: '2026-05-01T00:00', dp: '2026-05-02T00:00', veh: 'voiture', expected: 12.00, desc: 'Gare · 1er mai férié 24h (plafond nuit 12 CHF)' },
 
   // ── G · Tarif moto ─────────────────────────────────────────────────────
   { id: 'G1', cat: 'Moto',    parking: 'planta',         ar: '2026-04-20T09:00', dp: '2026-04-20T10:00', veh: 'moto',    expected: 0.00,  desc: 'Planta moto · 1h stay = 1ère heure gratuite → 0 CHF' },

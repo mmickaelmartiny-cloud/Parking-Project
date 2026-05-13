@@ -312,11 +312,6 @@
     "note": "Plafond : CHF 35/j (jour) · CHF 12/j (nuit, dim. & fériés)",
     "regles": [
       {
-        "type": "premiere_h_gratuite",
-        "label": "1ère heure toujours gratuite",
-        "emoji": "🎁"
-      },
-      {
         "type": "tarif_nuit_dim_feries",
         "hDeb": 19,
         "hFin": 7,
@@ -331,7 +326,7 @@
       }
     ],
     "tarification": {
-      "gratuit_initial": 60,
+      "gratuit_initial": 0,
       "jour": {
         "heures": [
           7,
@@ -340,14 +335,19 @@
         "arrondi": "ceil",
         "paliers": [
           {
+            "jusqua": 60,
+            "tranche": 60,
+            "prix": 1.5
+          },
+          {
             "jusqua": 270,
             "tranche": 30,
-            "prix": 1
+            "prix": 0.5
           },
           {
             "jusqua": null,
             "tranche": 30,
-            "prix": 2
+            "prix": 1
           }
         ],
         "plafond": 35
@@ -358,16 +358,11 @@
           7
         ],
         "dimFeries": true,
-        "arrondi": "floor",
+        "arrondi": "ceil",
         "paliers": [
           {
-            "jusqua": 120,
-            "tranche": 60,
-            "prix": 1
-          },
-          {
             "jusqua": null,
-            "tranche": 120,
+            "tranche": 60,
             "prix": 1
           }
         ],
