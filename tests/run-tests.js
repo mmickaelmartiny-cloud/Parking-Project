@@ -22,7 +22,10 @@ const EPS  = 0.01; // tolérance en CHF
 //   2026-04-24 = vendredi
 //   2026-04-25 = samedi (toute la journée gratuite)
 //   2026-04-26 = dimanche (tarif nuit/dim/fériés)
-//   2026-05-01 = 1er mai (férié suisse)
+//   2026-03-19 = jeudi · St-Joseph (férié VS fixe)
+//   2026-04-06 = lundi de Pâques (férié VS mobile)
+//   2026-05-14 = jeudi · Ascension (férié VS mobile)
+//   2026-05-01 = vendredi · 1er mai (PAS férié en VS — régression check)
 
 const TESTS = [
   // ── A · Règles de base ────────────────────────────────────────────────
@@ -51,7 +54,10 @@ const TESTS = [
 
   // ── E · Dimanches & fériés ────────────────────────────────────────────
   { id: 'E1', cat: 'Férié',   parking: 'planta',         ar: '2026-04-26T10:00', dp: '2026-04-26T12:00', veh: 'voiture', expected: 1.00,  desc: 'Planta · dimanche 10h-12h (= tarif nuit)' },
-  { id: 'E2', cat: 'Férié',   parking: 'planta',         ar: '2026-05-01T10:00', dp: '2026-05-01T12:00', veh: 'voiture', expected: 1.00,  desc: 'Planta · 1er mai (férié) 10h-12h' },
+  { id: 'E2', cat: 'Férié',   parking: 'planta',         ar: '2026-03-19T10:00', dp: '2026-03-19T12:00', veh: 'voiture', expected: 1.00,  desc: 'Planta · St-Joseph (férié VS fixe) 10h-12h' },
+  { id: 'E3', cat: 'Férié',   parking: 'planta',         ar: '2026-04-06T10:00', dp: '2026-04-06T12:00', veh: 'voiture', expected: 1.00,  desc: 'Planta · Lundi de Pâques (férié VS mobile) 10h-12h' },
+  { id: 'E4', cat: 'Férié',   parking: 'planta',         ar: '2026-05-14T10:00', dp: '2026-05-14T12:00', veh: 'voiture', expected: 1.00,  desc: 'Planta · Ascension (férié VS mobile) 10h-12h' },
+  { id: 'E5', cat: 'Férié',   parking: 'planta',         ar: '2026-05-01T10:00', dp: '2026-05-01T12:00', veh: 'voiture', expected: 3.00,  desc: 'Planta · 1er mai NON férié en VS → tarif jour normal' },
 
   // ── F · Cour de Gare (paliers jour/nuit, plafonds) ────────────────────
   { id: 'F1', cat: 'Gare',    parking: 'gare',           ar: '2026-04-26T00:00', dp: '2026-04-27T00:00', veh: 'voiture', expected: 12.00, desc: 'Gare · dimanche 24h (plafond nuit 12 CHF)' },
@@ -61,7 +67,7 @@ const TESTS = [
   { id: 'F5', cat: 'Gare',    parking: 'gare',           ar: '2026-04-20T09:00', dp: '2026-04-20T13:30', veh: 'voiture', expected: 5.00,  desc: 'Gare · 4h30 jour (fin palier 2, 1 CHF/h)' },
   { id: 'F6', cat: 'Gare',    parking: 'gare',           ar: '2026-04-20T09:00', dp: '2026-04-20T14:00', veh: 'voiture', expected: 6.00,  desc: 'Gare · 5h00 jour (bascule palier 3, 2 CHF/h)' },
   { id: 'F7', cat: 'Gare',    parking: 'gare',           ar: '2026-04-20T22:00', dp: '2026-04-21T06:00', veh: 'voiture', expected: 8.00,  desc: 'Gare · 22h→6h (nuit 8h × 1 CHF/h linéaire)' },
-  { id: 'F8', cat: 'Gare',    parking: 'gare',           ar: '2026-05-01T00:00', dp: '2026-05-02T00:00', veh: 'voiture', expected: 12.00, desc: 'Gare · 1er mai férié 24h (plafond nuit 12 CHF)' },
+  { id: 'F8', cat: 'Gare',    parking: 'gare',           ar: '2026-03-19T00:00', dp: '2026-03-20T00:00', veh: 'voiture', expected: 12.00, desc: 'Gare · St-Joseph férié VS 24h (plafond nuit 12 CHF)' },
 
   // ── G · Tarif moto ─────────────────────────────────────────────────────
   { id: 'G1', cat: 'Moto',    parking: 'planta',         ar: '2026-04-20T09:00', dp: '2026-04-20T10:00', veh: 'moto',    expected: 0.00,  desc: 'Planta moto · 1h stay = 1ère heure gratuite → 0 CHF' },
