@@ -1,0 +1,4287 @@
+[
+  {
+    "id": "p-r-bachet-praille-voitures-2",
+    "nom": "P+R Bachet-Praille (voitures)",
+    "adresse": "Route des Jeunes 91 1227 Carouge",
+    "maps": "https://www.google.com/maps/search/?api=1&query=P%2BR%20Bachet-Praille%20(voitures)%20Gen%C3%A8ve",
+    "places": 197,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "221",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          7,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.176855,
+      "lng": 6.128905
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "parking-p-r-bernex-9",
+    "nom": "Parking P+R Bernex",
+    "adresse": "Rue de Bernex 190 1233 Bernex",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking%20P%2BR%20Bernex%20Gen%C3%A8ve",
+    "places": 339,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "226",
+    "prixH": 1,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          7,
+          17
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0167
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          17,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.178664,
+      "lng": 6.0829
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "parking-p-r-bernex-10",
+    "nom": "Parking P+R Bernex",
+    "adresse": "Rue de Bernex 190 1233 Bernex",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking%20P%2BR%20Bernex%20Gen%C3%A8ve",
+    "places": 26,
+    "typeParking": "NC",
+    "typeVehicule": "moto",
+    "codeTarif": "353",
+    "tarifBrut": "1 franc par tranche de 3 heures, soit 0,33ct par heure",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.178604,
+      "lng": 6.083817
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "p-r-tuileries-11",
+    "nom": "P+R Tuileries",
+    "adresse": "Route des Romelles 5 1293 Bellevue",
+    "maps": "https://www.google.com/maps/search/?api=1&query=P%2BR%20Tuileries%20Gen%C3%A8ve",
+    "places": 52,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "227",
+    "prixH": 1,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          7,
+          17
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0167
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          17,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.249537,
+      "lng": 6.14779
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "p-r-tuileries-motos-12",
+    "nom": "P+R Tuileries (motos)",
+    "adresse": "Route des Romelles 5 1293 Bellevue",
+    "maps": "https://www.google.com/maps/search/?api=1&query=P%2BR%20Tuileries%20(motos)%20Gen%C3%A8ve",
+    "places": 2,
+    "typeParking": "NC",
+    "typeVehicule": "moto",
+    "codeTarif": "354",
+    "prixH": 0.2,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          7,
+          17
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0033
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          17,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.24967,
+      "lng": 6.147485
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "parking-p-r-bout-du-monde-13",
+    "nom": "Parking P+R Bout du monde",
+    "adresse": "Rte de Vessy 6 1206 Genève",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking%20P%2BR%20Bout%20du%20monde%20Gen%C3%A8ve",
+    "places": 74,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "228",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          7,
+          17
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          17,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.181223,
+      "lng": 6.158264
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "parking-p-r-frontenex-14",
+    "nom": "Parking P+R Frontenex",
+    "adresse": "Plateau de Frontenex 8 1223 Cologny",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking%20P%2BR%20Frontenex%20Gen%C3%A8ve",
+    "places": 27,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "229",
+    "prixH": 1,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          7,
+          17
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0167
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          17,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.206379,
+      "lng": 6.175615
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "la-chapelle-25",
+    "nom": "La Chapelle",
+    "adresse": "Chemin de Compostelle 1212 Lancy",
+    "maps": "https://www.google.com/maps/search/?api=1&query=La%20Chapelle%20Gen%C3%A8ve",
+    "places": 96,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "328",
+    "tarifBrut": "Du lundi au vendredi de 8h à 18h à CHF 1.50 de l’heure\r\nLes nuits de 18h à 8h, les samedis, dimanches et jours fériés à CHF 0,50 de l’heure",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.170704,
+      "lng": 6.132706
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "heds-thury-4-interieur-33",
+    "nom": "HEdS Thury 4 intérieur",
+    "adresse": "Av. Champel 47, ch. Thury 4 1206 Genève",
+    "maps": "https://www.google.com/maps/search/?api=1&query=HEdS%20Thury%204%20int%C3%A9rieur%20Gen%C3%A8ve",
+    "places": 39,
+    "typeParking": "intérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "233",
+    "prixH": 1.6,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0267
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.192286,
+      "lng": 6.152058
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "co-de-secheron-35",
+    "nom": "CO de Sécheron",
+    "adresse": "Av. Blanc 1 1202 Genève",
+    "maps": "https://www.google.com/maps/search/?api=1&query=CO%20de%20S%C3%A9cheron%20Gen%C3%A8ve",
+    "places": 55,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "238",
+    "prixH": 1,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0167
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.217457,
+      "lng": 6.146272
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "ocd-vil-villars-55",
+    "nom": "OCD-VIL Villars",
+    "adresse": "Rte des Franchises 11 1203 Genève",
+    "maps": "https://www.google.com/maps/search/?api=1&query=OCD-VIL%20Villars%20Gen%C3%A8ve",
+    "places": 10,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "249",
+    "prixH": 1,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "demi_h_gratuite",
+        "label": "Premières 30 min gratuites",
+        "emoji": "🎁"
+      },
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 30,
+      "jour": {
+        "heures": [
+          8,
+          16
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0167
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          16,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.210805,
+      "lng": 6.120011
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "centre-sportif-cointrin-78",
+    "nom": "Centre sportif Cointrin",
+    "adresse": "Av. Louis-Casaï 81 1216 Meyrin",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Centre%20sportif%20Cointrin%20Gen%C3%A8ve",
+    "places": 80,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "298",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 4 heures",
+    "regles": [
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          0,
+          24
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          24,
+          24
+        ],
+        "dimFeries": false,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      }
+    },
+    "coords": {
+      "lat": 46.226558,
+      "lng": 6.104619
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "jardins-familiaux-champ-bossu-80",
+    "nom": "Jardins familiaux Champ Bossu",
+    "adresse": "Ch. de Mouille-Galand 11 1214 Vernier",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Jardins%20familiaux%20Champ%20Bossu%20Gen%C3%A8ve",
+    "places": 60,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "243",
+    "tarifBrut": "CHF 0,50 / CHF 1 dès le 1.1.23",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.214054,
+      "lng": 6.077431
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "domaine-de-penthes-93",
+    "nom": "Domaine de Penthes",
+    "adresse": "Ch. de l'Impératrice 1292 Pregny-Chambésy",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Domaine%20de%20Penthes%20Gen%C3%A8ve",
+    "places": 46,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "295",
+    "tarifBrut": "Du lundi au vendredi, de 06h à 19h:\r\nDe 0h à 2h: CHF 2 de l'heure\r\nAprès 2h : CHF 4 de l'heure\r\nEntre 11h30 à 14h30, la nuit et les week-ends: gratuit",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.232369,
+      "lng": 6.13949
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "plage-du-reposoir-94",
+    "nom": "Plage du Reposoir",
+    "adresse": "Rte de Lausanne 222 1292 Pregny-Chambésy",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Plage%20du%20Reposoir%20Gen%C3%A8ve",
+    "places": 62,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "294",
+    "tarifBrut": "CHF 0,60 / CHF 1 dès le 1.1.23",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.23064,
+      "lng": 6.149549
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "plage-du-vengeron-exterieur-96",
+    "nom": "Plage du Vengeron extérieur",
+    "adresse": "Rte de Lausanne 284 1292 Pregny-Chambésy",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Plage%20du%20Vengeron%20ext%C3%A9rieur%20Gen%C3%A8ve",
+    "places": 96,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "303",
+    "tarifBrut": "CHF 0,60 / CHF 1 dès le 1.1.23",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.24598,
+      "lng": 6.152577
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "versoix-place-bordier-97",
+    "nom": "Versoix - place Bordier",
+    "adresse": "Place Bordier 1290 Versoix",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Versoix%20-%20place%20Bordier%20Gen%C3%A8ve",
+    "places": 151,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "309",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_initial",
+        "label": "Premières 120 min gratuites",
+        "emoji": "🎁"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 120,
+      "jour": {
+        "heures": [
+          7,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.285334,
+      "lng": 6.166169
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "versoix-bon-sejour-98",
+    "nom": "Versoix - Bon Séjour",
+    "adresse": "Rte de Sauverny 8 1290 Versoix",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Versoix%20-%20Bon%20S%C3%A9jour%20Gen%C3%A8ve",
+    "places": 65,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "308",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_initial",
+        "label": "Premières 120 min gratuites",
+        "emoji": "🎁"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 120,
+      "jour": {
+        "heures": [
+          7,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.284438,
+      "lng": 6.164229
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "versoix-centre-sportif-99",
+    "nom": "Versoix - Centre Sportif",
+    "adresse": "Rte de l'Etraz 201 1290 Versoix",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Versoix%20-%20Centre%20Sportif%20Gen%C3%A8ve",
+    "places": 228,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "304",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_initial",
+        "label": "Premières 180 min gratuites",
+        "emoji": "🎁"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 180,
+      "jour": {
+        "heures": [
+          7,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.295232,
+      "lng": 6.15573
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "versoix-centre-de-tir-100",
+    "nom": "Versoix - Centre de tir",
+    "adresse": "Rte de Sauverny 151 1290 Versoix",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Versoix%20-%20Centre%20de%20tir%20Gen%C3%A8ve",
+    "places": 75,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "305",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_initial",
+        "label": "Premières 180 min gratuites",
+        "emoji": "🎁"
+      },
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 180,
+      "jour": {
+        "heures": [
+          7,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.298907,
+      "lng": 6.140931
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "versoix-ecogia-101",
+    "nom": "Versoix - Ecogia",
+    "adresse": "Chemin d'Ecogia 1290 Versoix",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Versoix%20-%20Ecogia%20Gen%C3%A8ve",
+    "places": 58,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "307",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_initial",
+        "label": "Premières 120 min gratuites",
+        "emoji": "🎁"
+      },
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 120,
+      "jour": {
+        "heures": [
+          7,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.29093,
+      "lng": 6.152542
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "lachenal-versoix-102",
+    "nom": "Lachenal Versoix",
+    "adresse": "Rte de Saint-Loup 14 1290 Versoix",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Lachenal%20Versoix%20Gen%C3%A8ve",
+    "places": 105,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "311",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "premiere_h_gratuite",
+        "label": "Premières 60 min gratuites",
+        "emoji": "🎁"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 60,
+      "jour": {
+        "heures": [
+          7,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.280092,
+      "lng": 6.161512
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "la-scie-103",
+    "nom": "La Scie",
+    "adresse": "Chemin de la Scie 4 1290 Versoix",
+    "maps": "https://www.google.com/maps/search/?api=1&query=La%20Scie%20Gen%C3%A8ve",
+    "places": 106,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "312",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "premiere_h_gratuite",
+        "label": "Premières 60 min gratuites",
+        "emoji": "🎁"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 60,
+      "jour": {
+        "heures": [
+          7,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.275915,
+      "lng": 6.166958
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "ocv-veyrier-86-ext-public-108",
+    "nom": "OCV Veyrier 86 ext. public",
+    "adresse": "Rte de Veyrier 86 1227 Carouge",
+    "maps": "https://www.google.com/maps/search/?api=1&query=OCV%20Veyrier%2086%20ext.%20public%20Gen%C3%A8ve",
+    "places": 70,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "333",
+    "prixH": 2,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 10 heures",
+    "regles": [
+      {
+        "type": "premiere_h_gratuite",
+        "label": "Premières 60 min gratuites",
+        "emoji": "🎁"
+      },
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 60,
+      "jour": {
+        "heures": [
+          7,
+          17
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0333
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          17,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.183844,
+      "lng": 6.1517
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "ec-reymond-uldry-111",
+    "nom": "EC Reymond-Uldry",
+    "adresse": "Chemin du Domaine-Patry 1 1224 Chêne-Bougerie",
+    "maps": "https://www.google.com/maps/search/?api=1&query=EC%20Reymond-Uldry%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "240",
+    "tarifBrut": "CHF 0,80 / CHF 1 dès le 1.1.23",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.204611,
+      "lng": 6.17955
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "hippomene-motos-119",
+    "nom": "Hippomène Motos",
+    "adresse": "Chemin des Sports 70 1203 Genève",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Hippom%C3%A8ne%20Motos%20Gen%C3%A8ve",
+    "places": 15,
+    "typeParking": "intérieur",
+    "typeVehicule": "moto",
+    "codeTarif": "425",
+    "tarifBrut": "1 franc par tranche de 3 heures",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.208727,
+      "lng": 6.117343
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "voie-publique-128",
+    "nom": "Voie publique",
+    "adresse": "1227 Carouge",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Voie%20publique%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": "auto",
+    "codeTarif": "2500",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.179089,
+      "lng": 6.135765
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "versoix-ville-zone-port-choiseul-189",
+    "nom": "Versoix Ville - Zone Port Choiseul",
+    "adresse": "1290 Versoix",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Versoix%20Ville%20-%20Zone%20Port%20Choiseul%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "2701",
+    "tarifBrut": "Les 3 premières heures : CHF 0.50/h\r\nPuis CHF 1.50/h",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.289334,
+      "lng": 6.166515
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "batelle-exterieur-284",
+    "nom": "Batelle extérieur",
+    "adresse": "Route de Drize 7 1227 Carouge",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Batelle%20ext%C3%A9rieur%20Gen%C3%A8ve",
+    "places": 164,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "222",
+    "prixH": 1,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0167
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.17535,
+      "lng": 6.140126
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "batelle-exterieur-285",
+    "nom": "Batelle extérieur",
+    "adresse": "Route de Drize 7 1227 Carouge",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Batelle%20ext%C3%A9rieur%20Gen%C3%A8ve",
+    "places": 164,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "222",
+    "prixH": 1,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0167
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.176636,
+      "lng": 6.140165
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "centre-sportif-du-bois-des-freres-286",
+    "nom": "Centre sportif du Bois des Frères",
+    "adresse": "Chemin de l'Ecu 22 1219 Chatelaine",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Centre%20sportif%20du%20Bois%20des%20Fr%C3%A8res%20Gen%C3%A8ve",
+    "places": 193,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "433",
+    "prixH": 0.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 11 heures",
+    "regles": [
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0083
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.209161,
+      "lng": 6.106004
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "centre-sportif-du-bout-du-monde-287",
+    "nom": "Centre sportif du Bout-du-Monde",
+    "adresse": "Route de Vessy 12 1206 Genève",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Centre%20sportif%20du%20Bout-du-Monde%20Gen%C3%A8ve",
+    "places": 130,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "434",
+    "tarifBrut": "Heures pleines (7h-19h) : \r\nCHF 2/heure\r\n \r\nHeures creuses : \r\nnuits, sam-dim et JF à CHF 1 pour 4 heures",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.181777,
+      "lng": 6.156755
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "centre-sportif-de-vessy-288",
+    "nom": "Centre sportif de Vessy",
+    "adresse": "Route de Vessy 29 1234 Vessy",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Centre%20sportif%20de%20Vessy%20Gen%C3%A8ve",
+    "places": 178,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "443",
+    "prixH": 0.3,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.005
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.184321,
+      "lng": 6.165191
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "centre-sportif-de-vessy-289",
+    "nom": "Centre sportif de Vessy",
+    "adresse": "Route de Vessy 29 1234 Vessy",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Centre%20sportif%20de%20Vessy%20Gen%C3%A8ve",
+    "places": 178,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "443",
+    "prixH": 0.3,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.005
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.182579,
+      "lng": 6.163529
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "fondation-des-evaux-294",
+    "nom": "Fondation des Evaux",
+    "adresse": "chemin de François-Chavaz 110 1213 Onex",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Fondation%20des%20Evaux%20Gen%C3%A8ve",
+    "places": 138,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "432",
+    "prixH": 0.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          7,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0083
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.188264,
+      "lng": 6.092874
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "college-de-saussure-public-685",
+    "nom": "Collège De Saussure Public",
+    "adresse": "Vieux-Chemin d'Onex 9 1213 Petit-Lancy",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Coll%C3%A8ge%20De%20Saussure%20Public%20Gen%C3%A8ve",
+    "places": 98,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "250",
+    "tarifBrut": "CHF 0,80 / CHF 1 dès le 1.1.23",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.185197,
+      "lng": 6.11538
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "college-de-saussure-public-687",
+    "nom": "Collège De Saussure Public",
+    "adresse": "Vieux-Chemin d'Onex 9 1213 Petit-Lancy",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Coll%C3%A8ge%20De%20Saussure%20Public%20Gen%C3%A8ve",
+    "places": 98,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "250",
+    "tarifBrut": "CHF 0,80 / CHF 1 dès le 1.1.23",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.185567,
+      "lng": 6.114093
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "college-de-saussure-public-689",
+    "nom": "Collège De Saussure Public",
+    "adresse": "Vieux-Chemin d'Onex 9 1213 Petit-Lancy",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Coll%C3%A8ge%20De%20Saussure%20Public%20Gen%C3%A8ve",
+    "places": 98,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "250",
+    "tarifBrut": "CHF 0,80 / CHF 1 dès le 1.1.23",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.185495,
+      "lng": 6.114845
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "la-chapelle-693",
+    "nom": "La Chapelle",
+    "adresse": "Chemin de Compostelle 1212 Lancy",
+    "maps": "https://www.google.com/maps/search/?api=1&query=La%20Chapelle%20Gen%C3%A8ve",
+    "places": 96,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "328",
+    "tarifBrut": "Du lundi au vendredi de 8h à 18h à CHF 1.50 de l’heure\r\nLes nuits de 18h à 8h, les samedis, dimanches et jours fériés à CHF 0,50 de l’heure",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.170125,
+      "lng": 6.130619
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "chene-54-ext-703",
+    "nom": "Chêne 54 ext.",
+    "adresse": "Route de chêne 54 1208 Genève",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Ch%C3%AAne%2054%20ext.%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "418",
+    "prixH": 0.3,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          7,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.005
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.199921,
+      "lng": 6.171401
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "centre-sportif-cointrin-729",
+    "nom": "Centre sportif Cointrin",
+    "adresse": "Av. Louis-Casaï 81 1216 Meyrin",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Centre%20sportif%20Cointrin%20Gen%C3%A8ve",
+    "places": 80,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "298",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 4 heures",
+    "regles": [
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          0,
+          24
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          24,
+          24
+        ],
+        "dimFeries": false,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      }
+    },
+    "coords": {
+      "lat": 46.226235,
+      "lng": 6.105097
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "communes-reunies-94-public-804",
+    "nom": "Communes-Réunies 94 Public",
+    "adresse": "Av. Comm. Réun. 94 1212 Grand-Lancy",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Communes-R%C3%A9unies%2094%20Public%20Gen%C3%A8ve",
+    "places": 15,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "296",
+    "prixH": 1.5,
+    "montantMin": 1,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 1.00",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.171905,
+      "lng": 6.12365
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "satigny-ecole-mairie-1001",
+    "nom": "Satigny Ecole-Mairie",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Satigny%20Ecole-Mairie%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "740",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 24h",
+    "regles": [
+      {
+        "type": "gratuit_plage_hebdo",
+        "jour": 6,
+        "hDeb": 0,
+        "hFin": 24,
+        "label": "Gratuit le samedi",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.217397,
+      "lng": 6.030344
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "vernier-piscine-lignon-1030",
+    "nom": "Vernier piscine Lignon",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Vernier%20piscine%20Lignon%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "2402",
+    "prixH": 1,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 24h",
+    "regles": [
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          7,
+          23
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0167
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          23,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.204437,
+      "lng": 6.1001
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "vernier-zone-blanche-payante-illimitee-1032",
+    "nom": "Vernier zone blanche payante illimitée",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Vernier%20zone%20blanche%20payante%20illimit%C3%A9e%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "2400",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 24h",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.216044,
+      "lng": 6.085569
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "vernier-zone-blanche-90-min-1035",
+    "nom": "Vernier zone blanche 90 min.",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Vernier%20zone%20blanche%2090%20min.%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "2401",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.217171,
+      "lng": 6.087414
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "vernier-zone-blanche-90min-1036",
+    "nom": "Vernier zone blanche 90min.",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Vernier%20zone%20blanche%2090min.%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "1200",
+    "prixH": 2.8,
+    "montantMin": 0.7,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.70",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0467
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.211136,
+      "lng": 6.114218
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "parking-p-r-pre-bois-1176",
+    "nom": "Parking P+R Pré-Bois",
+    "adresse": "Ch. des Papillons 4 1216 Meyrin",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking%20P%2BR%20Pr%C3%A9-Bois%20Gen%C3%A8ve",
+    "places": 209,
+    "typeParking": "NC",
+    "typeVehicule": "auto",
+    "codeTarif": "224",
+    "tarifBrut": "Jour : du Lundi au Dimanche de 7h à 19h : CHF 3 / heure \r\nNuit : du Lundi au Dimanche de 19h à 7h : CHF 1 / heure ",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.222745,
+      "lng": 6.095874
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "versoix-ville-1187",
+    "nom": "Versoix Ville",
+    "adresse": "1290 Versoix",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Versoix%20Ville%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "2700",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "gratuit_plage_quotidien",
+        "hDeb": 12,
+        "hFin": 14,
+        "label": "Gratuit 12h–14h",
+        "emoji": "⏸️"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.277116,
+      "lng": 6.169839
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "versoix-ville-1189",
+    "nom": "Versoix Ville",
+    "adresse": "1290 Versoix",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Versoix%20Ville%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "2702",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 1 heure",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          7,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          7
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.277129,
+      "lng": 6.168001
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "vernier-zone-blanche-payante-illimitee-1198",
+    "nom": "Vernier zone blanche payante illimitée",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Vernier%20zone%20blanche%20payante%20illimit%C3%A9e%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "2401",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.215767,
+      "lng": 6.085665
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "vernier-zone-blanche-payante-illimitee-1200",
+    "nom": "Vernier zone blanche payante illimitée",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Vernier%20zone%20blanche%20payante%20illimit%C3%A9e%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "2401",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.216119,
+      "lng": 6.086222
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "voie-publique-1201",
+    "nom": "Voie Publique",
+    "adresse": "1200 Genève",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Voie%20Publique%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "1200",
+    "prixH": 2.8,
+    "montantMin": 0.7,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.70",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0467
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.203248,
+      "lng": 6.136044
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "parking-du-cimetiere-1202",
+    "nom": "Parking du Cimetière",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking%20du%20Cimeti%C3%A8re%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "2450",
+    "prixH": 0.8,
+    "montantMin": 0.8,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.80",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          17
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0133
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          17,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.192909,
+      "lng": 6.044871
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "parking-du-cimetiere-1204",
+    "nom": "Parking du Cimetière",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Parking%20du%20Cimeti%C3%A8re%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": "extérieur",
+    "typeVehicule": "auto",
+    "codeTarif": "2450",
+    "prixH": 0.8,
+    "montantMin": 0.8,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 7 jours",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.80",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          17
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.0133
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          17,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.192335,
+      "lng": 6.044289
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "rue-des-sources-16-motos-1229",
+    "nom": "Rue des Sources 16 motos",
+    "adresse": "Rue Prévost-Martin 6 1205 Genève",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Rue%20des%20Sources%2016%20motos%20Gen%C3%A8ve",
+    "places": 5,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "500",
+    "tarifBrut": "Heures pleines \r\nlun-dim: 9h-12h, 14h-19h\r\nCHF 3/heure\r\n\r\nHeures creuses \r\nEntre 12h et 14h, la nuit : gratuit",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.195777,
+      "lng": 6.145221
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "ville-de-thonex-rue-de-geneve-1246",
+    "nom": "Ville de Thônex Rue de Genève",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Ville%20de%20Th%C3%B4nex%20Rue%20de%20Gen%C3%A8ve%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "2900",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.192611,
+      "lng": 6.204096
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "ville-de-thonex-salle-des-fetes-1247",
+    "nom": "Ville de Thônex Salle des fêtes",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Ville%20de%20Th%C3%B4nex%20Salle%20des%20f%C3%AAtes%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "2901",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 3 jours",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.19363,
+      "lng": 6.205677
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "ville-de-thonex-parking-des-oiseaux-1248",
+    "nom": "Ville de Thônex Parking des Oiseaux",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Ville%20de%20Th%C3%B4nex%20Parking%20des%20Oiseaux%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "2903",
+    "tarifBrut": "De 0h à 1h : 1.5CHF / 60min\r\nDe 1h à 2h : 1CHF / 60min\r\nDe 2h à 3h : 0.5CHF / 60min\r\nAprès 3h : 1.5CHF / 60min",
+    "tarifApproximatif": true,
+    "regles": [
+      {
+        "type": "info",
+        "label": "⚠️ Tarif complexe, voir détail sur place",
+        "emoji": "⚠️"
+      }
+    ],
+    "coords": {
+      "lat": 46.196002,
+      "lng": 6.203599
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE"
+  },
+  {
+    "id": "ville-de-thonex-piscine-de-thonex-1249",
+    "nom": "Ville de Thônex Piscine de Thônex",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Ville%20de%20Th%C3%B4nex%20Piscine%20de%20Th%C3%B4nex%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "2902",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 11 heures",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.195465,
+      "lng": 6.204323
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "ville-de-thonex-rue-de-geneve-1253",
+    "nom": "Ville de Thônex Rue de Genève",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Ville%20de%20Th%C3%B4nex%20Rue%20de%20Gen%C3%A8ve%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "2900",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.193213,
+      "lng": 6.201538
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "vernier-zone-blanche-90-min-1269",
+    "nom": "Vernier zone blanche 90 min.",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Vernier%20zone%20blanche%2090%20min.%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "2401",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.211909,
+      "lng": 6.11247
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "vernier-zone-blanche-90-min-1270",
+    "nom": "Vernier zone blanche 90 min.",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Vernier%20zone%20blanche%2090%20min.%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "2401",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.211922,
+      "lng": 6.111714
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  },
+  {
+    "id": "vernier-zone-blanche-90-min-1290",
+    "nom": "Vernier zone blanche 90 min.",
+    "adresse": "",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Vernier%20zone%20blanche%2090%20min.%20Gen%C3%A8ve",
+    "places": null,
+    "typeParking": null,
+    "typeVehicule": null,
+    "codeTarif": "2401",
+    "prixH": 1.5,
+    "montantMin": 0.5,
+    "horaire": "24h/24",
+    "ouvH": 0,
+    "fermH": 24,
+    "note": "Durée max : 90 minutes",
+    "regles": [
+      {
+        "type": "gratuit_dim",
+        "label": "Gratuit le dimanche",
+        "emoji": "🎉"
+      },
+      {
+        "type": "gratuit_dim_feries",
+        "label": "Gratuit les jours fériés",
+        "emoji": "🎊"
+      },
+      {
+        "type": "info",
+        "label": "Facturation à la minute",
+        "emoji": "⏱️"
+      },
+      {
+        "type": "info",
+        "label": "Montant minimum facturé : CHF 0.50",
+        "emoji": "💰"
+      }
+    ],
+    "tarification": {
+      "gratuit_initial": 0,
+      "jour": {
+        "heures": [
+          8,
+          19
+        ],
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 1,
+            "prix": 0.025
+          }
+        ],
+        "plafond": 9999
+      },
+      "nuit": {
+        "heures": [
+          19,
+          8
+        ],
+        "dimFeries": true,
+        "arrondi": "ceil",
+        "paliers": [
+          {
+            "jusqua": null,
+            "tranche": 60,
+            "prix": 0
+          }
+        ],
+        "plafond": 0
+      }
+    },
+    "coords": {
+      "lat": 46.211477,
+      "lng": 6.110943
+    },
+    "ville": "geneve",
+    "feriesCanton": "GE",
+    "source": "Référentiel Tarification PMDS (16.04.2026)",
+    "dateTarif": "2026-04-16"
+  }
+]

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parkings Sion — Carte & Simulateur</title>
+  <title>Parkings — Carte & Simulateur</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -24,34 +24,18 @@
 </head>
 <body>
 
-<div id="map" aria-label="Carte des parkings de Sion"></div>
+<div id="map" aria-label="Carte des parkings"></div>
 
 <aside class="panel" id="panel">
   <button type="button" class="panel-grip" id="panelGrip" aria-label="Replier le panneau" aria-expanded="true"></button>
 
   <header class="panel-header">
     <div class="brand">
-      <svg class="valais-shield" viewBox="0 0 24 30" xmlns="http://www.w3.org/2000/svg" aria-label="Armoiries du Valais" role="img">
-        <defs>
-          <clipPath id="vs-clip">
-            <path d="M12 .5 L23.5 4 L23.5 18 C23.5 25 12 29.5 12 29.5 C12 29.5 .5 25 .5 18 L.5 4 Z"/>
-          </clipPath>
-          <polygon id="s5" points="0,-1.35 .32,-.42 1.28,-.42 .48,.16 .79,1.09 0,.5 -.79,1.09 -.48,.16 -1.28,-.42 -.32,-.42"/>
-        </defs>
-        <g clip-path="url(#vs-clip)">
-          <rect x="0" y="0" width="12" height="30" fill="#FFFFFF"/>
-          <rect x="12" y="0" width="12" height="30" fill="#CE1126"/>
-          <use href="#s5" x="12" y="6.5" fill="#CE1126"/>
-          <use href="#s5" x="7.5" y="10.5" fill="#CE1126"/><use href="#s5" x="16.5" y="10.5" fill="#FFFFFF"/>
-          <use href="#s5" x="4.5" y="14.5" fill="#CE1126"/><use href="#s5" x="12" y="14.5" fill="#FFFFFF"/><use href="#s5" x="19.5" y="14.5" fill="#FFFFFF"/>
-          <use href="#s5" x="3.5" y="18.5" fill="#CE1126"/><use href="#s5" x="8.5" y="18.5" fill="#CE1126"/><use href="#s5" x="15.5" y="18.5" fill="#FFFFFF"/><use href="#s5" x="20.5" y="18.5" fill="#FFFFFF"/>
-          <use href="#s5" x="6" y="22.5" fill="#CE1126"/><use href="#s5" x="12" y="22.5" fill="#FFFFFF"/><use href="#s5" x="18" y="22.5" fill="#FFFFFF"/>
-        </g>
-        <path d="M12 .5 L23.5 4 L23.5 18 C23.5 25 12 29.5 12 29.5 C12 29.5 .5 25 .5 18 L.5 4 Z" stroke="rgba(0,0,0,.25)" stroke-width=".6" fill="none"/>
-      </svg>
+      <div class="brand-shield" id="brandShield" aria-hidden="true"></div>
       <div class="brand-text">
-        <h1 class="brand-title">Parkings <span>Sion</span></h1>
-        <span class="brand-sub">Canton du Valais · 7 parkings</span>
+        <h1 class="brand-title">Parkings</h1>
+        <span class="brand-sub" id="brandSub"></span>
+        <div class="ville-pills" id="villePills" role="radiogroup" aria-label="Choisir la ville"></div>
       </div>
     </div>
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Basculer le thème">
@@ -122,8 +106,7 @@
             </div>
             <div class="result-amount">
               <div class="result-chf">
-                <span class="cur">CHF</span>
-                <span id="resTotal">0.00</span>
+                <span id="resTotal">0.00.-</span>
               </div>
               <div class="result-savings" id="resSavings"></div>
             </div>

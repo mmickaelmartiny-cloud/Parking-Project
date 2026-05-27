@@ -1,4 +1,4 @@
-const CACHE_NAME = 'parkings-sion-v1';
+const CACHE_NAME = 'parkings-v5';
 
 const STATIC_ASSETS = [
   '/',

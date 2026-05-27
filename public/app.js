@@ -37,6 +37,9 @@ initTheme();
 const fmtH = d => new Date(d).toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' });
 const fmtD = d => new Date(d).toLocaleDateString('fr-CH', { weekday: 'short', day: 'numeric', month: 'short' });
 const fmtChf = v => Number(v).toFixed(2);
+// Notation suisse : "2.50.-" pour un montant, "1.50/h" pour un tarif horaire.
+const fmtMnt   = v => v === 0 ? 'Gratuit' : `${fmtChf(v)}.-`;
+const fmtTarif = v => v === 0 ? 'Gratuit' : `${fmtChf(v)}/h`;
 function fmtDuree(min) {
   const h = Math.floor(min / 60), m = Math.round(min % 60);
   if (h === 0) return `${m} min`;
@@ -56,20 +59,75 @@ function priceClass(chf) {
 let currentMode = 'all';
 let currentVehicule = 'voiture';
 let allParkings = [];
+let allVilles = [];
+let currentVilleId = null;
 let map = null;
 let markers = {};       // id -> Leaflet marker
 let markerEls = {};     // id -> HTMLElement du marker (pour update classes)
 let activeId = null;
 let lightTiles = null, darkTiles = null;
+let showAllCompare = false;   // toggle "voir tous les parkings" en mode compare
+const COMPARE_TOP_N = 10;     // cap d'affichage du compare-all pour grosses villes
+
+function currentVille() {
+  return allVilles.find(v => v.id === currentVilleId) || allVilles[0];
+}
+
+// ── ÉCUS CANTONAUX (SVG) ──────────────────────────────────────────────────
+
+const SHIELD_CLIP = 'M12 .5 L23.5 4 L23.5 18 C23.5 25 12 29.5 12 29.5 C12 29.5 .5 25 .5 18 L.5 4 Z';
+
+function shieldSVG(canton) {
+  if (canton === 'VS') {
+    return `<svg viewBox="0 0 24 30" xmlns="http://www.w3.org/2000/svg" aria-label="Armoiries du Valais" role="img">
+      <defs>
+        <clipPath id="vs-clip"><path d="${SHIELD_CLIP}"/></clipPath>
+        <polygon id="s5" points="0,-1.35 .32,-.42 1.28,-.42 .48,.16 .79,1.09 0,.5 -.79,1.09 -.48,.16 -1.28,-.42 -.32,-.42"/>
+      </defs>
+      <g clip-path="url(#vs-clip)">
+        <rect x="0" y="0" width="12" height="30" fill="#FFFFFF"/>
+        <rect x="12" y="0" width="12" height="30" fill="#CE1126"/>
+        <use href="#s5" x="12" y="6.5" fill="#CE1126"/>
+        <use href="#s5" x="7.5" y="10.5" fill="#CE1126"/><use href="#s5" x="16.5" y="10.5" fill="#FFFFFF"/>
+        <use href="#s5" x="4.5" y="14.5" fill="#CE1126"/><use href="#s5" x="12" y="14.5" fill="#FFFFFF"/><use href="#s5" x="19.5" y="14.5" fill="#FFFFFF"/>
+        <use href="#s5" x="3.5" y="18.5" fill="#CE1126"/><use href="#s5" x="8.5" y="18.5" fill="#CE1126"/><use href="#s5" x="15.5" y="18.5" fill="#FFFFFF"/><use href="#s5" x="20.5" y="18.5" fill="#FFFFFF"/>
+        <use href="#s5" x="6" y="22.5" fill="#CE1126"/><use href="#s5" x="12" y="22.5" fill="#FFFFFF"/><use href="#s5" x="18" y="22.5" fill="#FFFFFF"/>
+      </g>
+      <path d="${SHIELD_CLIP}" stroke="rgba(0,0,0,.25)" stroke-width=".6" fill="none"/>
+    </svg>`;
+  }
+  if (canton === 'GE') {
+    // Armoiries genevoises simplifiées : mi-parti or (gauche) / gueules (droite)
+    // avec clé et demi-aigle stylisés
+    return `<svg viewBox="0 0 24 30" xmlns="http://www.w3.org/2000/svg" aria-label="Armoiries de Genève" role="img">
+      <defs><clipPath id="ge-clip"><path d="${SHIELD_CLIP}"/></clipPath></defs>
+      <g clip-path="url(#ge-clip)">
+        <rect x="0" y="0" width="12" height="30" fill="#FBBF24"/>
+        <rect x="12" y="0" width="12" height="30" fill="#DC2626"/>
+        <!-- Demi-aigle (gauche, sur or) -->
+        <path d="M7 8 L9 7 L10.5 9 L11 12 L11 16 L10 18 L8.5 18 L7.5 16 L7 13 Z" fill="#1F2937"/>
+        <circle cx="9" cy="8.5" r="0.7" fill="#FBBF24"/>
+        <!-- Clé (droite, sur gueules) -->
+        <circle cx="15.5" cy="9" r="1.8" fill="none" stroke="#FBBF24" stroke-width="1"/>
+        <line x1="15.5" y1="11" x2="15.5" y2="20" stroke="#FBBF24" stroke-width="1.2"/>
+        <line x1="15.5" y1="16" x2="17" y2="16" stroke="#FBBF24" stroke-width="1.2"/>
+        <line x1="15.5" y1="18" x2="17" y2="18" stroke="#FBBF24" stroke-width="1.2"/>
+      </g>
+      <path d="${SHIELD_CLIP}" stroke="rgba(0,0,0,.25)" stroke-width=".6" fill="none"/>
+    </svg>`;
+  }
+  // Fallback générique
+  return `<svg viewBox="0 0 24 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="${SHIELD_CLIP}" fill="var(--accent)" opacity="0.85"/>
+  </svg>`;
+}
 
 // ── CARTE ─────────────────────────────────────────────────────────────────
 
-const SION_CENTER = [46.2311, 7.3589];
-
-function initMap(parkings) {
+function initMap(parkings, center, zoom) {
   map = L.map('map', {
-    center: SION_CENTER,
-    zoom: 15,
+    center,
+    zoom,
     zoomControl: true,
     attributionControl: true,
     scrollWheelZoom: true
@@ -97,8 +155,9 @@ function initMap(parkings) {
 
 function addMarker(p) {
   if (!p.coords) return;
-  const priceStr = p.prixH === 0 ? 'Gratuit' : `${fmtChf(p.prixH)}`;
-  const cls = priceClass(p.prixH);
+  const isApprox = !!p.tarifApproximatif;
+  const priceStr = isApprox ? '⚠️' : fmtTarif(p.prixH);
+  const cls = isApprox ? 'price-approx' : priceClass(p.prixH);
 
   const icon = L.divIcon({
     className: '',
@@ -111,7 +170,7 @@ function addMarker(p) {
     .addTo(map)
     .bindTooltip(p.nom, { direction: 'top', offset: [0, -36], opacity: 0.95 });
 
-  m.on('click', () => focusParking(p.id, { pan: false }));
+  m.on('click', () => focusParking(p.id, { pan: false, scroll: true }));
 
   markers[p.id] = m;
 
@@ -128,16 +187,21 @@ function updateMarkerPrice(id, chf, { isBest = false } = {}) {
   el.classList.remove('price-free', 'price-low', 'price-mid', 'price-high', 'is-best');
   el.classList.add(priceClass(chf));
   if (isBest) el.classList.add('is-best');
-  el.textContent = chf === 0 ? 'Gratuit' : fmtChf(chf);
+  el.textContent = fmtMnt(chf);
 }
 
 function resetMarkers() {
   allParkings.forEach(p => {
     const el = markerEls[p.id];
     if (!el) return;
-    el.classList.remove('price-free', 'price-low', 'price-mid', 'price-high', 'is-best');
-    el.classList.add(priceClass(p.prixH));
-    el.textContent = p.prixH === 0 ? 'Gratuit' : fmtChf(p.prixH);
+    el.classList.remove('price-free', 'price-low', 'price-mid', 'price-high', 'price-approx', 'is-best');
+    if (p.tarifApproximatif) {
+      el.classList.add('price-approx');
+      el.textContent = '⚠️';
+    } else {
+      el.classList.add(priceClass(p.prixH));
+      el.textContent = fmtTarif(p.prixH);
+    }
   });
   setActive(null);
 }
@@ -153,13 +217,31 @@ function setActive(id) {
   }
 }
 
-function focusParking(id, { pan = true } = {}) {
+function scrollPanelToParking(id) {
+  // Scroll dans le bandeau de gauche jusqu'à la row du parking sélectionné.
+  // Si on est en mode compare-all avec une comp-entry, on scrolle aussi vers elle.
+  const targets = [
+    document.querySelector(`.parking-row[data-id="${id}"]`),
+    document.querySelector(`.comp-entry[data-id="${id}"]`)
+  ].filter(el => el && el.offsetParent !== null);
+  if (targets.length === 0) return;
+  // Sur mobile, s'assurer que le panneau n'est pas collapsed
+  const panel = document.getElementById('panel');
+  if (panel && panel.classList.contains('panel--collapsed') && window.innerWidth <= 768) {
+    panel.classList.remove('panel--collapsed');
+    panel.classList.add('panel--half');
+  }
+  targets[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function focusParking(id, { pan = true, scroll = false } = {}) {
   const p = allParkings.find(x => x.id === id);
   if (!p) return;
   setActive(id);
   if (pan && p.coords) map.setView([p.coords.lat, p.coords.lng], Math.max(map.getZoom(), 16), { animate: true });
   const sel = document.getElementById('selParking');
   if (sel && [...sel.options].some(o => o.value === id)) sel.value = id;
+  if (scroll) scrollPanelToParking(id);
 }
 
 function recenter() {
@@ -171,59 +253,158 @@ function recenter() {
 
 // ── RENDU DES ROWS ────────────────────────────────────────────────────────
 
-async function init() {
-  const res = await fetch('/api/parkings');
+function renderRow(p) {
+  const isApprox = !!p.tarifApproximatif;
+  const isFree   = !isApprox && p.prixH === 0;
+  const priceStr = isApprox ? '?' : fmtTarif(p.prixH);
+  const cls = isApprox ? 'price-approx' : priceClass(p.prixH);
+
+  const row = document.createElement('div');
+  row.className = 'parking-row' + (isApprox ? ' is-approx' : '');
+  row.dataset.id = p.id;
+  row.tabIndex = 0;
+  row.setAttribute('role', 'button');
+  row.setAttribute('aria-label', `Voir ${p.nom} sur la carte`);
+
+  const places = p.places ?? p.capacite ?? '?';
+  const hauteur = p.hauteur != null
+    ? `<span class="row-height">${Number(p.hauteur).toFixed(2)} m</span>`
+    : '';
+  const approxBadge = isApprox
+    ? `<span class="row-approx-badge" title="Tarif complexe — voir sur place">⚠️ Tarif complexe</span>`
+    : '';
+
+  row.innerHTML = `
+    <div class="row-price ${cls}">${priceStr}</div>
+    <div class="row-info">
+      <div class="row-name">${p.nom}${approxBadge}</div>
+      <div class="row-addr">
+        <a href="${p.maps}" target="_blank" rel="noopener" class="row-maps-link" onclick="event.stopPropagation()" aria-label="Itinéraire Google Maps vers ${p.nom}">
+          <span>${p.adresse}</span>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="row-stats">
+      <span class="row-places">${places} pl.</span>
+      ${hauteur}
+    </div>`;
+
+  row.addEventListener('click', () => focusParking(p.id));
+  row.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); focusParking(p.id); }
+  });
+  return row;
+}
+
+function updateBrand() {
+  const v = currentVille();
+  if (!v) return;
+  document.title = `Parkings ${v.nom} — Carte & Simulateur`;
+  const shieldEl = document.getElementById('brandShield');
+  if (shieldEl) shieldEl.innerHTML = shieldSVG(v.canton);
+  const sub = document.getElementById('brandSub');
+  if (sub) sub.textContent = `Canton ${v.canton === 'VS' ? 'du Valais' : 'de Genève'}`;
+  renderVillePills();
+}
+
+function clearMap() {
+  if (!map) return;
+  Object.values(markers).forEach(m => map.removeLayer(m));
+  markers = {};
+  markerEls = {};
+}
+
+async function loadVille(villeId, { firstLoad = false } = {}) {
+  const v = allVilles.find(x => x.id === villeId) || allVilles[0];
+  if (!v) return;
+  currentVilleId = v.id;
+  try { localStorage.setItem('ville', v.id); } catch (_) {}
+
+  const res = await fetch(`/api/parkings?ville=${v.id}`);
   const parkings = await res.json();
   allParkings = parkings;
 
+  // Rebuild grid & select
   const grid = document.getElementById('parkingGrid');
   const sel  = document.getElementById('selParking');
+  grid.innerHTML = '';
+  sel.innerHTML = '';
 
   parkings.forEach(p => {
-    const isFree   = p.prixH === 0;
-    const priceStr = isFree ? 'Gratuit' : fmtChf(p.prixH);
-    const cls = priceClass(p.prixH);
-
-    const row = document.createElement('div');
-    row.className = 'parking-row';
-    row.dataset.id = p.id;
-    row.tabIndex = 0;
-    row.setAttribute('role', 'button');
-    row.setAttribute('aria-label', `Voir ${p.nom} sur la carte`);
-
-    row.innerHTML = `
-      <div class="row-price ${cls}">${priceStr}</div>
-      <div class="row-info">
-        <div class="row-name">${p.nom}</div>
-        <div class="row-addr">
-          <a href="${p.maps}" target="_blank" rel="noopener" class="row-maps-link" onclick="event.stopPropagation()" aria-label="Itinéraire Google Maps vers ${p.nom}">
-            <span>${p.adresse}</span>
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
-          </a>
-        </div>
-      </div>
-      <div class="row-stats">
-        <span class="row-places">${p.places} pl.</span>
-        <span class="row-height">${Number(p.hauteur).toFixed(2)} m</span>
-      </div>`;
-
-    row.addEventListener('click', () => focusParking(p.id));
-    row.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); focusParking(p.id); }
-    });
-    grid.appendChild(row);
-
-    const opt = document.createElement('option');
-    opt.value = p.id; opt.textContent = p.nom;
-    sel.appendChild(opt);
+    grid.appendChild(renderRow(p));
+    // Seuls les parkings avec tarification fiable peuvent être simulés
+    if (!p.tarifApproximatif) {
+      const opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = p.nom;
+      sel.appendChild(opt);
+    }
   });
 
-  // Init carte (Leaflet doit être chargé — le script est en defer donc DOMContentLoaded l'attend)
-  if (typeof L !== 'undefined') {
-    initMap(parkings);
+  // Section label
+  const lbl = document.getElementById('sectionLabelText');
+  if (lbl) lbl.textContent = `Les ${parkings.length} parkings`;
+
+  // Carte : init si premier chargement, sinon clear + replace
+  if (firstLoad || !map) {
+    if (typeof L !== 'undefined') {
+      initMap(parkings, [v.center.lat, v.center.lng], v.zoom);
+    } else {
+      window.addEventListener('load', () => initMap(parkings, [v.center.lat, v.center.lng], v.zoom));
+    }
   } else {
-    window.addEventListener('load', () => initMap(parkings));
+    clearMap();
+    parkings.forEach(p => addMarker(p));
+    if (Object.values(markers).length > 0) {
+      const group = L.featureGroup(Object.values(markers));
+      map.fitBounds(group.getBounds(), { padding: [60, 60], maxZoom: 16, animate: true });
+    } else {
+      map.setView([v.center.lat, v.center.lng], v.zoom);
+    }
   }
+
+  // Reset UI state
+  showAllCompare = false;
+  document.getElementById('result').className = 'result';
+  document.getElementById('comparison').className = 'comparison';
+  document.getElementById('alertError').className = 'alert error';
+
+  updateBrand();
+}
+
+function renderVillePills() {
+  const container = document.getElementById('villePills');
+  if (!container) return;
+  container.innerHTML = '';
+  allVilles.forEach(v => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ville-pill' + (v.id === currentVilleId ? ' active' : '');
+    btn.dataset.ville = v.id;
+    btn.setAttribute('role', 'radio');
+    btn.setAttribute('aria-checked', String(v.id === currentVilleId));
+    btn.innerHTML = `${v.nom}<span class="ville-pill-count">${v.count}</span>`;
+    btn.addEventListener('click', () => {
+      if (v.id !== currentVilleId) loadVille(v.id);
+    });
+    container.appendChild(btn);
+  });
+}
+
+async function init() {
+  // 1. Charger les villes
+  const villesRes = await fetch('/api/villes');
+  allVilles = await villesRes.json();
+
+  // 2. Déterminer ville par défaut : URL > localStorage > première
+  const urlVille = new URLSearchParams(location.search).get('ville');
+  const savedVille = (() => { try { return localStorage.getItem('ville'); } catch (_) { return null; } })();
+  const validIds = new Set(allVilles.map(v => v.id));
+  const initialVille = [urlVille, savedVille, allVilles[0]?.id].find(id => id && validIds.has(id));
+
+  // 3. Charger la ville initiale (carte + données) — renderVillePills() est appelé via loadVille → updateBrand
+  await loadVille(initialVille, { firstLoad: true });
 
   setDefaults();
   setMode('all');
@@ -345,6 +526,20 @@ function initBottomSheet() {
 
 // ── MODE (single / all) ───────────────────────────────────────────────────
 
+// Un parking est "simulable" si non-approximatif et compatible avec le véhicule choisi
+function isSimulable(p, vehicule) {
+  if (p.tarifApproximatif) return false;
+  if (vehicule === 'moto') return !!p.moto;
+  // voiture : exclure les parkings explicitement typés moto (Genève)
+  return !p.typeVehicule || p.typeVehicule !== 'moto';
+}
+
+// Un parking est "visible" dans la liste/carte (plus permissif que simulable)
+function isVisible(p, vehicule) {
+  if (vehicule === 'moto') return !!p.moto || p.typeVehicule === 'moto';
+  return !p.typeVehicule || p.typeVehicule !== 'moto';
+}
+
 function setVehicule(v) {
   currentVehicule = v;
   document.getElementById('vehCar').classList.toggle('active', v === 'voiture');
@@ -355,9 +550,8 @@ function setVehicule(v) {
   const sel = document.getElementById('selParking');
   const prev = sel.value;
   sel.innerHTML = '';
-  const eligibles = v === 'moto'
-    ? allParkings.filter(p => p.moto)
-    : allParkings;
+  // Le select ne propose que les parkings simulables (= calcul possible)
+  const eligibles = allParkings.filter(p => isSimulable(p, v));
   eligibles.forEach(p => {
     const opt = document.createElement('option');
     opt.value = p.id;
@@ -366,10 +560,12 @@ function setVehicule(v) {
   });
   if (eligibles.find(p => p.id === prev)) sel.value = prev;
 
+  // Affichage des rows et markers (plus permissif : on garde les visibles non-simulables aussi)
+  const visibleIds = new Set(allParkings.filter(p => isVisible(p, v)).map(p => p.id));
+
   // Filtrer les rows du panel et les markers sur la carte
-  const eligibleIds = new Set(eligibles.map(p => p.id));
   allParkings.forEach(p => {
-    const show = eligibleIds.has(p.id);
+    const show = visibleIds.has(p.id);
     const row = document.querySelector(`.parking-row[data-id="${p.id}"]`);
     if (row) row.style.display = show ? '' : 'none';
     const m = markers[p.id];
@@ -383,8 +579,8 @@ function setVehicule(v) {
   const lbl = document.getElementById('sectionLabelText');
   if (lbl) {
     lbl.textContent = v === 'moto'
-      ? `${eligibles.length} parking${eligibles.length > 1 ? 's' : ''} moto`
-      : `Les ${eligibles.length} parkings`;
+      ? `${visibleIds.size} parking${visibleIds.size > 1 ? 's' : ''} moto`
+      : `Les ${visibleIds.size} parkings`;
   }
 
   document.getElementById('result').className = 'result';
@@ -473,7 +669,7 @@ async function simuler() {
     document.getElementById('resNom').textContent = parking.nom;
     document.getElementById('resPeriode').textContent =
       `${fmtD(arStr)} ${fmtH(arStr)} → ${fmtD(dpStr)} ${fmtH(dpStr)}  ·  ${fmtDuree(dureeMin)}`;
-    document.getElementById('resTotal').textContent = fmtChf(result.total);
+    document.getElementById('resTotal').textContent = result.total === 0 ? 'Gratuit' : `${fmtChf(result.total)}.-`;
 
     const mapsLink = document.getElementById('resMapsLink');
     if (parking.maps) { mapsLink.href = parking.maps; mapsLink.style.display = 'inline-flex'; }
@@ -481,7 +677,7 @@ async function simuler() {
 
     const savEl = document.getElementById('resSavings');
     if (result.economies > 0.005) {
-      savEl.textContent = `Économie : CHF ${fmtChf(result.economies)}`;
+      savEl.textContent = `Économie : ${fmtChf(result.economies)}.-`;
       savEl.style.display = 'block';
     } else { savEl.style.display = 'none'; }
 
@@ -490,8 +686,8 @@ async function simuler() {
     result.segments.forEach(seg => {
       const dotColor  = seg.isFree ? '#059669' : (seg.isReduced ? '#EA580C' : '#64748B');
       const costClass = seg.isFree ? 'cost-free' : (seg.isReduced ? 'cost-reduced' : 'cost-normal');
-      const costText  = seg.isFree ? 'Gratuit' : `CHF ${fmtChf(seg.cout)}`;
-      const tarifText = seg.isFree ? '—' : `CHF ${fmtChf(seg.tauxH)}/h`;
+      const costText  = seg.isFree ? 'Gratuit' : `${fmtChf(seg.cout)}.-`;
+      const tarifText = seg.isFree ? '—' : `${fmtChf(seg.tauxH)}/h`;
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -623,9 +819,8 @@ async function comparer() {
   btn.textContent = 'Calcul en cours…';
 
   try {
-    const eligibles = currentVehicule === 'moto'
-      ? allParkings.filter(p => p.moto)
-      : allParkings;
+    // Seuls les parkings simulables (non-approximatifs, compatibles véhicule)
+    const eligibles = allParkings.filter(p => isSimulable(p, currentVehicule));
 
     const results = await Promise.all(
       eligibles.map(p =>
@@ -648,6 +843,11 @@ async function comparer() {
 
     const maxTotal = Math.max(...results.filter(r => r.result).map(r => r.result.total), 0.01);
     const dureeMin = (depart - arrivee) / 60000;
+    const totalAll = results.length;
+    const showResults = (totalAll > COMPARE_TOP_N && !showAllCompare)
+      ? results.slice(0, COMPARE_TOP_N)
+      : results;
+    const truncated = showResults.length < totalAll;
 
     document.getElementById('compPeriode').innerHTML =
       `<strong>${fmtD(arStr)} ${fmtH(arStr)}</strong> → <strong>${fmtD(dpStr)} ${fmtH(dpStr)}</strong>&ensp;·&ensp;${fmtDuree(dureeMin)}`;
@@ -661,7 +861,7 @@ async function comparer() {
       if (item.result) updateMarkerPrice(item.parking.id, item.result.total, { isBest: idx === 0 });
     });
 
-    results.forEach((item, idx) => {
+    showResults.forEach((item, idx) => {
       const { parking, result } = item;
       const isBest   = idx === 0 && result;
       const isFree   = result && result.total === 0;
@@ -680,7 +880,7 @@ async function comparer() {
         : `<span class="comp-rank">${idx + 1}</span>`;
 
       const amountHTML = result
-        ? `<div class="comp-amount${isFree ? ' is-free' : ''}">CHF ${fmtChf(result.total)}</div>`
+        ? `<div class="comp-amount${isFree ? ' is-free' : ''}">${isFree ? 'Gratuit' : fmtChf(result.total) + '.-'}</div>`
         : `<div class="comp-amount" style="color:var(--ink-4)">—</div>`;
 
       const barClass = isFree ? 'bar-free' : (isBest ? 'bar-best' : '');
@@ -720,6 +920,19 @@ async function comparer() {
 
       list.appendChild(entry);
     });
+
+    // Bouton "voir tous les parkings" si la liste est tronquée
+    if (truncated) {
+      const moreBtn = document.createElement('button');
+      moreBtn.className = 'comp-show-all';
+      moreBtn.type = 'button';
+      moreBtn.textContent = `Voir les ${totalAll - showResults.length} autres parkings`;
+      moreBtn.addEventListener('click', () => {
+        showAllCompare = true;
+        comparer();
+      });
+      list.appendChild(moreBtn);
+    }
 
     compEl.className = 'comparison';
     requestAnimationFrame(() => { compEl.className = 'comparison visible'; });

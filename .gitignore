@@ -8,3 +8,6 @@ node_modules/
 parkings-sion.csv
 parkings-sion.md
 tests/report.html
+
+# Fichiers lock Excel temporaires
+~$*.xlsx

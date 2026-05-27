@@ -153,6 +153,14 @@ html[data-theme="dark"] .leaflet-control-zoom a:hover { background: #334155 !imp
 .parking-marker.price-mid::after { border-top-color: var(--orange); }
 .parking-marker.price-high { background: #FECACA; border-color: var(--red); color: #7F1D1D; }
 .parking-marker.price-high::after { border-top-color: var(--red); }
+.parking-marker.price-approx {
+  background: #FEF3C7;
+  border-color: #D97706;
+  border-style: dashed;
+  color: #92400E;
+  font-size: 0.85rem;
+}
+.parking-marker.price-approx::after { border-top-color: #D97706; }
 
 .parking-marker.is-best {
   background: var(--accent);
@@ -213,12 +221,16 @@ html[data-theme="dark"] .parking-marker::after { border-top-color: #F1F5F9; }
   gap: 0.8rem;
   min-width: 0;
 }
-.valais-shield {
+.brand-shield {
   width: 30px;
   height: 36px;
   flex-shrink: 0;
   filter: drop-shadow(0 1px 2px rgba(0,0,0,.15));
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.brand-shield svg { width: 100%; height: 100%; }
 .brand-text { min-width: 0; }
 .brand-title {
   font-family: var(--sans);
@@ -229,7 +241,49 @@ html[data-theme="dark"] .parking-marker::after { border-top-color: #F1F5F9; }
   line-height: 1.1;
   white-space: nowrap;
 }
-.brand-title span { color: var(--accent); }
+
+/* Sélecteur de ville en pills segmentés (cohérent avec .vehicle-toggle) */
+.ville-pills {
+  display: inline-flex;
+  gap: 0.3rem;
+  margin-top: 0.45rem;
+  padding: 0.2rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+.ville-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.32rem 0.65rem;
+  border: none;
+  border-radius: calc(var(--r-sm) - 2px);
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.ville-pill:hover { color: var(--accent); }
+.ville-pill.active {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.ville-pill.active:hover { color: white; }
+.ville-pill-count {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  opacity: 0.7;
+  font-weight: 500;
+}
+.ville-pill.active .ville-pill-count { opacity: 0.85; }
+.ville-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .brand-sub {
   font-family: var(--mono);
   font-size: 0.64rem;
@@ -674,6 +728,23 @@ select.field-input {
 .comp-entry { border-bottom: 1px solid var(--line); }
 .comp-entry:last-child { border-bottom: none; }
 
+.comp-show-all {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0;
+  background: var(--surface-2);
+  border: none;
+  border-top: 1px solid var(--line);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.comp-show-all:hover { background: var(--accent-bg); }
+
 .comp-row {
   display: grid;
   grid-template-columns: 2rem 1fr auto;
@@ -839,7 +910,7 @@ select.field-input {
 
 .parking-row {
   display: grid;
-  grid-template-columns: 54px 1fr auto;
+  grid-template-columns: 64px 1fr auto;
   align-items: center;
   gap: 0.75rem;
   padding: 0.65rem 0.75rem;
@@ -875,6 +946,7 @@ select.field-input {
 .row-price.price-low { background: #FEF3C7; color: #78350F; border-color: #FBBF24; }
 .row-price.price-mid { background: #FED7AA; color: #7C2D12; border-color: #FB923C; }
 .row-price.price-high { background: #FECACA; color: #7F1D1D; border-color: #F87171; }
+.row-price.price-approx { background: #FEF3C7; color: #92400E; border-color: #FBBF24; border-style: dashed; }
 
 .row-info { min-width: 0; }
 .row-name {
@@ -896,6 +968,34 @@ select.field-input {
   overflow: hidden;
   text-overflow: ellipsis;
   letter-spacing: -0.005em;
+}
+
+/* Badge tarif approximatif (parkings Genève sans simulateur fiable) */
+.row-approx-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+  border: 1px solid #FDE68A;
+}
+html[data-theme="dark"] .row-approx-badge {
+  background: rgba(251, 191, 36, 0.15);
+  color: #FCD34D;
+  border-color: rgba(251, 191, 36, 0.3);
+}
+.parking-row.is-approx { opacity: 0.85; }
+.parking-row.is-approx .row-price {
+  background: transparent;
+  border-style: dashed;
+  color: var(--ink-3);
 }
 
 .row-maps-link {
@@ -1019,6 +1119,10 @@ html[data-theme="dark"] .panel-header { background: var(--surface); border-botto
 html[data-theme="dark"] .brand-title { color: var(--ink); }
 html[data-theme="dark"] .brand-title span { color: var(--accent); }
 html[data-theme="dark"] .brand-sub { color: var(--ink-3); }
+html[data-theme="dark"] .ville-pills { background: var(--surface); border-color: var(--line-2); }
+html[data-theme="dark"] .ville-pill { color: var(--ink-2); }
+html[data-theme="dark"] .ville-pill.active { background: var(--accent); color: #0F172A; }
+html[data-theme="dark"] .ville-pill.active:hover { color: #0F172A; }
 html[data-theme="dark"] .theme-toggle { background: var(--surface-2); border-color: var(--line); color: var(--ink-2); }
 html[data-theme="dark"] .theme-toggle:hover { background: var(--accent); color: #0F172A; border-color: var(--accent); }
 

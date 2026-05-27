@@ -1,0 +1,16 @@
+[
+  {
+    "id": "sion",
+    "nom": "Sion",
+    "canton": "VS",
+    "center": { "lat": 46.231, "lng": 7.359 },
+    "zoom": 14
+  },
+  {
+    "id": "geneve",
+    "nom": "Genève",
+    "canton": "GE",
+    "center": { "lat": 46.204, "lng": 6.143 },
+    "zoom": 13
+  }
+]
