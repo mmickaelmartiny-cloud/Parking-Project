@@ -1,4 +1,4 @@
-const CACHE_NAME = 'parkings-v5';
+const CACHE_NAME = 'parkings-v6';
 
 const STATIC_ASSETS = [
   '/',

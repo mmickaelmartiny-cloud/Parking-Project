@@ -408,6 +408,7 @@ async function init() {
 
   setDefaults();
   setMode('all');
+  attachAutoCalc();
   document.getElementById('btnRecenter').addEventListener('click', recenter);
 
   initBottomSheet();
@@ -541,6 +542,7 @@ function isVisible(p, vehicule) {
 }
 
 function setVehicule(v) {
+  const hadResult = isResultShown();
   currentVehicule = v;
   document.getElementById('vehCar').classList.toggle('active', v === 'voiture');
   document.getElementById('vehMoto').classList.toggle('active', v === 'moto');
@@ -586,9 +588,11 @@ function setVehicule(v) {
   document.getElementById('result').className = 'result';
   document.getElementById('comparison').className = 'comparison';
   resetMarkers();
+  if (hadResult) scheduleAutoCalc(50);
 }
 
 function setMode(mode) {
+  const hadResult = isResultShown();
   currentMode = mode;
   document.getElementById('tabSingle').classList.toggle('active', mode === 'single');
   document.getElementById('tabAll').classList.toggle('active', mode === 'all');
@@ -614,6 +618,57 @@ function setMode(mode) {
     btn.onclick = simuler;
   }
   resetMarkers();
+  if (hadResult) scheduleAutoCalc(50);
+}
+
+// ── AUTO-CALC ─────────────────────────────────────────────────────────────
+// Recalcule automatiquement lorsque l'utilisateur modifie heures, parking ou véhicule.
+// - debounce 300ms sur input datetime, 50ms sur change select
+// - calcSeq + AbortController : invalide les requêtes périmées (important en compare-all)
+// - silencieux si inputs incomplets/invalides (pas de flash d'erreur en pleine saisie)
+let autoCalcTimer = null;
+let calcSeq = 0;
+let currentCalcAbort = null;
+
+function scheduleAutoCalc(delay = 300) {
+  if (autoCalcTimer) clearTimeout(autoCalcTimer);
+  autoCalcTimer = setTimeout(() => {
+    autoCalcTimer = null;
+    runCurrentCalc();
+  }, delay);
+}
+
+function runCurrentCalc() {
+  const arStr = document.getElementById('inpArrivee').value;
+  const dpStr = document.getElementById('inpDepart').value;
+  document.getElementById('alertError').className = 'alert error';  // hide stale error
+  if (!arStr || !dpStr) return;
+  const ar = new Date(arStr), dp = new Date(dpStr);
+  if (isNaN(ar) || isNaN(dp) || dp <= ar) return;
+  if ((dp - ar) / 60000 > 7 * 24 * 60) return;
+  if (currentMode === 'all') comparer({ silent: true });
+  else simuler({ silent: true });
+}
+
+function setCalculating(on) {
+  const sim = document.querySelector('.simulator');
+  if (sim) sim.classList.toggle('is-calculating', !!on);
+}
+
+function isResultShown() {
+  return document.getElementById('result').classList.contains('visible')
+      || document.getElementById('comparison').classList.contains('visible');
+}
+
+function attachAutoCalc() {
+  ['inpArrivee', 'inpDepart'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input',  () => scheduleAutoCalc(300));
+    el.addEventListener('change', () => scheduleAutoCalc(50));
+  });
+  const sel = document.getElementById('selParking');
+  if (sel) sel.addEventListener('change', () => scheduleAutoCalc(50));
 }
 
 // ── SIMULATEUR ────────────────────────────────────────────────────────────
@@ -629,19 +684,22 @@ function setDefaults() {
   document.getElementById('inpDepart').value  = fmt(later);
 }
 
-async function simuler() {
+async function simuler({ silent = false } = {}) {
   const alertEl  = document.getElementById('alertError');
   const resultEl = document.getElementById('result');
   const btn      = document.getElementById('btnCalc');
 
   alertEl.className  = 'alert error';
-  resultEl.className = 'result';
 
   const pid   = document.getElementById('selParking').value;
   const arStr = document.getElementById('inpArrivee').value;
   const dpStr = document.getElementById('inpDepart').value;
 
-  function showErr(msg) { alertEl.innerHTML = `⚠️&nbsp; ${msg}`; alertEl.className = 'alert error visible'; }
+  function showErr(msg) {
+    if (silent) return;
+    alertEl.innerHTML = `⚠️&nbsp; ${msg}`;
+    alertEl.className = 'alert error visible';
+  }
 
   if (!arStr || !dpStr) { showErr('Veuillez renseigner l\'heure d\'arrivée et de départ.'); return; }
 
@@ -651,16 +709,24 @@ async function simuler() {
   if (depart <= arrivee)                         { showErr('L\'heure de départ doit être postérieure à l\'heure d\'arrivée.'); return; }
   if ((depart - arrivee) / 60000 > 7 * 24 * 60) { showErr('La durée maximum simulable est de 7 jours.'); return; }
 
-  btn.disabled = true;
-  btn.textContent = 'Calcul en cours…';
+  const mySeq = ++calcSeq;
+  if (currentCalcAbort) currentCalcAbort.abort();
+  const ac = new AbortController();
+  currentCalcAbort = ac;
+
+  setCalculating(true);
+  if (!silent) { btn.disabled = true; btn.textContent = 'Calcul en cours…'; }
 
   try {
     const res = await fetch('/api/calculer', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ parkingId: pid, arrivee: arStr, depart: dpStr, vehicule: currentVehicule })
+      body: JSON.stringify({ parkingId: pid, arrivee: arStr, depart: dpStr, vehicule: currentVehicule }),
+      signal: ac.signal
     });
+    if (mySeq !== calcSeq) return;  // une requête plus récente est partie, on jette
     const data = await res.json();
+    if (mySeq !== calcSeq) return;
     if (!res.ok) { showErr(data.erreur || 'Erreur serveur.'); return; }
 
     const { parking, result } = data;
@@ -719,8 +785,16 @@ async function simuler() {
     resultEl.className = 'result';
     requestAnimationFrame(() => { resultEl.className = 'result visible'; });
 
-  } catch (err) { showErr('Impossible de contacter le serveur.'); }
-  finally { btn.disabled = false; btn.textContent = 'Calculer le prix'; }
+  } catch (err) {
+    if (err && err.name === 'AbortError') return;
+    if (mySeq === calcSeq) showErr('Impossible de contacter le serveur.');
+  } finally {
+    if (mySeq === calcSeq) {
+      setCalculating(false);
+      btn.disabled = false;
+      btn.textContent = 'Calculer le prix';
+    }
+  }
 }
 
 // ── COMPARATEUR ───────────────────────────────────────────────────────────
@@ -794,18 +868,21 @@ function toggleCompExpand(entry) {
   }
 }
 
-async function comparer() {
+async function comparer({ silent = false } = {}) {
   const alertEl = document.getElementById('alertError');
   const compEl  = document.getElementById('comparison');
   const btn     = document.getElementById('btnCalc');
 
   alertEl.className = 'alert error';
-  compEl.className  = 'comparison';
 
   const arStr = document.getElementById('inpArrivee').value;
   const dpStr = document.getElementById('inpDepart').value;
 
-  function showErr(msg) { alertEl.innerHTML = `⚠️&nbsp; ${msg}`; alertEl.className = 'alert error visible'; }
+  function showErr(msg) {
+    if (silent) return;
+    alertEl.innerHTML = `⚠️&nbsp; ${msg}`;
+    alertEl.className = 'alert error visible';
+  }
 
   if (!arStr || !dpStr) { showErr('Veuillez renseigner l\'heure d\'arrivée et de départ.'); return; }
 
@@ -815,8 +892,13 @@ async function comparer() {
   if (depart <= arrivee)                         { showErr('L\'heure de départ doit être postérieure à l\'heure d\'arrivée.'); return; }
   if ((depart - arrivee) / 60000 > 7 * 24 * 60) { showErr('La durée maximum simulable est de 7 jours.'); return; }
 
-  btn.disabled = true;
-  btn.textContent = 'Calcul en cours…';
+  const mySeq = ++calcSeq;
+  if (currentCalcAbort) currentCalcAbort.abort();
+  const ac = new AbortController();
+  currentCalcAbort = ac;
+
+  setCalculating(true);
+  if (!silent) { btn.disabled = true; btn.textContent = 'Calcul en cours…'; }
 
   try {
     // Seuls les parkings simulables (non-approximatifs, compatibles véhicule)
@@ -827,13 +909,16 @@ async function comparer() {
         fetch('/api/calculer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ parkingId: p.id, arrivee: arStr, depart: dpStr, vehicule: currentVehicule })
+          body: JSON.stringify({ parkingId: p.id, arrivee: arStr, depart: dpStr, vehicule: currentVehicule }),
+          signal: ac.signal
         })
         .then(r => r.json())
         .then(data => ({ parking: data.parking, result: data.result }))
-        .catch(() => ({ parking: p, result: null }))
+        .catch(err => ({ parking: p, result: null, _aborted: err && err.name === 'AbortError' }))
       )
     );
+
+    if (mySeq !== calcSeq) return;  // résultats périmés, on jette
 
     results.sort((a, b) => {
       if (!a.result) return 1;
@@ -937,8 +1022,16 @@ async function comparer() {
     compEl.className = 'comparison';
     requestAnimationFrame(() => { compEl.className = 'comparison visible'; });
 
-  } catch (err) { showErr('Impossible de contacter le serveur.'); }
-  finally { btn.disabled = false; btn.textContent = 'Comparer les parkings'; }
+  } catch (err) {
+    if (err && err.name === 'AbortError') return;
+    if (mySeq === calcSeq) showErr('Impossible de contacter le serveur.');
+  } finally {
+    if (mySeq === calcSeq) {
+      setCalculating(false);
+      btn.disabled = false;
+      btn.textContent = 'Comparer les parkings';
+    }
+  }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────

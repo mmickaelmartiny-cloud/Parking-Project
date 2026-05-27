@@ -58,10 +58,14 @@
 
       <div class="sim-sub">
         <span class="sim-icon-wrap" id="simIcon" aria-hidden="true">◉</span>
-        <div>
+        <div class="sim-sub-text">
           <h2 id="simTitle">Comparer tous les parkings</h2>
           <p id="simSubtitle">Classement du moins cher au plus cher pour la période choisie</p>
         </div>
+        <span class="calc-indicator" id="calcIndicator" role="status" aria-live="polite">
+          <span class="calc-spinner" aria-hidden="true"></span>
+          <span class="calc-text">Calcul…</span>
+        </span>
       </div>
 
       <div class="vehicle-toggle" role="radiogroup" aria-label="Type de véhicule">

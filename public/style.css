@@ -1307,4 +1307,36 @@ html[data-theme="dark"] .icon-sun  { display: block; }
 @media (prefers-reduced-motion: reduce) {
   .result.visible, .comparison.visible { animation: none; }
   .btn-calc, .sim-tab, .comp-bar, .parking-row, .parking-marker, .map-recenter { transition-duration: 0.01ms !important; }
+  .calc-spinner { animation: calc-pulse 1.2s ease-in-out infinite; }
 }
+
+/* ── INDICATEUR CALCUL EN COURS ─────────────────────── */
+.sim-sub-text { min-width: 0; flex: 1; }
+.calc-indicator {
+  margin-left: auto;
+  display: none;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--ink-3);
+  padding-top: 6px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s ease-in;
+}
+.simulator.is-calculating .calc-indicator {
+  display: inline-flex;
+  opacity: 1;
+}
+.calc-spinner {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-2);
+  border-top-color: var(--accent);
+  animation: calc-spin 0.7s linear infinite;
+}
+@keyframes calc-spin { to { transform: rotate(360deg); } }
+@keyframes calc-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+html[data-theme="dark"] .calc-indicator { color: var(--ink-3); }
+html[data-theme="dark"] .calc-spinner { border-color: var(--line-2); border-top-color: var(--accent); }
